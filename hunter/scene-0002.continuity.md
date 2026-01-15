@@ -1,0 +1,6 @@
+- Vehicles: Red 1985 Camaro (strained engine, heavy wrench in footwell); Black matte steel pickup (no markings, driven by Dale).
+- Location/Heading: Leaving Henderson’s Gas Station (Texas pines) to follow a bypass route marked on a hand-drawn vellum map.
+- Objects: Annie possesses a folding knife, a lukewarm soda, and a "new" hand-drawn map on skin-like vellum; Sarah has a heavy wrench.
+- Character States: Annie is experiencing nausea and physical "glitch" distortions; Dale has a jagged white scar above his left eye and "dead, calculating" eyes.
+- Plot/Revelations: The "signal" is degrading; Dale is a generational "iteration" or program tasked with "resolving" Annie’s bloodline.
+- Time/Environment: Transitioned from sunset to nightfall; the environment features unnatural elements (digital bell chime, oscillating frequencies, flickering visual density).

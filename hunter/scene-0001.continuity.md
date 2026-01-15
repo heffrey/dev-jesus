@@ -1,0 +1,6 @@
+- Vehicle: Red 1985 Camaro; engine is strained; interior contains a heavy wrench (footwell), old maps, and empty water bottles.
+- Location: Henderson’s gas station (decaying, ochre building) in Texas; heading toward an uncertain destination.
+- Items: They now possess stale crackers, lukewarm soda, and a "new" map; Annie has a folding knife in her pocket.
+- Character State (Sarah): Hyper-vigilant and "predatory"; hands locked at ten and two; acting as the protective "anchor."
+- Character State (Annie): Alert but restless; wearing a denim jacket; experiencing sensory distortion/feeling that reality is "fraying."
+- Time of Day: Transitioning from late afternoon to sunset; sun is "bruised purple" behind the pines.

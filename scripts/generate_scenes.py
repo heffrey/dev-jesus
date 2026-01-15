@@ -31,6 +31,14 @@ def read_text(path: str) -> str:
         return handle.read()
 
 
+def load_definitions(path: str) -> dict:
+    """Load character and setting definitions from JSON file."""
+    if not os.path.isfile(path):
+        return {"characters": {}, "settings": {}}
+    with open(path, "r", encoding="utf-8") as handle:
+        return json.load(handle)
+
+
 def call_gemini(api_key: str, model: str, prompt: str, max_retries: int, retry_base: float, verbose: bool = False) -> dict:
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
     payload = {
@@ -85,6 +93,140 @@ def extract_text(response: dict) -> str:
     return ""
 
 
+def extract_characters_from_purpose(scene_purpose: str, all_characters: dict) -> dict:
+    """Extract characters mentioned in scene purpose by matching names and aliases.
+    
+    Returns a filtered dict containing only characters that are mentioned in the scene purpose.
+    """
+    if not scene_purpose or not all_characters:
+        return {}
+    
+    scene_purpose_lower = scene_purpose.lower()
+    matching_characters = {}
+    
+    for char_key, char_data in all_characters.items():
+        # Check if character name appears in scene purpose
+        char_name = char_data.get("name", char_key)
+        if char_name.lower() in scene_purpose_lower:
+            matching_characters[char_key] = char_data
+            continue
+        
+        # Check if any alias appears in scene purpose
+        aliases = char_data.get("aliases", [])
+        for alias in aliases:
+            if alias.lower() in scene_purpose_lower:
+                matching_characters[char_key] = char_data
+                break
+    
+    return matching_characters
+
+
+def extract_continuity_notes(
+    api_key: str,
+    model: str,
+    scene_text: str,
+    scene_number: int,
+    max_retries: int,
+    retry_base: float,
+) -> str:
+    """Extract key continuity information from a scene using LLM.
+    
+    Returns a concise summary of continuity elements: vehicles, locations, objects,
+    character states, and important plot developments.
+    """
+    prompt = f"""Extract key continuity information from this scene. Focus on facts that need to be maintained in subsequent scenes:
+
+- Vehicles/transportation (make, model, color, condition)
+- Current location and where characters are heading
+- Objects/items characters possess or interact with
+- Character physical/emotional states
+- Important plot developments or revelations
+- Time of day and passage of time
+
+Scene {scene_number}:
+{scene_text}
+
+Provide a concise bullet-point summary (3-8 points max) of continuity elements. Be specific but brief. Format as:
+- [continuity element]: [specific detail]
+
+Example:
+- Vehicle: red 1985 Camaro, low on fuel
+- Location: Henderson's gas station, heading to farmhouse
+- Character state: Sarah is tense, watching for threats; Annie is alert but trying to stay calm
+- Plot: Dale was seen in black pickup truck, made eye contact with Annie"""
+
+    try:
+        response = call_gemini(api_key, model, prompt, max_retries, retry_base, verbose=False)
+        continuity_text = extract_text(response)
+        return continuity_text.strip() if continuity_text else ""
+    except Exception:
+        # If extraction fails, return empty - we'll fall back to summaries
+        return ""
+
+
+def load_continuity_notes(
+    output_dir: str,
+    current_scene_number: int,
+    api_key: str,
+    model: str,
+    max_retries: int,
+    retry_base: float,
+    max_scenes: int = 2,
+) -> str:
+    """Load continuity notes from previously generated scenes.
+    
+    Uses cached continuity notes if available, otherwise extracts them.
+    Returns concise continuity summaries from the last max_scenes scenes.
+    """
+    continuity_notes = []
+    
+    # Load scenes in reverse order (most recent first)
+    for scene_num in range(current_scene_number - 1, max(0, current_scene_number - max_scenes - 1), -1):
+        scene_path = os.path.join(output_dir, f"scene-{scene_num:04d}.md")
+        continuity_cache_path = os.path.join(output_dir, f"scene-{scene_num:04d}.continuity.md")
+        
+        if os.path.isfile(scene_path):
+            notes = ""
+            
+            # Try to load from cache first
+            if os.path.isfile(continuity_cache_path):
+                try:
+                    notes = read_text(continuity_cache_path).strip()
+                except Exception:
+                    pass
+            
+            # If no cache or cache is empty, extract continuity notes
+            if not notes:
+                try:
+                    scene_text = read_text(scene_path)
+                    if scene_text.strip():
+                        notes = extract_continuity_notes(
+                            api_key, model, scene_text, scene_num, max_retries, retry_base
+                        )
+                        # Cache the extracted notes
+                        if notes:
+                            try:
+                                with open(continuity_cache_path, "w", encoding="utf-8") as handle:
+                                    handle.write(notes)
+                                    if not notes.endswith("\n"):
+                                        handle.write("\n")
+                            except Exception:
+                                # If caching fails, continue without cache
+                                pass
+                except Exception:
+                    # If we can't read or extract, skip it
+                    pass
+            
+            if notes:
+                continuity_notes.append(f"Scene {scene_num} continuity:\n{notes}")
+    
+    if continuity_notes:
+        # Reverse to show chronological order
+        continuity_notes.reverse()
+        return "\n\n".join(continuity_notes)
+    return ""
+
+
 def build_scene_prompt(
     act_number: int,
     act_title: str,
@@ -93,15 +235,61 @@ def build_scene_prompt(
     scene_purpose: str,
     previous_scenes: list[str],
     core_premise: str,
+    definitions: dict,
+    output_dir: str,
+    api_key: str = None,
+    model: str = None,
+    max_retries: int = 5,
+    retry_base: float = 5.0,
 ) -> str:
+    # Load continuity notes from previous scenes (smart extraction, not full text)
     previous_context = ""
-    if previous_scenes:
+    if scene_number > 1 and api_key:
+        continuity_notes = load_continuity_notes(
+            output_dir, scene_number, api_key, model, max_retries, retry_base, max_scenes=2
+        )
+        if continuity_notes:
+            previous_context = f"\n\nContinuity from previous scenes (maintain consistency with these details):\n\n{continuity_notes}\n"
+    
+    # Fallback to purpose summaries if continuity extraction isn't available
+    if not previous_context and previous_scenes:
         previous_context = "\n\nPrevious scenes summary:\n" + "\n".join(f"- {s}" for s in previous_scenes[-3:])
 
+    # Build character and setting context
+    character_context = ""
+    setting_context = ""
+    
+    all_characters = definitions.get("characters", {})
+    # Filter characters to only include those mentioned in scene purpose
+    characters = extract_characters_from_purpose(scene_purpose, all_characters)
+    
+    if characters:
+        character_context = "\n\nAvailable Characters (use these consistently in your scenes):\n"
+        for char_key, char_data in characters.items():
+            char_context = f"- {char_data.get('name', char_key)}"
+            if "aliases" in char_data:
+                char_context += f" (also known as: {', '.join(char_data['aliases'])})"
+            if "description" in char_data:
+                char_context += f": {char_data['description']}"
+            if "role" in char_data:
+                char_context += f" [{char_data['role']}]"
+            character_context += char_context + "\n"
+    
+    settings = definitions.get("settings", {})
+    if settings:
+        setting_context = "\n\nAvailable Settings (use these consistently in your scenes):\n"
+        for setting_key, setting_data in settings.items():
+            setting_info = f"- {setting_data.get('name', setting_key)}"
+            if "aliases" in setting_data:
+                setting_info += f" (also known as: {', '.join(setting_data['aliases'])})"
+            if "description" in setting_data:
+                setting_info += f": {setting_data['description']}"
+            setting_context += setting_info + "\n"
+    
     prompt = f"""Generate a scene for a story called "dev-jesus". Write in the same style and format as the existing scenes.
 
 Core premise: {core_premise}
-
+{character_context}{setting_context}
 Act {act_number}: {act_title}
 Act description: {act_description}
 
@@ -115,7 +303,7 @@ Requirements:
 - Create 2-3 distinct sections with ## headings (time/location markers)
 - Each section should be 3-5 paragraphs
 - Maintain the tone: avoid reverence, avoid mockery, treat humanity as understandable
-- The story alternates between biblical-era scenes (Galilee) and present-day scenes (The Company operations floor)
+- Use the characters and settings defined above consistently - reference them by name when they appear
 - Follow the existing scene format exactly
 
 Generate the complete scene text now, starting with "# Scene {scene_number}" and including all sections:"""
@@ -138,6 +326,7 @@ def main() -> int:
     parser.add_argument("--acts-file", default="story/acts.json", help="JSON file defining acts and scenes")
     parser.add_argument("--core-premise-file", default="story/core-premise.md", help="File with core premise")
     parser.add_argument("--output-dir", default="story", help="Directory to save generated scenes")
+    parser.add_argument("--definitions-file", default=None, help="Path to character and setting definitions JSON file (defaults to {output-dir}/definitions.json)")
     parser.add_argument("--max-retries", type=int, default=5)
     parser.add_argument("--retry-base", type=float, default=5.0)
     parser.add_argument("--sleep-between", type=float, default=5.0, help="Seconds to wait between scenes")
@@ -177,6 +366,20 @@ def main() -> int:
     else:
         core_premise = "Human reality is a simulation. Jesus is a systems engineer from the originating civilization who entered as a constrained instance to deliver a corrective signal."
 
+    # Determine definitions file path
+    if args.definitions_file is None:
+        args.definitions_file = os.path.join(args.output_dir, "definitions.json")
+    
+    # Load definitions
+    definitions = load_definitions(args.definitions_file)
+    if args.verbose:
+        char_count = len(definitions.get("characters", {}))
+        setting_count = len(definitions.get("settings", {}))
+        if char_count > 0 or setting_count > 0:
+            print(f"Loaded {char_count} character(s) and {setting_count} setting(s) from {args.definitions_file}", flush=True)
+        else:
+            print(f"No definitions found at {args.definitions_file} (this is okay)", flush=True)
+
     with open(args.acts_file, "r", encoding="utf-8") as handle:
         acts_data = json.load(handle)
 
@@ -211,6 +414,16 @@ def main() -> int:
         print(f"\n[{idx}/{len(scenes_to_generate)}] Generating Scene {scene_num}", flush=True)
         print(f"  Act {scene_def['act_number']}: {scene_def['act_title']}", flush=True)
         print(f"  Purpose: {scene_def['scene_purpose']}", flush=True)
+        
+        # Show which characters were selected for this scene
+        if args.verbose:
+            all_chars = definitions.get("characters", {})
+            selected_chars = extract_characters_from_purpose(scene_def["scene_purpose"], all_chars)
+            if selected_chars:
+                char_names = [char_data.get("name", key) for key, char_data in selected_chars.items()]
+                print(f"  Selected characters: {', '.join(char_names)}", flush=True)
+            else:
+                print(f"  No characters found in scene purpose", flush=True)
 
         prompt = build_scene_prompt(
             act_number=scene_def["act_number"],
@@ -220,6 +433,12 @@ def main() -> int:
             scene_purpose=scene_def["scene_purpose"],
             previous_scenes=previous_scenes,
             core_premise=core_premise,
+            definitions=definitions,
+            output_dir=args.output_dir,
+            api_key=args.api_key,
+            model=args.model,
+            max_retries=args.max_retries,
+            retry_base=args.retry_base,
         )
 
         try:

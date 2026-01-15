@@ -1,0 +1,28 @@
+{
+  "Annie": [
+    "hunter/boards/scene-0003-2.jpg",
+    "hunter/boards/scene-0002-3.jpg",
+    "hunter/boards/scene-0003-1.jpg",
+    "hunter/boards/scene-0002-2.jpg",
+    "hunter/boards/scene-0002-1.jpg",
+    "hunter/boards/ref-annie.jpg"
+  ],
+  "Dale": [
+    "hunter/boards/scene-0002-2.jpg",
+    "hunter/boards/ref-dale.jpg"
+  ],
+  "Old Man Henderson": [
+    "hunter/boards/scene-0003-2.jpg",
+    "hunter/boards/scene-0002-3.jpg",
+    "hunter/boards/scene-0002-2.jpg",
+    "hunter/boards/scene-0002-1.jpg",
+    "hunter/boards/ref-old-man-henderson.jpg"
+  ],
+  "Sarah": [
+    "hunter/boards/scene-0003-2.jpg",
+    "hunter/boards/scene-0002-3.jpg",
+    "hunter/boards/scene-0003-1.jpg",
+    "hunter/boards/scene-0002-1.jpg",
+    "hunter/boards/ref-sarah.jpg"
+  ]
+}

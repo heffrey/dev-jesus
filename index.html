@@ -123,6 +123,41 @@
             text-align: center;
         }
 
+        .story-selector {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .story-selector label {
+            color: #333;
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+        .story-selector select {
+            padding: 10px 15px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .story-selector select:hover {
+            border-color: #5568d3;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+
+        .story-selector select:focus {
+            outline: none;
+            border-color: #5568d3;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 1.8em;
@@ -140,7 +175,15 @@
     </style>
 </head>
 <body>
-    <div class="container">        
+    <div class="container">
+        <div class="story-selector">
+            <label for="story-folder">Story:</label>
+            <select id="story-folder" onchange="changeStoryFolder()">
+                <option value="story">Story</option>
+                <option value="hunter">Hunter</option>
+            </select>
+        </div>
+        
         <div class="viewer">
             <div class="image-container">
                 <img id="storyboard-image" src="" alt="Storyboard">
@@ -163,57 +206,62 @@
     </div>
 
     <script>
-        // List of storyboard images (sorted by scene number)
-        const images = [
-            'story/boards/scene-0001-1.jpg',
-            'story/boards/scene-0001-2.jpg',
-            'story/boards/scene-0001-3.jpg',
-            'story/boards/scene-0002-1.jpg',
-            'story/boards/scene-0002-2.jpg',
-            'story/boards/scene-0002-3.jpg',
-            'story/boards/scene-0002-4.jpg',
-            'story/boards/scene-0003-1.jpg',
-            'story/boards/scene-0003-2.jpg',
-            'story/boards/scene-0003-3.jpg',
-            'story/boards/scene-0003-4.jpg',
-            'story/boards/scene-0004-1.jpg',
-            'story/boards/scene-0004-2.jpg',
-            'story/boards/scene-0004-3.jpg',
-            'story/boards/scene-0005-1.jpg',
-            'story/boards/scene-0005-2.jpg',
-            'story/boards/scene-0005-3.jpg',
-            'story/boards/scene-0005-4.jpg',
-            'story/boards/scene-0006-1.jpg',
-            'story/boards/scene-0006-2.jpg',
-            'story/boards/scene-0006-3.jpg',
-            'story/boards/scene-0007-1.jpg',
-            'story/boards/scene-0007-2.jpg',
-            'story/boards/scene-0007-3.jpg',
-            'story/boards/scene-0008-1.jpg',
-            'story/boards/scene-0008-2.jpg',
-            'story/boards/scene-0008-3.jpg',
-            'story/boards/scene-0008-4.jpg',
-            'story/boards/scene-0009-1.jpg',
-            'story/boards/scene-0009-2.jpg',
-            'story/boards/scene-0009-3.jpg',
-            'story/boards/scene-0010-1.jpg',
-            'story/boards/scene-0010-2.jpg',
-            'story/boards/scene-0010-3.jpg',
-            'story/boards/scene-0010-4.jpg',
-            'story/boards/scene-0011-1.jpg',
-            'story/boards/scene-0011-2.jpg',
-            'story/boards/scene-0011-3.jpg',
-            'story/boards/scene-0012-1.jpg',
-            'story/boards/scene-0012-2.jpg',
-            'story/boards/scene-0012-3.jpg',
-            'story/boards/scene-0013-1.jpg',
-            'story/boards/scene-0013-2.jpg',
-            'story/boards/scene-0013-3.jpg',
-            'story/boards/scene-0014-1.jpg',
-            'story/boards/scene-0014-2.jpg',
-            'story/boards/scene-0014-3.jpg'
-        ];
+        // Available story folders and their image lists
+        const storyImages = {
+            'story': [
+                'story/boards/scene-0001-1.jpg',
+                'story/boards/scene-0001-2.jpg',
+                'story/boards/scene-0001-3.jpg',
+                'story/boards/scene-0002-1.jpg',
+                'story/boards/scene-0002-2.jpg',
+                'story/boards/scene-0002-3.jpg',
+                'story/boards/scene-0002-4.jpg',
+                'story/boards/scene-0003-1.jpg',
+                'story/boards/scene-0003-2.jpg',
+                'story/boards/scene-0003-3.jpg',
+                'story/boards/scene-0003-4.jpg',
+                'story/boards/scene-0004-1.jpg',
+                'story/boards/scene-0004-2.jpg',
+                'story/boards/scene-0004-3.jpg',
+                'story/boards/scene-0005-1.jpg',
+                'story/boards/scene-0005-2.jpg',
+                'story/boards/scene-0005-3.jpg',
+                'story/boards/scene-0005-4.jpg',
+                'story/boards/scene-0006-1.jpg',
+                'story/boards/scene-0006-2.jpg',
+                'story/boards/scene-0006-3.jpg',
+                'story/boards/scene-0007-1.jpg',
+                'story/boards/scene-0007-2.jpg',
+                'story/boards/scene-0007-3.jpg',
+                'story/boards/scene-0008-1.jpg',
+                'story/boards/scene-0008-2.jpg',
+                'story/boards/scene-0008-3.jpg',
+                'story/boards/scene-0008-4.jpg',
+                'story/boards/scene-0009-1.jpg',
+                'story/boards/scene-0009-2.jpg',
+                'story/boards/scene-0009-3.jpg',
+                'story/boards/scene-0010-1.jpg',
+                'story/boards/scene-0010-2.jpg',
+                'story/boards/scene-0010-3.jpg',
+                'story/boards/scene-0010-4.jpg',
+                'story/boards/scene-0011-1.jpg',
+                'story/boards/scene-0011-2.jpg',
+                'story/boards/scene-0011-3.jpg',
+                'story/boards/scene-0012-1.jpg',
+                'story/boards/scene-0012-2.jpg',
+                'story/boards/scene-0012-3.jpg',
+                'story/boards/scene-0013-1.jpg',
+                'story/boards/scene-0013-2.jpg',
+                'story/boards/scene-0013-3.jpg',
+                'story/boards/scene-0014-1.jpg',
+                'story/boards/scene-0014-2.jpg',
+                'story/boards/scene-0014-3.jpg'
+            ],
+            'hunter': []
+        };
 
+        let currentFolder = 'story';
+        let images = storyImages[currentFolder];
         let currentIndex = 0;
         let autoPlayInterval = null;
         const autoPlayDelay = 3000; // 3 seconds per image
@@ -306,6 +354,69 @@
                 toggleAutoPlay();
             }
         });
+
+        function changeStoryFolder() {
+            const select = document.getElementById('story-folder');
+            const newFolder = select.value;
+            
+            if (newFolder === currentFolder) {
+                return;
+            }
+            
+            // Stop autoplay if running
+            stopAutoPlay();
+            
+            // Update folder and images
+            currentFolder = newFolder;
+            images = storyImages[currentFolder] || [];
+            
+            // Reset to first image
+            currentIndex = 0;
+            
+            if (images.length === 0) {
+                imageElement.src = '';
+                imageInfo.textContent = 'No storyboards available for this story';
+                prevBtn.disabled = true;
+                nextBtn.disabled = true;
+            } else {
+                updateImage();
+            }
+        }
+
+        // Function to discover images for a folder (can be called to populate hunter or other folders)
+        async function discoverImages(folder) {
+            const discovered = [];
+            // Try scenes 1-50, storyboards 1-10 per scene
+            for (let scene = 1; scene <= 50; scene++) {
+                for (let board = 1; board <= 10; board++) {
+                    const sceneNum = scene.toString().padStart(4, '0');
+                    const path = `${folder}/boards/scene-${sceneNum}-${board}.jpg`;
+                    
+                    // Try to load the image to see if it exists
+                    const exists = await checkImageExists(path);
+                    if (exists) {
+                        discovered.push(path);
+                    } else {
+                        // If this board doesn't exist, likely no more boards for this scene
+                        if (board === 1) {
+                            // If first board doesn't exist, likely no more scenes
+                            return discovered;
+                        }
+                        break;
+                    }
+                }
+            }
+            return discovered;
+        }
+
+        function checkImageExists(path) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => resolve(true);
+                img.onerror = () => resolve(false);
+                img.src = path;
+            });
+        }
 
         // Initialize
         updateImage();
