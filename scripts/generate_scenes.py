@@ -230,7 +230,7 @@ def main() -> int:
                 print(f"  ✗ No text returned for Scene {scene_num}", file=sys.stderr, flush=True)
                 continue
 
-            output_path = os.path.join(args.output_dir, f"scene-{scene_num}.md")
+            output_path = os.path.join(args.output_dir, f"scene-{scene_num:04d}.md")
             with open(output_path, "w", encoding="utf-8") as handle:
                 handle.write(scene_text)
                 if not scene_text.endswith("\n"):
