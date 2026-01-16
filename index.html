@@ -48,6 +48,12 @@
             margin-bottom: 30px;
         }
 
+        @media (max-width: 896px) and (orientation: landscape) {
+            .viewer {
+                max-width: 100%;
+            }
+        }
+
         .image-container {
             position: relative;
             width: 100%;
@@ -170,6 +176,151 @@
             button {
                 padding: 10px 20px;
                 font-size: 14px;
+            }
+        }
+
+        /* Mobile landscape optimizations */
+        @media (max-width: 896px) and (orientation: landscape) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 15px;
+                max-width: 100%;
+                border-radius: 15px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+                margin-bottom: 15px;
+            }
+
+            .story-selector {
+                margin-bottom: 15px;
+            }
+
+            .story-selector label {
+                font-size: 14px;
+            }
+
+            .story-selector select {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+
+            .viewer {
+                margin-bottom: 15px;
+                max-width: 100%;
+            }
+
+            .image-container {
+                aspect-ratio: 16/9;
+                border-radius: 8px;
+            }
+
+            .controls {
+                gap: 10px;
+                margin-top: 15px;
+            }
+
+            button {
+                padding: 8px 16px;
+                font-size: 13px;
+                border-radius: 6px;
+                min-height: 36px; /* Minimum touch target */
+                min-width: 80px;
+            }
+
+            .info {
+                margin-top: 10px;
+                font-size: 12px;
+            }
+
+            .keyboard-hint {
+                margin-top: 8px;
+                font-size: 11px;
+            }
+        }
+
+        /* Small mobile landscape (phones) */
+        @media (max-width: 667px) and (orientation: landscape) {
+            body {
+                padding: 8px;
+            }
+
+            .container {
+                padding: 12px;
+            }
+
+            h1 {
+                font-size: 1.3em;
+                margin-bottom: 12px;
+            }
+
+            .story-selector {
+                margin-bottom: 12px;
+            }
+
+            .story-selector label {
+                font-size: 13px;
+            }
+
+            .story-selector select {
+                padding: 6px 10px;
+                font-size: 13px;
+            }
+
+            .viewer {
+                margin-bottom: 12px;
+            }
+
+            .controls {
+                gap: 8px;
+                margin-top: 12px;
+            }
+
+            button {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+
+            .info {
+                font-size: 11px;
+            }
+
+            .keyboard-hint {
+                font-size: 10px;
+            }
+        }
+
+        /* Very small mobile landscape */
+        @media (max-width: 568px) and (orientation: landscape) {
+            h1 {
+                font-size: 1.2em;
+                margin-bottom: 10px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .story-selector {
+                margin-bottom: 10px;
+            }
+
+            .viewer {
+                margin-bottom: 10px;
+            }
+
+            .controls {
+                gap: 6px;
+                margin-top: 10px;
+            }
+
+            button {
+                padding: 6px 10px;
+                font-size: 11px;
             }
         }
     </style>
