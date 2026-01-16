@@ -260,8 +260,31 @@ def build_scene_prompt(
     setting_context = ""
     
     all_characters = definitions.get("characters", {})
-    # Filter characters to only include those mentioned in scene purpose
-    characters = extract_characters_from_purpose(scene_purpose, all_characters)
+    
+    # Strategy: Always include main characters to ensure consistency
+    # 1. First, get characters mentioned in scene purpose
+    characters_from_purpose = extract_characters_from_purpose(scene_purpose, all_characters)
+    
+    # 2. If no characters found in purpose, or if we have few characters total, include all
+    # 3. Otherwise, prioritize main characters (those with "protagonist" or "main" in role)
+    if not all_characters:
+        characters = {}
+    elif len(all_characters) <= 5:
+        # Few characters: include all to ensure consistency
+        characters = all_characters
+    elif characters_from_purpose:
+        # Some characters found in purpose: use those
+        characters = characters_from_purpose
+    else:
+        # Many characters but none in purpose: include main characters
+        characters = {}
+        for char_key, char_data in all_characters.items():
+            role = char_data.get("role", "").lower()
+            if any(keyword in role for keyword in ["protagonist", "main", "hero", "heroine", "lead"]):
+                characters[char_key] = char_data
+        # If no main characters identified, include first 3 characters
+        if not characters:
+            characters = dict(list(all_characters.items())[:3])
     
     if characters:
         character_context = "\n\nAvailable Characters (use these consistently in your scenes):\n"
@@ -293,10 +316,12 @@ def build_scene_prompt(
     else:
         story_name = f'"{story_name}"'
     
-    prompt = f"""Generate a scene for a story called {story_name}. Write in the same style and format as the existing scenes.
-
-Core premise: {core_premise}
-{character_context}{setting_context}
+    # Only include core premise if it's provided
+    premise_section = ""
+    if core_premise:
+        premise_section = f"\nCore premise: {core_premise}\n"
+    
+    prompt = f"""Generate a scene for a story called {story_name}. Write in the same style and format as the existing scenes.{premise_section}{character_context}{setting_context}
 Act {act_number}: {act_title}
 Act description: {act_description}
 
@@ -369,9 +394,8 @@ def main() -> int:
 
     core_premise = ""
     if os.path.isfile(args.core_premise_file):
-        core_premise = read_text(args.core_premise_file)
-    else:
-        core_premise = "Human reality is a simulation. Jesus is a systems engineer from the originating civilization who entered as a constrained instance to deliver a corrective signal."
+        core_premise = read_text(args.core_premise_file).strip()
+    # If no core premise file exists, leave it empty - don't inject story-specific assumptions
 
     # Determine definitions file path
     if args.definitions_file is None:

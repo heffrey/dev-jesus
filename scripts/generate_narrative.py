@@ -196,17 +196,22 @@ Expand on this with rich, detailed, and creative additions. Fill in missing deta
         return user_input
 
 
-def generate_acts_structure(api_key: str, model: str, story_concept: str, cycles: list[int], max_retries: int, retry_base: float, verbose: bool = False) -> list[dict]:
+def generate_acts_structure(api_key: str, model: str, story_concept: str, cycles: list[int], characters_info: str = None, max_retries: int = 5, retry_base: float = 5.0, verbose: bool = False) -> list[dict]:
     """Generate acts structure based on the Four Cycles framework."""
     cycle_descriptions = [FOUR_CYCLES[c] for c in cycles]
     
     # Determine scene count per act based on total acts
     scenes_per_act = 4 if len(cycles) == 3 else 3  # 3 acts get 4 scenes each, 5 acts get 3 scenes each
     
+    # Build character context for the prompt
+    character_context = ""
+    if characters_info and characters_info.strip():
+        character_context = f"\n\nMain Characters:\n{characters_info}\n\nIMPORTANT: When writing scene purposes, explicitly mention character names so they are used consistently throughout the story."
+    
     prompt = f"""You are a narrative structure expert working with Jorge Luis Borges' "Los Cuatro Ciclos" (The Four Cycles) framework.
 
 Story Concept: {story_concept}
-
+{character_context}
 The Four Cycles to use:
 {chr(10).join([f"{i+1}. {c['name']}: {c['description']}" for i, c in enumerate(cycle_descriptions)])}
 
@@ -215,7 +220,7 @@ Create a compelling narrative structure with {len(cycles)} acts, each correspond
 2. Write a rich description (2-3 sentences) explaining how this act embodies the cycle and advances the story
 3. Suggest exactly {scenes_per_act} scenes for each act, with specific, dramatic purposes that build tension and character
 
-Be creative and specific. Make each act title memorable and each scene purpose clear and compelling.
+Be creative and specific. Make each act title memorable and each scene purpose clear and compelling. When writing scene purposes, explicitly include character names from the character list above.
 
 Return your response as a JSON array with this exact structure:
 [
@@ -597,7 +602,50 @@ def main() -> int:
             args.max_retries, args.retry_base, args.verbose
         )
 
-    # Generate acts structure
+    # Generate definitions FIRST (before acts) so we can use character info in scene purposes
+    print("\n" + "=" * 70)
+    print("GENERATING DEFINITIONS")
+    print("=" * 70)
+    if args.use_gemini:
+        print("\n  Generating comprehensive definitions with Gemini...", flush=True)
+        # Auto-generate missing info if not provided
+        if not eras:
+            eras = ["Contemporary, unspecified location"]
+        definitions = generate_definitions(
+            args.api_key, args.model, story_concept,
+            characters_info or "Generate compelling main characters based on the story concept",
+            settings_info or "Generate evocative settings based on the story concept",
+            extras_info or "Generate relevant objects and props based on the story concept",
+            style_info or "Generate a distinctive visual style appropriate for the story",
+            eras,
+            args.max_retries, args.retry_base, args.verbose
+        )
+    else:
+        # Minimal structure
+        if not eras:
+            eras = ["Contemporary, unspecified location"]
+        definitions = {
+            "characters": {},
+            "settings": {},
+            "extras": {},
+            "style": {}
+        }
+    
+    # Extract character names from definitions for use in acts generation
+    character_names_for_acts = ""
+    if definitions.get("characters"):
+        char_list = []
+        for char_key, char_data in definitions["characters"].items():
+            name = char_data.get("name", char_key)
+            role = char_data.get("role", "")
+            if role:
+                char_list.append(f"{name} ({role})")
+            else:
+                char_list.append(name)
+        if char_list:
+            character_names_for_acts = "\n".join(char_list)
+
+    # Generate acts structure (now with character information)
     print("\n" + "=" * 70)
     print("GENERATING ACTS STRUCTURE")
     print("=" * 70)
@@ -605,6 +653,7 @@ def main() -> int:
         print("\n  Generating acts based on selected cycles with Gemini...", flush=True)
         acts = generate_acts_structure(
             args.api_key, args.model, story_concept, cycles,
+            character_names_for_acts or characters_info,
             args.max_retries, args.retry_base, args.verbose
         )
     else:
@@ -646,35 +695,6 @@ def main() -> int:
                 "scenes": scenes
             })
 
-    # Generate definitions (always use Gemini if available, or create minimal structure)
-    print("\n" + "=" * 70)
-    print("GENERATING DEFINITIONS")
-    print("=" * 70)
-    if args.use_gemini:
-        print("\n  Generating comprehensive definitions with Gemini...", flush=True)
-        # Auto-generate missing info if not provided
-        if not eras:
-            eras = ["Contemporary, unspecified location"]
-        definitions = generate_definitions(
-            args.api_key, args.model, story_concept,
-            characters_info or "Generate compelling main characters based on the story concept",
-            settings_info or "Generate evocative settings based on the story concept",
-            extras_info or "Generate relevant objects and props based on the story concept",
-            style_info or "Generate a distinctive visual style appropriate for the story",
-            eras,
-            args.max_retries, args.retry_base, args.verbose
-        )
-    else:
-        # Minimal structure
-        if not eras:
-            eras = ["Contemporary, unspecified location"]
-        definitions = {
-            "characters": {},
-            "settings": {},
-            "extras": {},
-            "style": {}
-        }
-
     # Save files
     print("\n" + "=" * 70)
     print("SAVING FILES")
@@ -689,6 +709,14 @@ def main() -> int:
     with open(definitions_path, "w", encoding="utf-8") as handle:
         json.dump(definitions, handle, indent=2, ensure_ascii=False)
     print(f"  ✓ Created {definitions_path}")
+
+    # Create core-premise.md from story concept
+    core_premise_path = os.path.join(story_path, "core-premise.md")
+    with open(core_premise_path, "w", encoding="utf-8") as handle:
+        handle.write(story_concept)
+        if not story_concept.endswith("\n"):
+            handle.write("\n")
+    print(f"  ✓ Created {core_premise_path}")
 
     # Create README
     readme_path = os.path.join(story_path, "README.md")
