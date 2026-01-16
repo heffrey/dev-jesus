@@ -1,0 +1,188 @@
+{
+  "characters": {
+    "jim_ceruzi": {
+      "name": "Jim Ceruzi",
+      "aliases": [
+        "Elias Thorne",
+        "The Lion of Wall Street",
+        "The Great Elias Thorne"
+      ],
+      "description": "A ruthless corporate titan and founder of Ceruzi-Vance Global who specialized in hostile takeovers. Now facing terminal Stage IV glioblastoma, he is a man reckoning with the absolute isolation caused by a lifetime of treating human relationships as transactional assets.",
+      "appearance": {
+        "height_and_build": "6'2\" with a once-commanding frame now becoming gaunt and hollowed-out due to illness.",
+        "skin_tone": "Pale, sallow complexion with a sickly grey undertone #D1C4B2.",
+        "hair_style_and_color": "Short, meticulously groomed but thinning hair, colored a cold, steely silver-grey #A9A9A9.",
+        "eye_color": "Piercing, predatory ice-blue #4682B4, currently showing signs of clouding and fatigue.",
+        "facial_features": "Sharp, angular jawline, high cheekbones, and deep-set eyes surrounded by dark circles of exhaustion.",
+        "distinctive_features": "A subtle tremor in his right hand; a slight facial droop on the left side due to the tumor's progression.",
+        "clothing": "The 'Thorne Shroud': a bespoke midnight-wool and silk blend power suit #0A0A0F with high-peaked, structural lapels and subtle knife-pleated vents.",
+        "accessories": "Italian leather loafers in polished obsidian black #050505; a titanium and sapphire glass smartphone."
+      },
+      "role": "Protagonist",
+      "era": "Present Day Manhattan"
+    },
+    "julian_vance": {
+      "name": "Julian Vance",
+      "aliases": [
+        "The Ghost in the Hamptons"
+      ],
+      "description": "Jim's former business partner and once close friend who was ruthlessly ousted in a 2012 board coup. He represents the first major bridge Jim burned in his quest for total dominance.",
+      "appearance": {
+        "height_and_build": "Average height, slightly stooped posture reflecting his years of exile.",
+        "skin_tone": "Weathered, sun-damaged skin from years in the Hamptons #C68E62.",
+        "hair_style_and_color": "Receding, unkempt white hair #F5F5F5.",
+        "eye_color": "Dull, weary hazel #8E7618.",
+        "facial_features": "Softened features, a face marked by betrayal and the salt air of the coast.",
+        "distinctive_features": "Deep frown lines; usually seen in loose-fitting linen clothing.",
+        "clothing": "Faded navy polo #000080 and tan chinos #D2B48C.",
+        "accessories": "A simple gold wedding band."
+      },
+      "role": "Former Partner/Victim",
+      "era": "Present Day Manhattan"
+    },
+    "elena_ceruzi": {
+      "name": "Elena",
+      "aliases": [
+        "The Pulse of His Life"
+      ],
+      "description": "Jim's ex-wife who supported his early career but was eventually discarded for his empire. She now lives a solitary, wealthy life in Provence, serving as the conscience Jim chose to ignore.",
+      "appearance": {
+        "height_and_build": "Elegant and slender with a poised, graceful stature.",
+        "skin_tone": "Warm, olive-toned skin from the French sun #D2B48C.",
+        "hair_style_and_color": "Soft, shoulder-length chestnut brown with subtle gold highlights #5D3A1A.",
+        "eye_color": "Deep, empathetic brown #4B3621.",
+        "facial_features": "Refined features with high brows and expressive eyes that hold a permanent trace of sadness.",
+        "distinctive_features": "Fine laugh lines around the eyes that contrast with Jim's cold expression.",
+        "clothing": "Silk wrap dress in a muted lavender #967BB6.",
+        "accessories": "A simple pearl necklace; often carries a leather-bound journal."
+      },
+      "role": "Ex-Wife/Moral Compass",
+      "era": "Present Day Manhattan"
+    },
+    "claire_ceruzi": {
+      "name": "Claire",
+      "aliases": [
+        "The Portrait of Drive"
+      ],
+      "description": "Jim's eldest daughter, a successful and cold professional who has adopted her father's ruthlessness to protect herself from him. She is the ultimate symbol of his failed legacy.",
+      "appearance": {
+        "height_and_build": "Tall, athletic, and standing with a rigid, defensive posture.",
+        "skin_tone": "Fair and porcelain-like #F5F5DC.",
+        "hair_style_and_color": "Sharp, bob-cut blonde hair, impeccably styled #FAF0BE.",
+        "eye_color": "Cold, analytical grey-blue #778899.",
+        "facial_features": "Symmetry that borders on clinical; thin lips and a sharp nose.",
+        "distinctive_features": "A five-carat diamond necklace #E0FFFF that she wears as a symbol of her father's absence.",
+        "clothing": "Tailored charcoal grey power suit #36454F.",
+        "accessories": "A high-end luxury watch with a black leather strap."
+      },
+      "role": "Estranged Daughter",
+      "era": "Present Day Manhattan"
+    },
+    "marcus": {
+      "name": "Marcus",
+      "aliases": [],
+      "description": "The head of Elias Thorne's private security detail. A man built for the physical defense of a fortress, a human wall meant to filter out the inconveniences of the living. He represents the 'Gilded Reach' personified—the architectural arrogance of a man who believed he could buy safety through isolation.",
+      "appearance": {
+        "height_and_build": "Muscular, imposing frame built for physical defense. Rigid, attentive posture suggesting military or security training.",
+        "skin_tone": "Medium complexion, professional appearance #C8A882.",
+        "hair_style_and_color": "Short, professional cut, dark hair #2C2C2C.",
+        "eye_color": "Alert, focused eyes #4A4A4A.",
+        "facial_features": "Strong jawline, serious expression. Brow often furrowed in concentration or concern.",
+        "distinctive_features": "Professional, disciplined bearing. Often seen holding a tablet or communication device.",
+        "clothing": "Dark suit matching the corporate security aesthetic #0A0A0F, white dress shirt, conservative tie. Professional security detail uniform.",
+        "accessories": "Dark tablet or communication device. Professional security equipment."
+      },
+      "role": "Head of Security",
+      "era": "Present Day Manhattan"
+    }
+  },
+  "settings": {
+    "the_manhattan_monolith": {
+      "name": "The Manhattan Monolith",
+      "aliases": [
+        "Thorne Tower Penthouse",
+        "The 88th Floor"
+      ],
+      "description": "A 12,000-square-foot manifesto of monochromatic nihilism overlooking the city. It is a sterile, high-altitude vacuum designed to isolate its inhabitant from the human world below.",
+      "visual_details": {
+        "architecture_landscape_features": "Floor-to-ceiling glass walls; 30-foot obsidian conference table; heated herringbone white oak floors.",
+        "colors": "Nero Marquina marble black #050505; matte-black steel #1A1A1A; scorched shou sugi ban wood #2B2B2B.",
+        "lighting_conditions": "Recessed architectural lighting casting long, dramatic shadows; the violet-purple glow of a Manhattan sunset #4B0082.",
+        "textures_and_materials": "Polished marble, cold steel, charcoal velvet, and industrial-grade HEPA-filtered air.",
+        "atmospheric_elements": "A heavy, suffocating silence; the 'White Glove' concierge service ensuring total isolation.",
+        "time_of_day_weather": "Twilight/Sunset over the Hudson River."
+      },
+      "era": "Present Day Manhattan"
+    },
+    "the_gilded_reach": {
+      "name": "The Gilded Reach",
+      "aliases": [
+        "The Hamptons Fortress",
+        "The Montauk Estate"
+      ],
+      "description": "A six-acre oceanfront estate acting as a fortress against the world. It is a masterpiece of architectural arrogance that has become a cenotaph to Jim's social climbing.",
+      "visual_details": {
+        "architecture_landscape_features": "Weathered cedar siding; cold slate roofing; infinity pool bleeding into the Atlantic horizon; eighteen-foot privet hedges.",
+        "colors": "Weathered cedar grey #708090; slate blue #4682B4; deep Atlantic teal #008080.",
+        "lighting_conditions": "Harsh, unshielded coastal light reflecting off stainless steel and water.",
+        "textures_and_materials": "Corrosive salt spray; marine-grade stainless steel; rough-hewn teak decking.",
+        "atmospheric_elements": "The roar of the ocean sounding like a countdown; the smell of salt and old wealth.",
+        "time_of_day_weather": "Bright but cold afternoon."
+      },
+      "era": "Present Day Manhattan"
+    },
+    "142_miller_street": {
+      "name": "142 Miller Street",
+      "aliases": [
+        "The Childhood Home",
+        "The Scranton House"
+      ],
+      "description": "Jim's original home, now a decaying, hollowed-out husk. It serves as a physical manifestation of the soul Jim abandoned in his pursuit of wealth.",
+      "visual_details": {
+        "architecture_landscape_features": "Victorian house with a buckled wrap-around porch; boarded-up windows; overgrown yard with rusted machinery.",
+        "colors": "Faded, peeling white paint #F5F5F5; rusted iron brown #8B4513; dead ragweed tan #D2B48C.",
+        "lighting_conditions": "In memory: a perpetual golden hour #FFD700. In reality: bleak, flat daylight.",
+        "textures_and_materials": "Shattered glass; scrap plywood; rotting wood; waist-high ragweed.",
+        "atmospheric_elements": "The scent of cedar oil and pipe tobacco (memory) vs. the smell of damp rot (present).",
+        "time_of_day_weather": "Overcast and grey."
+      },
+      "era": "Present Day Manhattan/Memory"
+    }
+  },
+  "extras": {
+    "bmw_m8_competition": {
+      "name": "BMW M8 Competition",
+      "aliases": [
+        "The Stealth Predator"
+      ],
+      "description": "A high-performance luxury vehicle finished in Vantablack, designed to insulate Jim from the city he strip-mined.",
+      "appearance": "Coated in Vantablack #000000; interior features quilted charcoal Alcantara #2F4F4F and cold carbon fiber; digital HUD projecting tactical blue displays #00FFFF."
+    },
+    "the_rothko_painting": {
+      "name": "Untitled (Red and Orange)",
+      "aliases": [
+        "The Forty-Million-Dollar Wound"
+      ],
+      "description": "A massive abstract painting by Mark Rothko that Jim bought out of spite, now mirroring his internal decay.",
+      "appearance": "A texture-heavy expanse of vibrating, deep crimson #8B0000 and burnt orange #FF4500 that looks like an open, bleeding wound in the twilight."
+    },
+    "the_manila_folder": {
+      "name": "The Manila Folder",
+      "aliases": [
+        "The White Flag"
+      ],
+      "description": "A standard medical folder containing the diagnosis that signaled the end of Jim's reign.",
+      "appearance": "Stark buff-colored paper #F5DEB3; containing white 20lb bond paper printed with clinical black text; high contrast against the obsidian table."
+    }
+  },
+  "style": {
+    "description": "A cinematic, high-contrast visual style blending 'Brutalist Luxury' with 'Medical Realism.' The aesthetic emphasizes the scale of the architecture against the fragility of the human body.",
+    "typeface": "Sharp, minimalist sans-serif for modern elements; elegant, faded serif for memory sequences.",
+    "inking": "Fine-line detail with heavy, solid black areas (spot blacks) to emphasize the 'void' of the penthouse.",
+    "coloring": "Desaturated monochromatic palette for the present day, interrupted only by the 'bleeding' colors of art and sunsets; warm, saturated ambers for childhood memories.",
+    "line_width": "Ultra-thin, clinical lines for the penthouse; jagged, shaky lines for Jim's perspective as his vision blurs.",
+    "palette": "Obsidian #050505, Titanium #A0A0A0, Vantablack #000000, Copper #B87333, and Bruised Purple #4B0082.",
+    "shading": "Dramatic chiaroscuro; long, skeletal shadows cast by architectural features.",
+    "texture": "A contrast between surgical, polished surfaces (glass, marble) and organic decay (peeling paint, rotting wood)."
+  }
+}

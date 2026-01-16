@@ -1,0 +1,6 @@
+- Time: 5:42 PM (arrival) to 6:30 PM (entry into house); dusk/evening.
+- Transportation: Greyhound bus (arrived at station); two-mile walk on foot to Miller Street.
+- Location: 142 Miller Street, Scranton (The Scranton House); a decaying, two-story white structure with no electricity/power.
+- Character physical state: Elias is experiencing a deep, wet cough and a persistent metallic/copper taste; his nervous system is struggling to calibrate, resulting in an uneven gait.
+- Character clothing/items: Wearing a heavy, mass-produced wool overcoat and boots; possesses a heavy brass key used to force open the stubborn front door.
+- Plot development: Elias has abandoned his "Thorne Industries" persona and the "Manhattan Monolith" to return to his original "source code" identity in Scranton.

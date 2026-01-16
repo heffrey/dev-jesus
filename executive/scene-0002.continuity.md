@@ -1,0 +1,6 @@
+- **Time & Location**: 2:15 PM – 3:15 PM; moving from Apex Chambers (Midtown Manhattan) to a Greyhound station, destination 142 Miller Street, Scranton.
+- **Transportation**: Yellow taxi cab with cracked vinyl seats; driver is wearing a headset and speaking an unrecognized language.
+- **Objects**: Elias is wearing a "standard wool overcoat" (not his usual bespoke suits); he left a handwritten confession/technical log of the "midnight coup" on Julian’s desk.
+- **Character State (Elias Thorne)**: Experiencing adrenaline tremors in his hands; transitioning from an "omnipotent" corporate persona to a "vulnerable" and "constrained" state.
+- **Character State (Julian)**: Hard-eyed, bitter, and deeply exhausted; a former friend betrayed by Elias three years ago who now possesses the means to restore his reputation.
+- **Plot Development**: Thorne Industries is being liquidated; Elias has officially broken ties with his corporate life to return to his "source code" in Scranton.

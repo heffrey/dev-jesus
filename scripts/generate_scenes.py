@@ -286,7 +286,14 @@ def build_scene_prompt(
                 setting_info += f": {setting_data['description']}"
             setting_context += setting_info + "\n"
     
-    prompt = f"""Generate a scene for a story called "dev-jesus". Write in the same style and format as the existing scenes.
+    # Extract story name from output directory (e.g., "executive" from "executive" or "executive/")
+    story_name = os.path.basename(os.path.normpath(output_dir))
+    if story_name == "story":
+        story_name = "this story"  # Fallback for default "story" directory
+    else:
+        story_name = f'"{story_name}"'
+    
+    prompt = f"""Generate a scene for a story called {story_name}. Write in the same style and format as the existing scenes.
 
 Core premise: {core_premise}
 {character_context}{setting_context}

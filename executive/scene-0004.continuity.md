@@ -1,0 +1,6 @@
+- Time and Location: 10:14 AM – 11:02 AM; "The Gilded Reach" (Montauk, NY), a fortress-like estate of white concrete and glass.
+- Elias’s Physical State: Rapidly failing vessel; vision "stuttering" to reveal wireframe geometry; metallic taste in mouth; hacking cough; trembling hands and rattling lungs.
+- Elias’s Possessions: Cheap/heavy boots and a standard wool overcoat.
+- Claire’s State: Dressed in a charcoal-colored knit; cold, professional, and emotionally detached; views her father as a "variable factored out."
+- Plot Developments: Elias has liquidated Thorne Industries; the "Monolith" is empty; Julian possesses the company logs.
+- Reality/Simulation Detail: The simulation is unstable due to an encroaching "dev" signal; the estate briefly flickered to reveal a decaying house at "142 Miller Street."

@@ -146,16 +146,24 @@ def find_character_reference_images(
         remaining = max_references - len(prioritized_paths)
         prioritized_paths.extend(storyboard_images[:remaining])
     
+    # Get script root for resolving cross-directory references
+    script_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    
     valid_paths = []
     for ref_path in prioritized_paths:
         # Handle both relative and absolute paths
         if os.path.isabs(ref_path):
             full_path = ref_path
         else:
-            # Try relative to output_dir first, then relative to current working directory
+            # Try multiple resolution strategies:
+            # 1. Relative to output_dir
+            # 2. Relative to current working directory
+            # 3. Relative to script root (for cross-directory references like executive/boards/ref-*.jpg)
             full_path = os.path.join(output_dir, ref_path)
             if not os.path.isfile(full_path):
                 full_path = os.path.join(os.getcwd(), ref_path)
+            if not os.path.isfile(full_path):
+                full_path = os.path.join(script_root, ref_path)
         
         if os.path.isfile(full_path):
             valid_paths.append(full_path)
@@ -186,49 +194,276 @@ def update_character_references(
 
 
 def detect_entities(scene_text: str, definitions: dict) -> tuple[list[dict], list[dict], list[dict]]:
-    """Detect which characters, settings, and extras appear in the scene text."""
+    """Detect which characters, settings, and extras appear in the scene text.
+    
+    Improved detection that distinguishes between:
+    - Visually present: characters doing actions, speaking, or being directly observed
+    - Just mentioned: names in narration, metaphors, or references to other locations
+    """
     scene_lower = scene_text.lower()
     found_characters = []
     found_settings = []
     found_extras = []
+    
+    # Extract section headers to identify the actual setting
+    section_headers = []
+    for line in scene_text.splitlines():
+        if line.startswith("## "):
+            section_headers.append(line.lower())
 
-    # Check for characters
+    # Indicators of visual presence (defined once for reuse)
+    action_verbs = ['stood', 'walked', 'moved', 'looked', 'turned', 'entered', 'sat', 'hailed', 'said', 'spoke', 'reached', 'watched', 'felt', 'stepped', 'stepping', 'was', 'is', 'did', 'had', 'found', 'began', 'stopped', 'pulled', 'reached', 'stepped', 'slumped', 'sliding', 'waiting', 'began', 'struggled', 'calibrate', 'seized', 'leaving', 'forcing', 'exhaled', 'swallowing', 'adjust']
+    location_preps = [' at ', ' in ', ' on ', ' inside ', ' outside ', ' within ', ' of ', ' from ']
+    
+    # Check for characters - prioritize visually present (doing actions, speaking)
     for char_key, char_data in definitions.get("characters", {}).items():
         # Check name and aliases
         names_to_check = [char_key, char_data.get("name", "")]
         if "aliases" in char_data:
             names_to_check.extend(char_data["aliases"])
         
+        matched = False
+        is_visually_present = False
+        
         for name in names_to_check:
-            if name and name.lower() in scene_lower:
-                if char_data not in found_characters:
-                    found_characters.append(char_data)
-                break
+            if not name:
+                continue
+            name_lower = name.lower()
+            
+            # Check for exact match with word boundaries
+            pattern = r'\b' + re.escape(name_lower) + r'\b'
+            matches = list(re.finditer(pattern, scene_lower))
+            
+            if matches:
+                # Check if character is visually present (doing actions, speaking, or being directly observed)
+                for match in matches:
+                    start, end = match.span()
+                    # Get context around the match (50 chars before and after)
+                    context_start = max(0, start - 50)
+                    context_end = min(len(scene_lower), end + 50)
+                    context = scene_lower[context_start:context_end]
+                    
+                    # Indicators of visual presence:
+                    # - Character doing actions (verbs before/after name)
+                    # - Character speaking (quotes nearby)
+                    has_quotes = '"' in context or "'" in context
+                    # - Character being directly observed (pronouns, "he", "she", "they" nearby)
+                    has_pronouns = any(pronoun in context for pronoun in [' he ', ' she ', ' they ', ' his ', ' her ', ' their '])
+                    # - Character name in subject position (followed by verb)
+                    followed_by_verb = any(context[end - context_start:end - context_start + 20].startswith(verb) for verb in [' was ', ' is ', ' did ', ' had ', ' stood', ' walked', ' moved', ' looked', ' turned', ' entered', ' sat', ' hailed', ' said', ' spoke'])
+                    
+                    if any(verb in context for verb in action_verbs) or has_quotes or (has_pronouns and followed_by_verb):
+                        is_visually_present = True
+                        break
+                
+                # If visually present, add immediately; otherwise check if it's a strong mention
+                if is_visually_present:
+                    if char_data not in found_characters:
+                        found_characters.append(char_data)
+                    matched = True
+                    break
+                # If not visually present but mentioned, only add if it's a direct reference (not just in narration)
+                elif any(match for match in matches if '"' in scene_lower[max(0, match.start()-20):match.end()+20]):
+                    # Character mentioned in dialogue - likely present
+                    if char_data not in found_characters:
+                        found_characters.append(char_data)
+                    matched = True
+                    break
+            
+            # For multi-word names/aliases, check individual words but require visual presence indicators
+            # Exclude common words that cause false positives
+            common_words = {'the', 'of', 'in', 'a', 'an', 'and', 'or', 'to', 'for', 'with', 'from', 'on', 'at', 'by', 'as', 'is', 'was', 'are', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'must', 'can'}
+            words = name_lower.split()
+            if len(words) > 1 and not matched:
+                for word in words:
+                    # Skip common words and require substantial words (4+ chars) for word matching
+                    if len(word) >= 4 and word not in common_words:
+                        word_pattern = r'\b' + re.escape(word) + r'\b'
+                        word_matches = list(re.finditer(word_pattern, scene_lower))
+                        for match in word_matches:
+                            start, end = match.span()
+                            context = scene_lower[max(0, start-30):min(len(scene_lower), end+30)]
+                            # Only match if there are action indicators nearby (stronger requirement)
+                            if any(verb in context for verb in action_verbs) or '"' in context:
+                                if char_data not in found_characters:
+                                    found_characters.append(char_data)
+                                matched = True
+                                break
+                        if matched:
+                            break
+                if matched:
+                    break
+        
+        # Fallback: only if substantial name and in dialogue or action context
+        if not matched:
+            for name in names_to_check:
+                if not name or len(name) < 4:
+                    continue
+                name_lower = name.lower()
+                if name_lower in scene_lower:
+                    # Check if in dialogue or action context
+                    idx = scene_lower.find(name_lower)
+                    context = scene_lower[max(0, idx-30):min(len(scene_lower), idx+len(name_lower)+30)]
+                    if '"' in context or any(verb in context for verb in [' said', ' spoke', ' asked', ' replied', ' stood', ' walked', ' moved']):
+                        if char_data not in found_characters:
+                            found_characters.append(char_data)
+                        break
 
-    # Check for settings
+    # Check for settings - prioritize actual location vs just mentioned
     for setting_key, setting_data in definitions.get("settings", {}).items():
         # Check name and aliases
         names_to_check = [setting_key, setting_data.get("name", "")]
         if "aliases" in setting_data:
             names_to_check.extend(setting_data["aliases"])
         
+        matched = False
+        is_actual_location = False
+        
         for name in names_to_check:
-            if name and name.lower() in scene_lower:
-                if setting_data not in found_settings:
-                    found_settings.append(setting_data)
-                break
+            if not name:
+                continue
+            name_lower = name.lower()
+            pattern = r'\b' + re.escape(name_lower) + r'\b'
+            matches = list(re.finditer(pattern, scene_lower))
+            
+            if matches:
+                # Check if it's the actual location (in section header, or with location indicators)
+                for match in matches:
+                    start, end = match.span()
+                    before_context = scene_lower[max(0, start-60):start]
+                    after_context = scene_lower[end:min(len(scene_lower), end+40)]
+                    context = scene_lower[max(0, start-30):min(len(scene_lower), end+30)]
+                    
+                    # FIRST: Check if it's clearly just a reference (exclude these immediately)
+                    # Check both before and after context for reference phrases
+                    combined_context = before_context + ' ' + after_context
+                    reference_indicators = [
+                        ' from ', 'from the', ' toward ', 'toward the', ' heading toward', ' heading to',
+                        ' leaving ', ' behind ', ' observing ', ' no longer ', ' height of the',
+                        ' monuments of ', ' decaying husk of ', ' returning to ', ' back to ',
+                        ' going to ', ' destination ', 'heading toward the', 'toward the decaying'
+                    ]
+                    is_just_reference = any(indicator in combined_context for indicator in reference_indicators)
+                    
+                    if is_just_reference:
+                        # Skip this match - it's just a reference, not the actual location
+                        continue
+                    
+                    # Indicators of actual location:
+                    # - In section header (time/location markers) - strongest indicator
+                    in_header = any(name_lower in header for header in section_headers)
+                    if in_header:
+                        is_actual_location = True
+                        break
+                    
+                    # - Positive location prepositions (at, in, inside, outside, on, within)
+                    positive_location_preps = [' at ', ' in ', ' inside ', ' outside ', ' within ', ' on ']
+                    has_positive_prep = any(prep in context for prep in positive_location_preps)
+                    if has_positive_prep:
+                        is_actual_location = True
+                        break
+                
+                if is_actual_location:
+                    if setting_data not in found_settings:
+                        found_settings.append(setting_data)
+                    matched = True
+                    break
+            
+            # For multi-word settings, check individual words but require location indicators
+            # Exclude common words and be very strict about reference phrases
+            # IMPORTANT: If the full name was found but skipped as a reference, don't try word matching
+            # (this prevents "street" from "142 Miller Street" matching "street" in "street level")
+            common_words = {'the', 'of', 'in', 'a', 'an', 'and', 'or', 'to', 'for', 'with', 'from', 'on', 'at', 'by', 'as'}
+            words = name_lower.split()
+            # Only do word matching if we haven't found any matches yet AND the full name wasn't a reference
+            full_name_was_reference = False
+            if matches:
+                for match in matches:
+                    start, end = match.span()
+                    before_context = scene_lower[max(0, start-60):start]
+                    after_context = scene_lower[end:min(len(scene_lower), end+40)]
+                    combined_context = before_context + ' ' + after_context
+                    reference_indicators = [
+                        ' from ', 'from the', ' toward ', 'toward the', ' heading toward', ' heading to',
+                        ' leaving ', ' behind ', ' observing ', ' no longer ', ' height of the',
+                        ' monuments of ', ' decaying husk of ', ' returning to ', ' back to ',
+                        ' going to ', ' destination ', 'heading toward the', 'toward the decaying'
+                    ]
+                    if any(indicator in combined_context for indicator in reference_indicators):
+                        full_name_was_reference = True
+                        break
+            
+            if len(words) > 1 and not matched and not full_name_was_reference:
+                for word in words:
+                    # Skip common words and require substantial words (4+ chars)
+                    if len(word) >= 4 and word not in common_words:
+                        word_pattern = r'\b' + re.escape(word) + r'\b'
+                        word_matches = list(re.finditer(word_pattern, scene_lower))
+                        for match in word_matches:
+                            start, end = match.span()
+                            before_context = scene_lower[max(0, start-60):start]
+                            after_context = scene_lower[end:min(len(scene_lower), end+40)]
+                            combined_context = before_context + ' ' + after_context
+                            
+                            # Check if it's a reference (same check as above)
+                            reference_indicators = [
+                                ' from ', 'from the', ' toward ', 'toward the', ' heading toward', ' heading to',
+                                ' leaving ', ' behind ', ' observing ', ' no longer ', ' height of the',
+                                ' monuments of ', ' decaying husk of ', ' returning to ', ' back to ',
+                                ' going to ', ' destination ', 'heading toward the', 'toward the decaying'
+                            ]
+                            is_just_reference = any(indicator in combined_context for indicator in reference_indicators)
+                            
+                            if is_just_reference:
+                                continue
+                            
+                            # Only match if positive location indicators present (not references)
+                            # But be careful: if word appears in header, make sure it's actually referring to this setting
+                            # (e.g., "street" in "The Street Level" shouldn't match "142 Miller Street")
+                            positive_location_preps = [' at ', ' in ', ' inside ', ' outside ', ' within ', ' on ']
+                            has_positive_prep = any(prep in combined_context for prep in positive_location_preps)
+                            # Check if word in header is actually referring to this setting (not just a common word)
+                            in_header = False
+                            if len(word) >= 5:  # Only check substantial words (avoid "the", "of", etc.)
+                                for header in section_headers:
+                                    # Make sure the word appears in context that suggests it's this setting
+                                    if word in header and word in combined_context:
+                                        # Check if the full setting name is nearby
+                                        full_name_nearby = name_lower in combined_context
+                                        if full_name_nearby:
+                                            in_header = True
+                                            break
+                            
+                            if (has_positive_prep or in_header) and not is_just_reference:
+                                if setting_data not in found_settings:
+                                    found_settings.append(setting_data)
+                                matched = True
+                                break
+                        if matched:
+                            break
+                if matched:
+                    break
 
     # Check for extras
+    # For extras, be more strict - only match full names/aliases to avoid false positives
+    # Extras are specific objects and partial word matches are likely incorrect
     for extra_key, extra_data in definitions.get("extras", {}).items():
         # Check name and aliases
         names_to_check = [extra_key, extra_data.get("name", "")]
         if "aliases" in extra_data:
             names_to_check.extend(extra_data["aliases"])
         
+        matched = False
         for name in names_to_check:
-            if name and name.lower() in scene_lower:
+            if not name:
+                continue
+            name_lower = name.lower()
+            # Only match full name/alias with word boundaries (no partial word matching)
+            pattern = r'\b' + re.escape(name_lower) + r'\b'
+            if re.search(pattern, scene_lower):
                 if extra_data not in found_extras:
                     found_extras.append(extra_data)
+                matched = True
                 break
 
     return found_characters, found_settings, found_extras
@@ -262,17 +497,32 @@ def extract_sections(scene_text: str) -> list[tuple[str, str]]:
     return sections
 
 
-def divide_scene_into_storyboards(scene_text: str, min_storyboards: int = 3, max_storyboards: int = 5) -> list[tuple[str, str]]:
-    """Divide a scene into multiple storyboard chunks. Returns list of (chunk_title, chunk_text) tuples."""
+def divide_scene_into_storyboards(scene_text: str, min_storyboards: int = 4, max_storyboards: int = 6) -> list[tuple[str, str]]:
+    """Divide a scene into multiple storyboard chunks. Returns list of (chunk_title, chunk_text) tuples.
+    
+    Improved to be dialog-aware: splits at dialog boundaries when possible to allow richer dialog scenes.
+    """
     sections = extract_sections(scene_text)
     storyboards = []
     
     if sections:
         # If we have sections, try to group them into storyboards
-        # Each storyboard should cover 1-2 sections
+        # Each storyboard should cover 1-2 sections, but be more flexible for dialog-heavy sections
         sections_per_storyboard = max(1, len(sections) // max_storyboards)
         if sections_per_storyboard < 1:
             sections_per_storyboard = 1
+        
+        # Check if any section is dialog-heavy (has multiple quoted passages)
+        dialog_heavy_sections = []
+        for idx, (title, body) in enumerate(sections):
+            dialog_count = len(re.findall(r'["\']', body))
+            # If section has 3+ dialog quotes, it might benefit from being split
+            if dialog_count >= 3:
+                dialog_heavy_sections.append(idx)
+        
+        # If we have dialog-heavy sections and room, split them further
+        if dialog_heavy_sections and len(sections) < max_storyboards * 1.5:
+            sections_per_storyboard = 1  # One section per storyboard for dialog-heavy scenes
         
         for i in range(0, len(sections), sections_per_storyboard):
             chunk_sections = sections[i:i + sections_per_storyboard]
@@ -280,12 +530,21 @@ def divide_scene_into_storyboards(scene_text: str, min_storyboards: int = 3, max
             chunk_text = "\n\n".join([f"## {title}\n\n{body}" for title, body in chunk_sections])
             storyboards.append((chunk_title, chunk_text))
     else:
-        # If no sections, divide by paragraphs
+        # If no sections, divide by paragraphs, but be dialog-aware
         paragraphs = [p.strip() for p in scene_text.split("\n\n") if p.strip() and not p.strip().startswith("#")]
         if not paragraphs:
             paragraphs = [scene_text]
         
-        paragraphs_per_storyboard = max(1, len(paragraphs) // max_storyboards)
+        # Check dialog density - if paragraphs have lots of dialog, use smaller chunks
+        total_dialog = sum(len(re.findall(r'["\']', p)) for p in paragraphs)
+        avg_dialog_per_para = total_dialog / len(paragraphs) if paragraphs else 0
+        
+        # If average dialog per paragraph is high, use smaller chunks
+        if avg_dialog_per_para >= 2:
+            paragraphs_per_storyboard = max(1, len(paragraphs) // (max_storyboards + 1))
+        else:
+            paragraphs_per_storyboard = max(1, len(paragraphs) // max_storyboards)
+        
         if paragraphs_per_storyboard < 1:
             paragraphs_per_storyboard = 1
         
@@ -314,46 +573,211 @@ def divide_scene_into_storyboards(scene_text: str, min_storyboards: int = 3, max
     return storyboards
 
 
-def derive_panel_instructions(chunk_text: str, panel_count: int) -> list[str]:
-    """Generate panel instructions for a storyboard chunk."""
+def derive_panel_instructions(chunk_text: str, panel_count: int, detected_characters: list[dict] = None) -> list[str]:
+    """Generate panel instructions for a storyboard chunk, with special attention to dialog.
+    
+    Args:
+        chunk_text: The text content of the chunk
+        panel_count: Number of panels to generate
+        detected_characters: List of character dicts detected in this chunk (for explicit naming)
+    """
     sections = extract_sections(chunk_text)
     instructions = []
+    
+    # Extract character names for explicit mention in instructions
+    character_names = []
+    if detected_characters:
+        for char in detected_characters:
+            name = char.get('name', '')
+            if name:
+                character_names.append(name)
+                # Also check for aliases
+                if 'aliases' in char:
+                    character_names.extend(char['aliases'])
 
     if sections:
         for title, body in sections:
-            # Extract key moments from the body
+            # Extract key moments from the body, prioritizing dialog
             paragraphs = [p.strip() for p in body.split("\n\n") if p.strip()]
-            for para in paragraphs[:2]:  # Take up to 2 paragraphs per section
+            
+            # First, look for dialog (quoted text) - these get their own panels
+            # Use a more robust regex to find dialog with context
+            dialog_pattern = r'["\']([^"\']+)["\']'
+            dialog_matches = list(re.finditer(dialog_pattern, body))
+            
+            for match in dialog_matches[:4]:  # Up to 4 dialog quotes per section
+                quote = match.group(1)
+                start_pos = match.start()
+                end_pos = match.end()
+                
+                # Find the paragraph containing this quote
+                para_start = body.rfind('\n\n', 0, start_pos) + 2
+                if para_start < 2:
+                    para_start = 0
+                para_end = body.find('\n\n', end_pos)
+                if para_end == -1:
+                    para_end = len(body)
+                
+                para_text = body[para_start:para_end].strip()
+                
+                # Get the sentence containing the quote
+                sentences = re.split(r'(?<=[.!?])\s+', para_text)
+                quote_context = ""
+                for sent in sentences:
+                    if quote in sent:
+                        quote_context = sent.strip()
+                        break
+                
+                if quote_context and quote_context not in instructions:
+                    instructions.append(f"{title}: {quote_context}")
+                elif quote and f'"{quote}"' not in str(instructions):
+                    instructions.append(f"{title}: Character says: \"{quote}\"")
+            
+            # Then extract key narrative moments (up to 3 per section to allow for dialog)
+            narrative_count = 0
+            for para in paragraphs:
+                if narrative_count >= 3:  # Increased from 2 to allow more panels
+                    break
+                # Skip if this paragraph is mostly dialog (has 2+ quotes)
+                quote_count = len(re.findall(r'["\']', para))
+                if quote_count >= 2:
+                    continue
                 sentence = first_sentence(para)
-                if sentence:
-                    instructions.append(f"{title}: {sentence}")
+                if sentence and sentence not in instructions:
+                    # If we have detected characters, try to make the sentence more explicit
+                    enhanced_sentence = ensure_character_mentioned(sentence, character_names, para)
+                    instructions.append(f"{title}: {enhanced_sentence}")
+                    narrative_count += 1
     else:
         paragraphs = [p.strip() for p in chunk_text.split("\n\n") if p.strip()]
+        
+        # First extract dialog - process paragraph by paragraph to avoid cross-paragraph issues
         for paragraph in paragraphs:
+            # Find all dialog quotes in this paragraph
+            dialog_pattern = r'["\']([^"\']+)["\']'
+            dialog_matches = list(re.finditer(dialog_pattern, paragraph))
+            
+            for match in dialog_matches[:2]:  # Up to 2 quotes per paragraph
+                quote = match.group(1)
+                # Skip very short quotes (likely punctuation artifacts)
+                if len(quote.strip()) < 3:
+                    continue
+                
+                # Get the sentence containing the quote
+                sentences = re.split(r'(?<=[.!?])\s+', paragraph)
+                quote_context = ""
+                for sent in sentences:
+                    if quote in sent:
+                        quote_context = sent.strip()
+                        break
+                
+                if quote_context and quote_context not in instructions:
+                    instructions.append(quote_context)
+                    if len(instructions) >= 5:  # Limit total dialog panels
+                        break
+            if len(instructions) >= 5:
+                break
+        
+        # Then extract narrative moments
+        for paragraph in paragraphs:
+            # Skip if mostly dialog (has 2+ quotes)
+            quote_count = len(re.findall(r'["\']', paragraph))
+            if quote_count >= 2:
+                continue
             sentence = first_sentence(paragraph)
-            if sentence:
-                instructions.append(sentence)
+            if sentence and sentence not in instructions:
+                # If we have detected characters, try to make the sentence more explicit
+                enhanced_sentence = ensure_character_mentioned(sentence, character_names, paragraph)
+                instructions.append(enhanced_sentence)
 
     if not instructions:
         instructions = ["Establish the setting and key characters."]
 
     if panel_count is None:
-        panel_count = max(3, min(5, len(instructions)))
+        # Increased default range to 4-6 panels to allow for richer dialog
+        panel_count = max(4, min(6, len(instructions)))
 
     if len(instructions) > panel_count:
         instructions = instructions[:panel_count]
     elif len(instructions) < panel_count:
-        padding = [
-            "Atmospheric wide shot that reinforces the mood.",
-            "Close-up on a key character reaction.",
-            "Transition shot that hints at the next beat.",
-            "Establishing shot of the environment.",
-            "Detail shot showing important visual elements."
-        ]
+        # Generate character-specific padding if characters are detected
+        if character_names:
+            primary_char = character_names[0]  # Use first detected character
+            padding = [
+                f"Atmospheric wide shot showing {primary_char} in the environment.",
+                f"Close-up on {primary_char}'s reaction or expression.",
+                f"Transition shot with {primary_char} that hints at the next beat.",
+                f"Establishing shot of the environment with {primary_char} visible.",
+                f"Detail shot showing {primary_char} and important visual elements."
+            ]
+        else:
+            padding = [
+                "Atmospheric wide shot that reinforces the mood.",
+                "Close-up on a key character reaction.",
+                "Transition shot that hints at the next beat.",
+                "Establishing shot of the environment.",
+                "Detail shot showing important visual elements."
+            ]
         while len(instructions) < panel_count:
             instructions.append(padding[(len(instructions) - 1) % len(padding)])
 
     return instructions
+
+
+def ensure_character_mentioned(sentence: str, character_names: list[str], context: str = "") -> str:
+    """Ensure a sentence explicitly mentions a character if one is detected.
+    
+    Replaces pronouns (he, she, they) with character names when character_names are provided.
+    """
+    if not character_names:
+        return sentence
+    
+    # Find the primary character (first one in the list)
+    primary_char = character_names[0]
+    
+    # Check if sentence already mentions any character name
+    sentence_lower = sentence.lower()
+    for name in character_names:
+        if name.lower() in sentence_lower:
+            return sentence  # Already mentions a character
+    
+    # Try to replace pronouns with character name
+    enhanced = sentence
+    sentence_lower = sentence.lower()
+    
+    # Pattern: "he/she/they [verb]" -> "[Character] [verb]"
+    # Replace all instances, not just first - process in order to avoid double replacement
+    pronoun_replacements = [
+        (r'\bhis\s+', f'{primary_char}\'s '),  # Do possessive first to avoid matching "his" in "he"
+        (r'\bher\s+', f'{primary_char}\'s '),  # Do possessive first
+        (r'\btheir\s+', f'{primary_char}\'s '),  # Do possessive first
+        (r'\bhe\s+', f'{primary_char} '),
+        (r'\bshe\s+', f'{primary_char} '),
+        (r'\bthey\s+', f'{primary_char} '),
+        (r'\bhim\s+', f'{primary_char} '),
+        (r'\bher\b', f'{primary_char}'),  # Without space for end of sentence
+    ]
+    
+    for pattern, replacement in pronoun_replacements:
+        if re.search(pattern, sentence_lower):
+            enhanced = re.sub(pattern, replacement, enhanced, flags=re.IGNORECASE)
+            sentence_lower = enhanced.lower()  # Update for next check
+    
+    # If still no character mentioned and sentence uses pronouns, prepend character name
+    if enhanced == sentence or (not any(name.lower() in enhanced.lower() for name in character_names) and any(pronoun in sentence_lower for pronoun in [' he ', ' she ', ' they ', ' his ', ' her ', ' their '])):
+        # Try to replace at the start if sentence begins with pronoun-like structure
+        if re.match(r'^(the|a|an)\s+', sentence_lower):
+            enhanced = f"{primary_char}: {sentence}"
+        else:
+            # Insert character name before first verb or after first few words
+            words = sentence.split()
+            if len(words) > 3:
+                # Insert after first few words if sentence is long
+                enhanced = ' '.join(words[:2] + [primary_char] + words[2:])
+            else:
+                enhanced = f"{primary_char}: {sentence}"
+    
+    return enhanced
 
 
 def build_character_reference_prompt(
@@ -653,8 +1077,10 @@ def build_style_reference_prompt(style: dict) -> str:
         "",
         "Style Requirements:",
         "- Format: comic book panels",
-        "- Show multiple examples: character close-up, action scene, dialogue panel, establishing shot",
+        "- Show multiple examples: empty dialogue panel, establishing shot (environment only), prop/object detail, background scene",
         "- Demonstrate consistent application of all style elements",
+        "- CRITICAL: DO NOT include any individuals, people, or characters in this style reference",
+        "- Focus on environments, objects, props, backgrounds, and typography only",
     ])
     
     if style_details:
@@ -666,10 +1092,16 @@ def build_style_reference_prompt(style: dict) -> str:
         "Requirements:",
         "- Single panel or multi-panel reference showing the complete visual style",
         "- Include examples of: lettering/typography, inking, coloring, line work, shading",
-        "- Show how dialogue bubbles, captions, and sound effects are styled",
+        "- Show how dialogue bubbles, captions, and sound effects are styled (use placeholder text, no characters)",
         "- Demonstrate the color palette usage and limitations",
         "- Show consistent line width and inking technique",
         "- This image will be used as the PRIMARY style reference for ALL future storyboards",
+        "",
+        "CRITICAL RESTRICTIONS:",
+        "- DO NOT include any people, individuals, or characters in this style reference image",
+        "- DO NOT show faces, bodies, or any human forms",
+        "- Focus on environments, objects, props, backgrounds, typography, and abstract style elements only",
+        "- This ensures the style reference does not interfere with character generation",
         "",
         "CRITICAL: This is the master style reference. ALL future storyboards must match this style EXACTLY.",
         "Every panel must use the same typeface, inking style, coloring approach, line width, and palette.",
@@ -743,6 +1175,7 @@ def build_prompt(
     extra_references: dict = None,
     setting_references: dict = None,
     style_reference_path: str = None,
+    style: dict = None,
 ) -> str:
     lines = [
         f"Create a {len(panel_instructions)}-panel comic book.",
@@ -778,33 +1211,39 @@ def build_prompt(
             if not has_ref_images and "appearance" in char:
                 char_lines.append(f"  Appearance: {char['appearance']}")
             elif has_ref_images:
-                char_lines.append(f"  Visual Reference: A canonical reference image is provided below. Use it as the PRIMARY source for this character's appearance. Match it EXACTLY.")
+                char_lines.append(f"  Visual Reference: A CANONICAL reference image (ref-*.jpg/png) is provided below. This is the ABSOLUTE, DEFINITIVE source for this character's appearance. You MUST match it EXACTLY - do NOT improvise or modify. The canonical reference image overrides ALL text descriptions.")
             
             lines.extend(char_lines)
         lines.append("")
         
-        # Add visual reference section if we have references
+        # Add consolidated visual reference section if we have references
         if character_references:
-            has_references = False
-            ref_lines = []
+            has_canonical_refs = False
+            has_storyboard_refs = False
+            canonical_chars = []
+            storyboard_chars = []
+            
             for char in characters:
                 char_name = char.get('name', 'Unknown')
                 if char_name in character_references and character_references[char_name]:
-                    has_references = True
-                    # Check if we have a canonical ref- image
                     ref_paths = character_references[char_name]
                     has_canonical = any(
                         os.path.basename(p).lower().startswith("ref-") 
                         for p in ref_paths
                     )
                     if has_canonical:
-                        ref_lines.append(f"- {char_name}: A canonical reference image is provided below. This is the DEFINITIVE visual reference. Match this character's appearance EXACTLY as shown in the reference image. Do NOT improvise or modify the character's appearance. Use the reference image as the sole source of truth for facial features, clothing, hair, build, and all physical characteristics.")
+                        has_canonical_refs = True
+                        canonical_chars.append(char_name)
                     else:
-                        ref_lines.append(f"- {char_name}: Reference images from previous storyboards are included below. Match the character's appearance EXACTLY as shown in those reference images.")
+                        has_storyboard_refs = True
+                        storyboard_chars.append(char_name)
             
-            if has_references:
-                lines.append("CRITICAL Visual Reference Instructions:")
-                lines.extend(ref_lines)
+            if has_canonical_refs or has_storyboard_refs:
+                lines.append("CRITICAL: Visual Reference Instructions")
+                if has_canonical_refs:
+                    lines.append(f"- Characters with CANONICAL references ({', '.join(canonical_chars)}): Match EXACTLY as shown in the canonical reference images. These are the ABSOLUTE source of truth. Do NOT modify or interpret.")
+                if has_storyboard_refs:
+                    lines.append(f"- Characters with storyboard references ({', '.join(storyboard_chars)}): Match EXACTLY as shown in previous storyboard images.")
                 lines.append("")
 
     # Add setting definitions
@@ -859,43 +1298,7 @@ def build_prompt(
             lines.extend(extra_lines)
         lines.append("")
         
-        # Add visual reference section for extras if we have references
-        if extra_references:
-            has_references = False
-            ref_lines = []
-            for extra in extras:
-                extra_name = extra.get('name', 'Unknown')
-                if extra_name in extra_references and extra_references[extra_name]:
-                    has_references = True
-                    ref_paths = extra_references[extra_name]
-                    has_canonical = any(
-                        os.path.basename(p).lower().startswith("ref-extra-") 
-                        for p in ref_paths
-                    )
-                    if has_canonical:
-                        ref_lines.append(f"- {extra_name}: A canonical reference image is provided below. This is the DEFINITIVE visual reference. Match this extra's appearance EXACTLY as shown in the reference image.")
-            
-            if has_references:
-                lines.append("CRITICAL Extra Visual Reference Instructions:")
-                lines.extend(ref_lines)
-                lines.append("")
-    
-    # Add setting visual reference section if we have references
-    if setting_references:
-        has_references = False
-        ref_lines = []
-        for setting in settings:
-            setting_name = setting.get('name', 'Unknown')
-            if setting_name in setting_references:
-                refs = setting_references[setting_name]
-                if refs.get("indoor") or refs.get("outdoor"):
-                    has_references = True
-                    ref_lines.append(f"- {setting_name}: Reference images are provided below. Use them as the PRIMARY source for this setting's appearance. Match them EXACTLY.")
-        
-        if has_references:
-            lines.append("CRITICAL Setting Visual Reference Instructions:")
-            lines.extend(ref_lines)
-            lines.append("")
+        # Extras and settings references are handled in the main reference section below
     
     # Add master style reference if available
     if style_reference_path:
@@ -921,19 +1324,52 @@ def build_prompt(
     for index, instruction in enumerate(panel_instructions, start=1):
         lines.append(f"{index}) {instruction}")
 
-    lines.extend(
-        [
+    # Build style section from definitions if available, otherwise use generic defaults
+    style_lines = [
             "",
             "Style:",
             "- format: comic book",
-            "- color: limited-palette",
-            "- linework: inked",
-            "- era: biblical-meets-sci-fi",
+    ]
+    
+    # Use style definitions if available
+    if style:
+        if "coloring" in style:
+            style_lines.append(f"- color: {style['coloring']}")
+        else:
+            style_lines.append("- color: limited-palette")
+        
+        if "inking" in style:
+            style_lines.append(f"- linework: {style['inking']}")
+        else:
+            style_lines.append("- linework: inked")
+        
+        if "palette" in style:
+            style_lines.append(f"- palette: {style['palette']}")
+        
+        if "shading" in style:
+            style_lines.append(f"- shading: {style['shading']}")
+        
+        if "texture" in style:
+            style_lines.append(f"- texture: {style['texture']}")
+    else:
+        # Generic defaults if no style definitions
+        style_lines.append("- color: limited-palette")
+        style_lines.append("- linework: inked")
+    
+    style_lines.extend([
             f"- mood: {mood}",
             f"- camera: {camera}",
             "",
             "Lettering and Typography:",
-            "- Font: Comic Sans (or Comic Sans-style lettering) for all text",
+    ])
+    
+    # Use typeface from style definitions if available
+    if style and "typeface" in style:
+        style_lines.append(f"- Font: {style['typeface']}")
+    else:
+        style_lines.append("- Font: Use consistent comic book lettering style for all text")
+    
+    style_lines.extend([
             "- Use consistent lettering style across all panels",
             "- All dialogue and text should use the same font family and size",
             "- Lettering should be clear, readable, and professionally rendered",
@@ -942,24 +1378,42 @@ def build_prompt(
             "- Ensure text is properly integrated with the art (not floating or misaligned)",
             "- All panels must share the same typographic treatment",
             "",
-            "CRITICAL: Visual consistency:",
-            "- If reference images are provided for characters, use them as the PRIMARY and DEFINITIVE source for appearance",
-            "- Do NOT improvise or modify character appearance when reference images are provided",
-            "- Match reference images EXACTLY - facial features, clothing, hair, build, all physical characteristics",
-            "- If reference images are provided for extras, use them as the PRIMARY source and match them EXACTLY",
-            "- If reference images are provided for settings, use them as the PRIMARY source and match them EXACTLY",
+    ])
+    
+    lines.extend(style_lines)
+    # Consolidated consistency section
+    has_any_refs = bool(characters and character_references) or bool(extras and extra_references) or bool(settings and setting_references)
+    has_canonical = False
+    if character_references:
+        for char in characters:
+            char_name = char.get('name', 'Unknown')
+            if char_name in character_references:
+                ref_paths = character_references[char_name]
+                if any(os.path.basename(p).lower().startswith("ref-") for p in ref_paths):
+                    has_canonical = True
+                    break
+    
+    if has_any_refs:
+        lines.extend([
+            "",
+            "CRITICAL: Visual Consistency Requirements",
+            "",
+        ])
+        
+        if has_canonical:
+            lines.append("⚠️ CANONICAL REFERENCES: Match characters EXACTLY as shown in canonical reference images (ref-*.jpg/png). These override all text descriptions.")
+            lines.append("")
+        
+        lines.extend([
+            "- Reference images are the PRIMARY source for appearance - match them EXACTLY",
+            "- Characters, extras, and settings must look IDENTICAL across all panels",
             "- Only use text descriptions if no reference images are available",
-            "- If a master style reference is provided, it takes precedence over all other style instructions",
-            "- Maintain consistent visual details, architecture, and atmosphere for each setting",
-            "- If a character, extra, or setting appears in multiple panels, they must look identical",
+            "- Master style reference takes precedence over all style instructions",
             "",
             "Negative prompts:",
             f"- {negative_prompt}",
-            "- inconsistent fonts, mismatched lettering, varying text styles",
-            "- inconsistent character appearance, changing facial features, different clothing",
-            "- inconsistent setting details, changing architecture, varying visual style",
-        ]
-    )
+            "- inconsistent character/setting appearance, varying visual style",
+        ])
 
     return "\n".join(lines).strip() + "\n"
 
@@ -1112,8 +1566,9 @@ def main() -> int:
     parser.add_argument("--model", default=DEFAULT_MODEL)
     parser.add_argument("--scene-glob", default="story/scene-*.md")
     parser.add_argument("--output-dir", default="story/boards")
-    parser.add_argument("--panel-count", type=int, default=None, help="Panels per storyboard (default: 3-5 based on content)")
-    parser.add_argument("--storyboards-per-scene", type=int, default=None, help="Number of storyboards per scene (default: 3-5 based on content)")
+    parser.add_argument("--panel-count", type=int, default=None, help="Panels per storyboard (default: 4-6 based on content, with dialog prioritized)")
+    parser.add_argument("--storyboards-per-scene", type=int, default=None, help="Number of storyboards per scene (default: 4-6 based on content)")
+    parser.add_argument("--chunks", type=str, default=None, help="Comma-separated list of chunk indices to regenerate (e.g., '1,3,5' or '2'). If not specified, all chunks are generated. Indices are 1-based.")
     parser.add_argument("--mood", default="quiet tension, contemplative")
     parser.add_argument("--camera", default="cinematic, varied shots")
     parser.add_argument("--max-retries", type=int, default=5)
@@ -1125,6 +1580,10 @@ def main() -> int:
     )
     parser.add_argument("--verbose", "-v", action="store_true", help="Show detailed progress")
     parser.add_argument("--definitions-file", default=None, help="Path to character and setting definitions JSON file (defaults to {scene-glob directory}/definitions.json)")
+    parser.add_argument("--debug-prompt", action="store_true", default=True, help="Print every prompt sent to Gemini API (for debugging). Default: enabled. Use --no-debug-prompt to disable.")
+    parser.add_argument("--no-debug-prompt", dest="debug_prompt", action="store_false", help="Disable prompt debugging")
+    parser.add_argument("--save-prompt", default=None, help="Save each prompt to a file (specify directory path, or use 'auto' to save alongside output)")
+    parser.add_argument("--dry-run", action="store_true", help="Build and display prompts without calling the Gemini API. Useful for debugging prompt generation.")
     args = parser.parse_args()
 
     if not args.api_key:
@@ -1217,16 +1676,45 @@ def main() -> int:
                 print(f"  Detected extras: {', '.join(extra_names)}", flush=True)
         
         # Divide scene into multiple storyboards
-        min_sb = 3
-        max_sb = 5
+        # Increased defaults to allow for richer dialog and more detailed scenes
+        min_sb = 4
+        max_sb = 6
         if args.storyboards_per_scene:
             min_sb = max_sb = args.storyboards_per_scene
         
         storyboard_chunks = divide_scene_into_storyboards(scene_text, min_sb, max_sb)
         total_storyboards = len(storyboard_chunks)
         
+        # Filter to specific chunks if requested
+        chunk_indices_to_generate = None
+        if args.chunks:
+            try:
+                # Parse comma-separated chunk indices (1-based)
+                requested_indices = sorted(set(int(x.strip()) for x in args.chunks.split(',')))
+                # Validate indices
+                valid_indices = [idx for idx in requested_indices if 1 <= idx <= total_storyboards]
+                invalid_indices = [idx for idx in requested_indices if idx < 1 or idx > total_storyboards]
+                
+                if invalid_indices:
+                    if args.verbose:
+                        print(f"  Warning: Chunk index(es) {invalid_indices} are out of range (1-{total_storyboards}), ignoring", flush=True)
+                
+                if valid_indices:
+                    chunk_indices_to_generate = valid_indices
+                    if args.verbose:
+                        print(f"  Filtering to {len(valid_indices)} requested chunk(s): {valid_indices}", flush=True)
+                else:
+                    if args.verbose:
+                        print(f"  Warning: No valid chunks specified, generating all chunks", flush=True)
+            except ValueError as e:
+                if args.verbose:
+                    print(f"  Warning: Invalid chunk specification '{args.chunks}', expected comma-separated numbers (e.g., '1,3,5'). Error: {e}. Generating all chunks.", flush=True)
+        
         if args.verbose:
-            print(f"  Dividing scene into {total_storyboards} storyboard(s)...", flush=True)
+            if chunk_indices_to_generate:
+                print(f"  Generating {len(chunk_indices_to_generate)} of {total_storyboards} storyboard(s)...", flush=True)
+            else:
+                print(f"  Dividing scene into {total_storyboards} storyboard(s)...", flush=True)
         
         # Check for first-time characters and generate reference images
         for char in characters:
@@ -1356,14 +1844,23 @@ def main() -> int:
                             time.sleep(args.sleep_between)
         
         # Generate a storyboard for each chunk
-        for sb_idx, (chunk_title, chunk_text) in enumerate(storyboard_chunks, start=1):
+        # If specific chunks were requested, only generate those
+        if chunk_indices_to_generate:
+            # Generate only the requested chunks, preserving original indices for file naming
+            chunks_to_process = [(idx, storyboard_chunks[idx - 1]) for idx in chunk_indices_to_generate]
+        else:
+            # Generate all chunks
+            chunks_to_process = [(idx, chunk) for idx, chunk in enumerate(storyboard_chunks, start=1)]
+        
+        for sb_idx, (chunk_title, chunk_text) in chunks_to_process:
             if args.verbose:
                 print(f"  Storyboard {sb_idx}/{total_storyboards}: {chunk_title}", flush=True)
             
             # Detect which characters, settings, and extras actually appear in THIS chunk
             chunk_characters, chunk_settings, chunk_extras = detect_entities(chunk_text, definitions)
             
-            panel_instructions = derive_panel_instructions(chunk_text, args.panel_count)
+            # Pass detected characters to panel instruction generation for explicit naming
+            panel_instructions = derive_panel_instructions(chunk_text, args.panel_count, detected_characters=chunk_characters)
             if args.verbose:
                 print(f"    Generating {len(panel_instructions)} panel(s)...", flush=True)
             
@@ -1463,9 +1960,11 @@ def main() -> int:
             if args.verbose and reference_images:
                 print(f"    Using {len(reference_images)} reference image(s) for character consistency", flush=True)
             
+            # Use only the chunk_title for scene_title, not the inferred scene title
+            # The inferred scene title is the first section header, which may not match this chunk
             prompt = build_prompt(
                 scene_id=f"{scene_id}-{sb_idx}",
-                scene_title=f"{scene_title} - {chunk_title}",
+                scene_title=chunk_title,  # Use chunk title directly, not concatenated with scene title
                 scene_text=chunk_text,
                 panel_instructions=panel_instructions,
                 mood=args.mood,
@@ -1478,8 +1977,46 @@ def main() -> int:
                 extra_references=extra_references,
                 setting_references=setting_references,
                 style_reference_path=style_reference_path,
+                style=definitions.get("style"),
             )
 
+            # Debug: Print or save prompt if requested
+            if args.debug_prompt or args.save_prompt or args.dry_run:
+                prompt_info = f"\n{'='*80}\n"
+                prompt_info += f"PROMPT FOR: {scene_id}-{sb_idx}\n"
+                prompt_info += f"{'='*80}\n\n"
+                prompt_info += prompt
+                prompt_info += f"\n\n{'='*80}\n"
+                prompt_info += f"REFERENCE IMAGES ({len(reference_images)}):\n"
+                for img_path in reference_images:
+                    prompt_info += f"  - {img_path}\n"
+                prompt_info += f"\n{'='*80}\n"
+                prompt_info += f"DETECTED ENTITIES FOR THIS CHUNK:\n"
+                prompt_info += f"  Characters: {', '.join([c.get('name', 'Unknown') for c in chunk_characters])}\n"
+                prompt_info += f"  Settings: {', '.join([s.get('name', 'Unknown') for s in chunk_settings])}\n"
+                prompt_info += f"  Extras: {', '.join([e.get('name', 'Unknown') for e in chunk_extras])}\n"
+                prompt_info += f"{'='*80}\n"
+                
+                if args.debug_prompt or args.dry_run:
+                    print(prompt_info, flush=True)
+                
+                if args.save_prompt:
+                    if args.save_prompt.lower() == "auto":
+                        save_dir = args.output_dir
+                    else:
+                        save_dir = args.save_prompt
+                    ensure_dir(save_dir)
+                    prompt_file = os.path.join(save_dir, f"{scene_id}-{sb_idx}-prompt.txt")
+                    with open(prompt_file, "w", encoding="utf-8") as handle:
+                        handle.write(prompt_info)
+                    if args.verbose:
+                        print(f"    Saved prompt to {prompt_file}", flush=True)
+            
+            # Skip API call in dry-run mode
+            if args.dry_run:
+                print(f"    [DRY RUN] Would generate storyboard image (skipped API call)", flush=True)
+                continue
+            
             try:
                 response = call_gemini(
                     args.api_key,

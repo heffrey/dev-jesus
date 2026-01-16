@@ -200,6 +200,9 @@ def generate_acts_structure(api_key: str, model: str, story_concept: str, cycles
     """Generate acts structure based on the Four Cycles framework."""
     cycle_descriptions = [FOUR_CYCLES[c] for c in cycles]
     
+    # Determine scene count per act based on total acts
+    scenes_per_act = 4 if len(cycles) == 3 else 3  # 3 acts get 4 scenes each, 5 acts get 3 scenes each
+    
     prompt = f"""You are a narrative structure expert working with Jorge Luis Borges' "Los Cuatro Ciclos" (The Four Cycles) framework.
 
 Story Concept: {story_concept}
@@ -207,10 +210,12 @@ Story Concept: {story_concept}
 The Four Cycles to use:
 {chr(10).join([f"{i+1}. {c['name']}: {c['description']}" for i, c in enumerate(cycle_descriptions)])}
 
-Create a narrative structure with {len(cycles)} acts, each corresponding to one of the cycles above. For each act:
-1. Provide a title that reflects the cycle's theme
-2. Write a description (2-3 sentences) explaining how this act embodies the cycle
-3. Suggest 3-5 scenes for each act, with specific purposes
+Create a compelling narrative structure with {len(cycles)} acts, each corresponding to one of the cycles above. For each act:
+1. Provide a distinctive, evocative title that reflects the cycle's theme and fits the story
+2. Write a rich description (2-3 sentences) explaining how this act embodies the cycle and advances the story
+3. Suggest exactly {scenes_per_act} scenes for each act, with specific, dramatic purposes that build tension and character
+
+Be creative and specific. Make each act title memorable and each scene purpose clear and compelling.
 
 Return your response as a JSON array with this exact structure:
 [
@@ -243,13 +248,26 @@ Return ONLY valid JSON, no explanations or markdown formatting."""
         
         acts = json.loads(text)
         
-        # Ensure proper numbering
+        # Ensure proper numbering and scene count
         scene_num = 1
-        for act in acts:
-            act["number"] = len([a for a in acts if a.get("number", 0) < act.get("number", 0)]) + 1
-            for scene in act.get("scenes", []):
+        scenes_per_act = 4 if len(cycles) == 3 else 3
+        for i, act in enumerate(acts):
+            act["number"] = i + 1
+            # Ensure each act has the right number of scenes
+            scenes = act.get("scenes", [])
+            if len(scenes) < scenes_per_act:
+                # Add placeholder scenes if needed
+                for j in range(len(scenes), scenes_per_act):
+                    scenes.append({"number": scene_num, "purpose": f"Scene in {act.get('title', 'Act')}"})
+                    scene_num += 1
+            elif len(scenes) > scenes_per_act:
+                # Trim excess scenes
+                scenes = scenes[:scenes_per_act]
+            # Renumber all scenes
+            for j, scene in enumerate(scenes):
                 scene["number"] = scene_num
                 scene_num += 1
+            act["scenes"] = scenes
         
         return acts
     except json.JSONDecodeError as exc:
@@ -257,34 +275,42 @@ Return ONLY valid JSON, no explanations or markdown formatting."""
             print(f"  Warning: Could not parse acts structure: {exc}", file=sys.stderr, flush=True)
             print(f"  Response was: {text[:500]}", file=sys.stderr, flush=True)
         # Return a default structure
-        return [
-            {
+        scenes_per_act = 4 if len(cycles) == 3 else 3
+        scene_num = 1
+        default_acts = []
+        for i in range(len(cycles)):
+            act_scenes = [
+                {"number": scene_num + j, "purpose": f"Scene {j+1} in {cycle_descriptions[i]['name']}"}
+                for j in range(scenes_per_act)
+            ]
+            scene_num += scenes_per_act
+            default_acts.append({
                 "number": i + 1,
                 "title": cycle_descriptions[i]["name"],
                 "description": cycle_descriptions[i]["description"],
-                "scenes": [
-                    {"number": i * 3 + j + 1, "purpose": f"Scene in {cycle_descriptions[i]['name']}"}
-                    for j in range(3)
-                ]
-            }
-            for i in range(len(cycles))
-        ]
+                "scenes": act_scenes
+            })
+        return default_acts
     except Exception as exc:
         if verbose:
             print(f"  Warning: Could not generate acts structure: {exc}", file=sys.stderr, flush=True)
         # Return a default structure
-        return [
-            {
+        scenes_per_act = 4 if len(cycles) == 3 else 3
+        scene_num = 1
+        default_acts = []
+        for i in range(len(cycles)):
+            act_scenes = [
+                {"number": scene_num + j, "purpose": f"Scene {j+1} in {cycle_descriptions[i]['name']}"}
+                for j in range(scenes_per_act)
+            ]
+            scene_num += scenes_per_act
+            default_acts.append({
                 "number": i + 1,
                 "title": cycle_descriptions[i]["name"],
                 "description": cycle_descriptions[i]["description"],
-                "scenes": [
-                    {"number": i * 3 + j + 1, "purpose": f"Scene in {cycle_descriptions[i]['name']}"}
-                    for j in range(3)
-                ]
-            }
-            for i in range(len(cycles))
-        ]
+                "scenes": act_scenes
+            })
+        return default_acts
 
 
 def generate_definitions(api_key: str, model: str, story_concept: str, characters_info: str, settings_info: str, extras_info: str, style_info: str, eras: list[str], max_retries: int, retry_base: float, verbose: bool = False) -> dict:
@@ -429,6 +455,7 @@ def main() -> int:
     parser.add_argument("--retry-base", type=float, default=5.0)
     parser.add_argument("--verbose", "-v", action="store_true", help="Show detailed progress")
     parser.add_argument("--use-gemini", action="store_true", default=True, help="Use Gemini API to expand details")
+    parser.add_argument("--acts", type=int, choices=[3, 5], default=None, help="Number of acts (3 or 5). Default: prompt user")
     args = parser.parse_args()
 
     print("=" * 70)
@@ -484,111 +511,86 @@ def main() -> int:
     print("\n" + "=" * 70)
     print("ERAS AND TIME PERIODS")
     print("=" * 70)
-    eras = []
-    while True:
-        era = prompt_user(
-            f"Enter era/time period #{len(eras) + 1} (e.g., 'Rural Texas, 1985', 'Ancient Rome, 44 BCE')",
-            required=False
-        )
-        if not era:
-            if len(eras) == 0:
-                era = prompt_user("At least one era is required", required=True)
-            else:
-                break
-        eras.append(era)
-        if not prompt_yes_no("Add another era?", default=False):
-            break
-
-    # Dimensions and spaces
-    print("\n" + "=" * 70)
-    print("DIMENSIONS AND SPACES")
-    print("=" * 70)
-    dimensions_info = prompt_user(
-        "Describe any special dimensions, spaces, or realities in your story (parallel worlds, dream spaces, etc.)",
+    eras_input = prompt_user(
+        "Enter era/time period(s) (e.g., 'Rural Texas, 1985' or 'Modern day, New York City'). Leave blank to auto-generate.",
         required=False
     )
-    if args.use_gemini and dimensions_info:
-        print("\n  Expanding dimensions information with Gemini...", flush=True)
-        dimensions_info = expand_with_gemini(
-            args.api_key, args.model, dimensions_info,
-            f"Expanding information about dimensions and spaces for story: {story_concept}",
-            args.max_retries, args.retry_base, args.verbose
-        )
+    if eras_input:
+        # Parse multiple eras if comma-separated
+        eras = [e.strip() for e in eras_input.split(",") if e.strip()]
+    else:
+        eras = []
 
-    # Select cycles
-    print("\n" + "=" * 70)
-    print("THE FOUR CYCLES")
-    print("=" * 70)
-    print("\nBorges' Four Cycles framework:")
-    for num, cycle in FOUR_CYCLES.items():
-        print(f"\n  {num}. {cycle['name']}")
-        print(f"     {cycle['description']}")
-        print(f"     Themes: {', '.join(cycle['themes'])}")
+    # Determine number of acts
+    if args.acts:
+        num_acts = args.acts
+    else:
+        print("\n" + "=" * 70)
+        print("NARRATIVE STRUCTURE")
+        print("=" * 70)
+        print("\nChoose your narrative structure:")
+        print("  1. 3-Act Structure (Classic: Conflict, Journey, Resolution)")
+        print("  2. 5-Act Structure (Epic: Conflict, Quest, Transformation, Return, Resolution)")
+        choice = prompt_user("Enter choice (1 or 2)", default="1", required=True)
+        num_acts = 3 if choice == "1" else 5
     
-    print("\nSelect which cycles to use (you can use all 4, or a subset):")
-    cycle_options = [f"{num}. {FOUR_CYCLES[num]['name']}" for num in FOUR_CYCLES.keys()]
-    selected_cycles = prompt_multiple("", cycle_options, allow_multiple=True)
-    cycles = [int(s.split(".")[0]) for s in selected_cycles]
-    cycles.sort()
+    # Automatically select cycles based on act structure
+    if num_acts == 3:
+        # 3-act: Troy (conflict), Search (journey), Return (resolution)
+        cycles = [1, 2, 3]
+        print(f"\n✓ Using 3-act structure with cycles: {', '.join([FOUR_CYCLES[c]['name'] for c in cycles])}")
+    else:  # 5 acts
+        # 5-act: Troy, Search, Sacrifice, Return, and back to Troy for resolution/rebuilding
+        cycles = [1, 2, 4, 3, 1]
+        print(f"\n✓ Using 5-act structure with cycles: {', '.join([FOUR_CYCLES[c]['name'] for c in cycles])}")
 
-    # Characters
+    # Characters, Settings, Extras, Style - all optional, will be auto-generated if not provided
     print("\n" + "=" * 70)
-    print("CHARACTERS")
+    print("ADDITIONAL DETAILS (Optional - leave blank to auto-generate)")
     print("=" * 70)
+    
     characters_info = prompt_user(
-        "Describe the main characters (names, roles, brief descriptions). You can be general or specific.",
+        "Main characters (names, roles, descriptions). Leave blank to auto-generate:",
         required=False
     )
     if args.use_gemini and characters_info:
-        print("\n  Expanding characters information with Gemini...", flush=True)
+        print("  Expanding characters information with Gemini...", flush=True)
         characters_info = expand_with_gemini(
             args.api_key, args.model, characters_info,
             f"Expanding character information for story: {story_concept}",
             args.max_retries, args.retry_base, args.verbose
         )
 
-    # Settings
-    print("\n" + "=" * 70)
-    print("SETTINGS")
-    print("=" * 70)
     settings_info = prompt_user(
-        "Describe the main settings/locations (can be general or specific)",
+        "Main settings/locations. Leave blank to auto-generate:",
         required=False
     )
     if args.use_gemini and settings_info:
-        print("\n  Expanding settings information with Gemini...", flush=True)
+        print("  Expanding settings information with Gemini...", flush=True)
         settings_info = expand_with_gemini(
             args.api_key, args.model, settings_info,
             f"Expanding setting information for story: {story_concept}",
             args.max_retries, args.retry_base, args.verbose
         )
 
-    # Extras
-    print("\n" + "=" * 70)
-    print("EXTRAS (Non-Character Entities)")
-    print("=" * 70)
     extras_info = prompt_user(
-        "Describe important objects, vehicles, props, or other non-character entities",
+        "Important objects, vehicles, props. Leave blank to auto-generate:",
         required=False
     )
     if args.use_gemini and extras_info:
-        print("\n  Expanding extras information with Gemini...", flush=True)
+        print("  Expanding extras information with Gemini...", flush=True)
         extras_info = expand_with_gemini(
             args.api_key, args.model, extras_info,
             f"Expanding extras information for story: {story_concept}",
             args.max_retries, args.retry_base, args.verbose
         )
 
-    # Style
-    print("\n" + "=" * 70)
-    print("VISUAL STYLE")
-    print("=" * 70)
     style_info = prompt_user(
-        "Describe the visual style for the comic (typeface, coloring, inking, etc.). Can be general or specific.",
+        "Visual style (typeface, coloring, inking). Leave blank to auto-generate:",
         required=False
     )
     if args.use_gemini and style_info:
-        print("\n  Expanding style information with Gemini...", flush=True)
+        print("  Expanding style information with Gemini...", flush=True)
         style_info = expand_with_gemini(
             args.api_key, args.model, style_info,
             f"Expanding visual style information for story: {story_concept}",
@@ -644,23 +646,28 @@ def main() -> int:
                 "scenes": scenes
             })
 
-    # Generate definitions
+    # Generate definitions (always use Gemini if available, or create minimal structure)
     print("\n" + "=" * 70)
     print("GENERATING DEFINITIONS")
     print("=" * 70)
     if args.use_gemini:
         print("\n  Generating comprehensive definitions with Gemini...", flush=True)
+        # Auto-generate missing info if not provided
+        if not eras:
+            eras = ["Contemporary, unspecified location"]
         definitions = generate_definitions(
             args.api_key, args.model, story_concept,
-            characters_info or "No specific characters provided",
-            settings_info or "No specific settings provided",
-            extras_info or "No specific extras provided",
-            style_info or "No specific style provided",
+            characters_info or "Generate compelling main characters based on the story concept",
+            settings_info or "Generate evocative settings based on the story concept",
+            extras_info or "Generate relevant objects and props based on the story concept",
+            style_info or "Generate a distinctive visual style appropriate for the story",
             eras,
             args.max_retries, args.retry_base, args.verbose
         )
     else:
         # Minimal structure
+        if not eras:
+            eras = ["Contemporary, unspecified location"]
         definitions = {
             "characters": {},
             "settings": {},

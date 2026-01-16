@@ -1,0 +1,6 @@
+- [Location/Destination]: Manhattan Monolith (88th Floor penthouse); departing for 142 Miller Street, Scranton.
+- [Time of Day]: 11:30 AM; security detail ordered to vacate by noon.
+- [Character State]: Elias (transitioning to "Jim") is clinical and detached; intentionally shedding his elite status to seek "the friction of reality."
+- [Discarded Items]: Phone and watch left on a wooden table; silk robe abandoned; security detail (led by Marcus) terminated.
+- [Plot Development]: Systematic liquidation of Thorne Industries holdings; "The Gilded Reach" (Montauk estate) signed over as a public conservatory.
+- [Environment]: Penthouse ventilation overrides opened, letting in city exhaust and salt air to break the sterile vacuum.

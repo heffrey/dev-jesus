@@ -1,0 +1,31 @@
+{
+  "acts": [
+    {
+      "number": 1,
+      "title": "The Return to the Human",
+      "description": "Elias Thorne undergoes a spiritual homecoming, dismantling his corporate empire to rediscover the vulnerable man he was before his ascent. He seeks to restore the broken bonds of his past, moving from the isolation of his 'conquered' city back to the fundamental recognition of family and mortality.",
+      "scenes": [
+        {
+          "number": 1,
+          "purpose": "Elias initiates a 'hostile takeover' of his own life, firing his security and liquidating assets to strip away the barriers between himself and the world."
+        },
+        {
+          "number": 2,
+          "purpose": "A confrontation with Julian where Elias seeks no profit, but offers a genuine confession, attempting to restore the honor lost in the midnight coup."
+        },
+        {
+          "number": 3,
+          "purpose": "Elias returns to the modest neighborhood of his youth, using the metallic tang of his illness as a catalyst to remember the sensory reality of his life before the obsidian table."
+        },
+        {
+          "number": 4,
+          "purpose": "The final approach to Claire's home, where Elias must wait at the door like a traveler returning from a long, misguided voyage, seeking recognition not as a benefactor, but as a father."
+        },
+        {
+          "number": 5,
+          "purpose": "A concluding scene of restoration where the 'Giant' is finally shed, and Elias finds peace in a simple, non-transactional human connection as the sun sets."
+        }
+      ]
+    }
+  ]
+}
