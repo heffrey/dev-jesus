@@ -166,7 +166,9 @@ def find_character_reference_images(
                 full_path = os.path.join(script_root, ref_path)
         
         if os.path.isfile(full_path):
-            valid_paths.append(full_path)
+            # Ensure we return absolute paths
+            abs_path = os.path.abspath(full_path)
+            valid_paths.append(abs_path)
     
     return valid_paths
 
@@ -341,7 +343,10 @@ def detect_entities(scene_text: str, definitions: dict) -> tuple[list[dict], lis
                         ' from ', 'from the', ' toward ', 'toward the', ' heading toward', ' heading to',
                         ' leaving ', ' behind ', ' observing ', ' no longer ', ' height of the',
                         ' monuments of ', ' decaying husk of ', ' returning to ', ' back to ',
-                        ' going to ', ' destination ', 'heading toward the', 'toward the decaying'
+                        ' going to ', ' destination ', 'heading toward the', 'toward the decaying',
+                        ' compared to ', 'compared to the', ' compared with ', 'compared with the',
+                        ' versus ', ' vs ', ' unlike ', ' like the ', ' similar to ',
+                        ' clarity of the ', ' of the ', ' vacuum of the ', ' sterile height of the '
                     ]
                     is_just_reference = any(indicator in combined_context for indicator in reference_indicators)
                     
@@ -387,7 +392,10 @@ def detect_entities(scene_text: str, definitions: dict) -> tuple[list[dict], lis
                         ' from ', 'from the', ' toward ', 'toward the', ' heading toward', ' heading to',
                         ' leaving ', ' behind ', ' observing ', ' no longer ', ' height of the',
                         ' monuments of ', ' decaying husk of ', ' returning to ', ' back to ',
-                        ' going to ', ' destination ', 'heading toward the', 'toward the decaying'
+                        ' going to ', ' destination ', 'heading toward the', 'toward the decaying',
+                        ' compared to ', 'compared to the', ' compared with ', 'compared with the',
+                        ' versus ', ' vs ', ' unlike ', ' like the ', ' similar to ',
+                        ' clarity of the ', ' of the ', ' vacuum of the ', ' sterile height of the '
                     ]
                     if any(indicator in combined_context for indicator in reference_indicators):
                         full_name_was_reference = True
@@ -405,12 +413,15 @@ def detect_entities(scene_text: str, definitions: dict) -> tuple[list[dict], lis
                             after_context = scene_lower[end:min(len(scene_lower), end+40)]
                             combined_context = before_context + ' ' + after_context
                             
-                            # Check if it's a reference (same check as above)
+                            # Check if it's a reference (same check as above - must match the full name check)
                             reference_indicators = [
                                 ' from ', 'from the', ' toward ', 'toward the', ' heading toward', ' heading to',
                                 ' leaving ', ' behind ', ' observing ', ' no longer ', ' height of the',
                                 ' monuments of ', ' decaying husk of ', ' returning to ', ' back to ',
-                                ' going to ', ' destination ', 'heading toward the', 'toward the decaying'
+                                ' going to ', ' destination ', 'heading toward the', 'toward the decaying',
+                                ' compared to ', 'compared to the', ' compared with ', 'compared with the',
+                                ' versus ', ' vs ', ' unlike ', ' like the ', ' similar to ',
+                                ' clarity of the ', ' of the ', ' vacuum of the ', ' sterile height of the '
                             ]
                             is_just_reference = any(indicator in combined_context for indicator in reference_indicators)
                             
@@ -1945,8 +1956,12 @@ def main() -> int:
                             reference_images.append(full_path)
             
             # Add master style reference if available
-            if style_reference_path and os.path.isfile(style_reference_path):
-                reference_images.append(style_reference_path)
+            if style_reference_path:
+                # Ensure style reference path is absolute
+                if not os.path.isabs(style_reference_path):
+                    style_reference_path = os.path.abspath(style_reference_path)
+                if os.path.isfile(style_reference_path):
+                    reference_images.append(style_reference_path)
             
             # Remove duplicates while preserving order
             seen = set()
