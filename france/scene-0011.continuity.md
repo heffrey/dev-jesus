@@ -1,0 +1,6 @@
+- **Location/Time**: Notre Dame Cathedral rafters ("The Forest") above the high altar; transitions from sunset to nightfall during Henri IV’s "Paris is worth a Mass" ceremony.
+- **Character state (Elouan)**: Fingers bleeding from climbing, forearm grazed by a dagger, thin tunic soaked in cold sweat; emotionally desperate but triumphant.
+- **Character state (Thorne)**: Wearing a soot-black habit (discarded his crimson cloak); fanatical certainty shattered into a "hollow, silent void" after his failure.
+- **Objects**: Elouan carries a heavy brass map cylinder at his belt (used to deflect the shot); Thorne has a long-barreled arquebus (spent) and a jagged misericorde (dagger).
+- **Plot/Development**: Thorne attempted to assassinate King Henri IV; Elouan intervened, causing the shot to hit a stone pillar; the King is unharmed and the public acclaims him ("Vive le Roi!").
+- **Physical Damage**: A stone pillar in the cathedral is chipped/sprayed with limestone dust from the heavy lead ball.

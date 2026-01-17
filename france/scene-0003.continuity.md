@@ -1,0 +1,6 @@
+- Location: Elouan de Vassy’s garret (Rue de la Harpe, Latin Quarter); Thorne is now targeting the d'Aubigné estate.
+- Objects: Charred vellum fragment with a stylized owl crest (Politique network) and a list of names, tucked into Thorne’s belt.
+- Plot: Thorne identified Marquise Genevieve d'Aubigné ("The Iron Widow") as the architect of the betrayal; Elouan (the Little Fox) escaped through a crawlspace.
+- Character state: Thorne is cold and methodical; Elouan is a fugitive; the League militiamen are aggressive and searching the district.
+- Time: Midnight; the bells of Saint-Germain-l'Auxerrois are tolling.
+- Important Detail: Thorne has ordered the district sealed to prevent Elouan’s escape.

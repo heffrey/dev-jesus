@@ -1,0 +1,6 @@
+- [Time/Progression]: Midday to Sunset; the *Te Deum* bells have begun to toll, signaling King Henri’s arrival at the city gates.
+- [Locations]: Moving from the Rue de l'Arbre-Sec cellar into the Catacombs of Saint-Innocent, specifically the tunnels leading to the "Bishop’s passage" beneath Notre Dame.
+- [Character State: Elouan de Vassy]: Known as "The Little Fox"; exhausted and terrified (sunken eyes, trembling); wearing a thin tunic and disintegrating boots held together by twine.
+- [Character State: Father Thorne]: The "Red Shadow"; fanatical and disciplined; leading a file of Red Capes (League radicals) through the tunnels to commit a "martyrdom."
+- [Key Items]: Elouan possesses a yellowed parchment map of the quarries in a cylinder and a tallow candle; Thorne carries a hidden dagger and an oilcloth-wrapped, long-barreled arquebus.
+- [Plot Development]: Thorne is bypassing the battlefields to assassinate Henri at the altar during his conversion ceremony to prevent the "Paris is worth a Mass" peace.

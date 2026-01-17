@@ -1,0 +1,73 @@
+{
+  "acts": [
+    {
+      "number": 1,
+      "title": "The Ash of the Lily",
+      "description": "This act captures the suffocating atmosphere of a Paris under siege, where the Troy Cycle manifests in the internal rot and external pressure of a city devouring its own. It establishes the brutal stakes of the religious conflict, forcing Elouan de Vassy to choose between survival and a desperate gamble for peace.",
+      "scenes": [
+        {
+          "number": 1,
+          "purpose": "Elouan de Vassy witnesses a public execution ordered by 'The Sixteen,' establishing the lethal paranoia of Paris and his own precarious position as a secret moderate."
+        },
+        {
+          "number": 2,
+          "purpose": "Marquise Genevieve d'Aubigné summons Elouan de Vassy to a hidden cellar, entrusting him with the secret passage maps and the mission to reach Henri of Navarre's camp."
+        },
+        {
+          "number": 3,
+          "purpose": "Father Bastien Thorne leads a raid on Elouan de Vassy’s quarters, narrowly missing the courier but discovering evidence of Genevieve d'Aubigné’s 'Politique' network."
+        },
+        {
+          "number": 4,
+          "purpose": "Elouan de Vassy attempts to scale the barricades during a Spanish bombardment, barely escaping the city while Father Bastien Thorne watches from the ramparts, marking him for death."
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "title": "The Pilgrimage of Steel",
+      "description": "Embodying the Search Cycle, this act follows the arduous journey across a landscape of 'Decaying Renaissance' in pursuit of the stolen sword, Joyeuse. The quest shifts from a simple delivery to a spiritual and political search for the soul of France amidst the ruins of the Loire Valley.",
+      "scenes": [
+        {
+          "number": 5,
+          "purpose": "Elouan de Vassy meets Marquise Genevieve d'Aubigné at a scarred chateau to learn that the message is useless without the recovery of the stolen sword, Joyeuse."
+        },
+        {
+          "number": 6,
+          "purpose": "Elouan de Vassy tracks the relic to a desecrated abbey, where he must outmaneuver Father Bastien Thorne’s 'Red Capes' in a tense game of cat-and-mouse through the cloisters."
+        },
+        {
+          "number": 7,
+          "purpose": "Father Bastien Thorne captures and interrogates Elouan de Vassy, attempting to break his faith in the 'heretic' King before Marquise Genevieve d'Aubigné orchestrates a daring distraction."
+        },
+        {
+          "number": 8,
+          "purpose": "Elouan de Vassy recovers Joyeuse from a Spanish detachment and finally reaches Henri’s camp, presenting both the maps and the relic to the Bearnais king."
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "title": "The Altar of the Seine",
+      "description": "The Return Cycle brings the narrative back to the gates of Paris for the restoration of the monarchy and the recognition of a new order. It focuses on the 'necessary' conversion and the final confrontation at the heart of the kingdom to heal the fractured mosaic of France.",
+      "scenes": [
+        {
+          "number": 9,
+          "purpose": "Marquise Genevieve d'Aubigné smuggles Elouan de Vassy back into Paris to coordinate with moderate factions as Henri prepares his public conversion to Catholicism."
+        },
+        {
+          "number": 10,
+          "purpose": "Father Bastien Thorne, realizing the League is losing its grip, plots to assassinate Henri during the Te Deum, forcing Elouan de Vassy into a race through the city's catacombs."
+        },
+        {
+          "number": 11,
+          "purpose": "Elouan de Vassy confronts Father Bastien Thorne in the rafters of the cathedral, preventing the assassination and forcing the priest to face the reality of his own fanaticism."
+        },
+        {
+          "number": 12,
+          "purpose": "As Henri enters the city to the cry of 'Paris is worth a Mass,' Elouan de Vassy and Marquise Genevieve d'Aubigné watch from the shadows, acknowledging the high cost of their restored peace."
+        }
+      ]
+    }
+  ]
+}

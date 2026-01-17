@@ -1,0 +1,7 @@
+- **Time of day**: Winter dawn (scene progressed from dusk through midnight).
+- **Location**: Escaping the Abbey of Saint-Céneri (Orne Valley); now heading toward Paris.
+- **Character state (Elouan)**: Physically ragged, soaking wet from drainage conduit, boots held together by twine, hands ink-stained.
+- **Objects (Elouan)**: Leather cylinder containing maps; currently unarmed.
+- **Plot development**: The stolen sword *Joyeuse* was moved from the abbey toward Paris; Father Thorne and the Inquisition are hunting Elouan specifically for his maps.
+- **Transportation**: Enemy forces are using warhorses and a wagon (noted via tracks in the mud).
+- **Enemy forces**: Father Bastien Thorne ("The Red Shadow") and "Red Cape" Inquisitors are occupying the abbey.

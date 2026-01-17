@@ -1,0 +1,7 @@
+- **Location/Time:** "Le Cerf Blanc" (coaching inn), three leagues from Paris; progresses from Midnight to Pre-Dawn; the stable hayloft is currently burning.
+- **Character State (Elouan):** Bound to a high-backed chair with hempen rope; boots held together by frayed twine and frozen sludge; physically exhausted and shivering.
+- **Character State (Thorne):** Wearing a damp red cape; smells of frankincense and wine; retreating from the inn as the rescue begins.
+- **Objects (Maps):** Thorne has seized the leather map cylinder; several loose vellum charts remain scattered on the scarred oak table.
+- **Objects (The Sword):** The Catholic League possesses the hilt of the sword *Joyeuse*; the blade is missing and currently "moving" to an unknown destination.
+- **Plot/Revelations:** The "Iron Widow" (Marquise Genevieve d'Aubigné) orchestrated the fire and *croquant* skirmish to rescue Elouan; Elouan is suspected of knowing the meeting point for the thieves carrying the blade.
+- **Transportation:** A rider in charcoal silks (the Marquise) is present outside; Thorne’s Red Cape sentries are engaged in a yard skirmish.

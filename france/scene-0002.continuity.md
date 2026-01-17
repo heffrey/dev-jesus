@@ -1,0 +1,6 @@
+- **Time/Location**: Transitions from Late Afternoon to Evening; moves from the Barricades (Radical Maw) to a secret cellar beneath the d'Aubigné townhouse, heading toward the Camp of the White Plume.
+- **Objects**: A leather cylinder containing two maps: a clandestine map of subterranean outlets/the Tour de Nesle postern gate, and a vellum sheet with the Bearnais sigil.
+- **Character Physical/Emotional State**: Elouan is hungry ("gnawing ache"), trembling, and shaken after witnessing an execution; Genevieve (the "Iron Widow") is resolute, wearing dusty mourning silks.
+- **Plot Development**: Elouan is tasked with delivering maps to King Henri to enable a secret entry into Paris in exchange for an Edict of tolerance.
+- **Threats/Antagonists**: Thorne (the "Red Shadow") is actively hunting Elouan; the d'Aubigné townhouse is under surveillance by the Sixteen (marked with red paint).
+- **Environmental Detail**: Paris is under siege, suffering from starvation ("bone bread" made of skeletal remains/sawdust) and controlled by the League and the Sixteen.

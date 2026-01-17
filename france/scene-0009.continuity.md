@@ -1,0 +1,6 @@
+- **Vehicle**: A creaking horse-drawn wagon with gapped floorboards; driven by an unnamed driver.
+- **Location**: Currently in a vaulted "Politique" network cellar on Rue de l'Arbre-Sec (near the Louvre), after entering through the Porte Saint-Jacques.
+- **Objects**: A folded vellum sheet (list of League members to be bribed or flipped); Genevieve’s forged pass (seal of the Duke of Mayenne) and copper coins.
+- **Character States**: Elouan is disguised as a "frightened clerk" nephew in ruined, twine-bound boots; Genevieve wears charcoal silks under a mud-spattered widow's cloak.
+- **Plot**: The King possesses Elouan's maps; the conspirators are now using Elouan's list of names to execute the "Paris is worth a Mass" strategy to flip the city's allegiance.
+- **Time of Day**: The scene concludes at pre-dawn with the first grey light filtering into the cellar.

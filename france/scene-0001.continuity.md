@@ -1,0 +1,6 @@
+- Location/Time: Noon, grey afternoon; Paris, moving from the Barricades/Radical Maw to the Place de Grève.
+- Key Item: Elouan carries a leather cylinder containing a self-made, detailed map of Paris sewer outlets.
+- Character State (Elouan): Hungry, trembling with fear, and hiding his identity behind a threadbare cloak.
+- Character State (Thorne): Father Bastien Thorne ("Red Shadow"), wearing a signature crimson cape; calm, fanatical, and commanding.
+- Plot Development: A Châtelet clerk was publicly executed for "Politique" sympathies; Henri of Navarre is currently at the city gates.
+- World Detail: Severe famine (bread made of bone/sawdust); the city is under the radical control of the "Sixteen" and their citizen-militia.

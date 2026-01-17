@@ -1,0 +1,6 @@
+- **Location/Time:** Late afternoon, late autumn; the ruined Chateau de Vauroux, Loire Valley (western wing collapsed).
+- **Character State (Elouan):** Physically exhausted, "creature of mud," lungs burning, worn-through boots, and trembling hands.
+- **Character State (Genevieve):** Known as the "Iron Widow"; resolute, commanding, and dressed in heavy charcoal silks.
+- **Key Items:** Vellum maps of Paris (detailing secret conduits and crumbling walls) inside a leather cylinder; cartographer’s tools; a missive with an owl crest.
+- **Plot Revelation:** The Sword of Charlemagne (*Joyeuse*) was stolen from Saint-Denis by the League to delegitimize Henri of Navarre’s claim to the throne.
+- **New Destination:** Elouan is diverted from the "White Plume" camp; he must now track the thieves toward the "ruins of the south" to recover the sword.

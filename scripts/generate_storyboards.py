@@ -274,27 +274,139 @@ def detect_entities(scene_text: str, definitions: dict) -> tuple[list[dict], lis
             
             # For multi-word names/aliases, check individual words but require visual presence indicators
             # Exclude common words that cause false positives
+            # IMPORTANT: For multi-word aliases, require at least 2 significant words to match (not just one)
+            # to avoid false positives from common words like "pulse", "life", etc.
             common_words = {'the', 'of', 'in', 'a', 'an', 'and', 'or', 'to', 'for', 'with', 'from', 'on', 'at', 'by', 'as', 'is', 'was', 'are', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'must', 'can'}
             words = name_lower.split()
+            
             if len(words) > 1 and not matched:
-                for word in words:
-                    # Skip common words and require substantial words (4+ chars) for word matching
-                    if len(word) >= 4 and word not in common_words:
+                # Extract significant words (4+ chars, not common words)
+                significant_words = [w for w in words if len(w) >= 4 and w not in common_words]
+                
+                # Require at least 2 significant words to match for multi-word aliases
+                # This prevents false positives from single common words like "pulse", "life", etc.
+                if len(significant_words) >= 2:
+                    matched_words = []
+                    for word in significant_words:
                         word_pattern = r'\b' + re.escape(word) + r'\b'
                         word_matches = list(re.finditer(word_pattern, scene_lower))
+                        
                         for match in word_matches:
                             start, end = match.span()
                             context = scene_lower[max(0, start-30):min(len(scene_lower), end+30)]
                             # Only match if there are action indicators nearby (stronger requirement)
                             if any(verb in context for verb in action_verbs) or '"' in context:
-                                if char_data not in found_characters:
-                                    found_characters.append(char_data)
+                                matched_words.append((word, start))
+                                break
+                    
+                    # Only add character if at least 2 significant words matched
+                    # AND they appear within reasonable proximity (within 100 chars of each other)
+                    if len(matched_words) >= 2:
+                        # Check if matched words are in proximity
+                        positions = [pos for _, pos in matched_words]
+                        min_pos = min(positions)
+                        max_pos = max(positions)
+                        if max_pos - min_pos <= 100:  # Words within 100 chars
+                            if char_data not in found_characters:
+                                found_characters.append(char_data)
                                 matched = True
                                 break
+                        # If words are too far apart, they might be false matches (e.g., "Thorne" in "Thorne Industries")
+                        # Fall through to single-word matching logic below
+                    
+                    # If only one word matched, OR if 2+ words matched but are too far apart,
+                    # check if the single word is a valid match (capitalized, with action context)
+                    if len(matched_words) == 1 or (len(matched_words) >= 2 and not matched):
+                        # Only one significant word matched - check if it's a strong match with action context
+                        # This handles cases like "Elias" from "Elias Thorne" appearing alone
+                        # BUT: Avoid false positives from compound nouns (e.g., "ghost ship" matching "ghost" from "The Ghost in the Hamptons")
+                        word, word_pos = matched_words[0]
+                        word_pattern = r'\b' + re.escape(word) + r'\b'
+                        word_matches = list(re.finditer(word_pattern, scene_lower))
+                        
+                        for match in word_matches:
+                            start, end = match.span()
+                            context = scene_lower[max(0, start-30):min(len(scene_lower), end+30)]
+                            
+                            # Check if word is part of a compound noun (e.g., "ghost ship", "wall street")
+                            # If the next word after the match is a noun (not a verb), it might be a compound
+                            after_match = scene_lower[end:min(len(scene_lower), end+15)].strip()
+                            # Common compound patterns: word + noun (not verb)
+                            # If word is immediately followed by another word (not punctuation/space), check if it's a compound
+                            next_char = scene_lower[end] if end < len(scene_lower) else ' '
+                            if next_char == ' ':
+                                # Check the next word - if it's a noun (not a verb), might be compound
+                                next_word_match = re.match(r'\s+(\w+)', after_match)
+                                if next_word_match:
+                                    next_word = next_word_match.group(1)
+                                    # If next word is likely a noun (not in action_verbs), it might be a compound
+                                    # But we still want to match if there's strong action context
+                                    is_likely_compound = next_word not in action_verbs and len(next_word) > 3
+                                else:
+                                    is_likely_compound = False
+                            else:
+                                is_likely_compound = False
+                            
+                            # Strong action context required for single word from multi-word alias
+                            # CRITICAL: Require the word to be capitalized (proper noun) to avoid compound noun false positives
+                            # This prevents "ghost" in "ghost ship" from matching "The Ghost in the Hamptons"
+                            # Proper names are always capitalized, so this is a safe requirement
+                            has_action = any(verb in context for verb in action_verbs) or '"' in context
+                            
+                            if has_action:
+                                # Check if word is capitalized (proper noun) - REQUIRED for single word from multi-word alias
+                                # This avoids false positives from compound nouns like "ghost ship", "wall street", etc.
+                                original_match = scene_text[start:end] if start < len(scene_text) else scene_lower[start:end]
+                                is_capitalized = original_match and original_match[0].isupper() if original_match else False
+                                has_quotes = '"' in context or "'" in context
+                                
+                                # REQUIRE capitalization (or quotes) for single word from multi-word alias
+                                # This is safe because character names/aliases are proper nouns
+                                if not (is_capitalized or has_quotes):
+                                    continue  # Skip this match - word is not capitalized, likely not a proper noun reference
+                                
+                                # Word is capitalized or in quotes - safe to match as proper noun
+                                if char_data not in found_characters:
+                                    found_characters.append(char_data)
+                                    matched = True
+                                    break
                         if matched:
                             break
-                if matched:
-                    break
+                elif len(significant_words) == 1:
+                    # For single significant word in multi-word alias, require the FULL alias phrase to appear
+                    # This is stricter to avoid false positives
+                    full_phrase_pattern = r'\b' + r'\s+'.join([re.escape(w) for w in words if w not in common_words]) + r'\b'
+                    
+                    # NEW: Also check if the single significant word appears alone with action context
+                    # This handles cases like "Elias" from "Elias Thorne" appearing alone
+                    if not re.search(full_phrase_pattern, scene_lower) and significant_words:
+                        single_word = significant_words[0]
+                        single_word_pattern = r'\b' + re.escape(single_word) + r'\b'
+                        single_word_matches = list(re.finditer(single_word_pattern, scene_lower))
+                        
+                        for match in single_word_matches:
+                            start, end = match.span()
+                            context = scene_lower[max(0, start-30):min(len(scene_lower), end+30)]
+                            # Check for action context - character doing something
+                            if any(verb in context for verb in action_verbs) or '"' in context:
+                                if char_data not in found_characters:
+                                    found_characters.append(char_data)
+                                    matched = True
+                                    break
+                        if matched:
+                            break
+                    
+                    if re.search(full_phrase_pattern, scene_lower):
+                        # Full phrase found - check for action context
+                        match = re.search(full_phrase_pattern, scene_lower)
+                        if match:
+                            start, end = match.span()
+                            context = scene_lower[max(0, start-30):min(len(scene_lower), end+30)]
+                            if any(verb in context for verb in action_verbs) or '"' in context:
+                                if char_data not in found_characters:
+                                    found_characters.append(char_data)
+                                    matched = True
+                                    break
         
         # Fallback: only if substantial name and in dialogue or action context
         if not matched:
@@ -302,10 +414,12 @@ def detect_entities(scene_text: str, definitions: dict) -> tuple[list[dict], lis
                 if not name or len(name) < 4:
                     continue
                 name_lower = name.lower()
+                
                 if name_lower in scene_lower:
                     # Check if in dialogue or action context
                     idx = scene_lower.find(name_lower)
                     context = scene_lower[max(0, idx-30):min(len(scene_lower), idx+len(name_lower)+30)]
+                    
                     if '"' in context or any(verb in context for verb in [' said', ' spoke', ' asked', ' replied', ' stood', ' walked', ' moved']):
                         if char_data not in found_characters:
                             found_characters.append(char_data)
@@ -1869,6 +1983,23 @@ def main() -> int:
             
             # Detect which characters, settings, and extras actually appear in THIS chunk
             chunk_characters, chunk_settings, chunk_extras = detect_entities(chunk_text, definitions)
+            
+            # Fallback: If chunk has pronouns + action verbs but no character names detected,
+            # and we know from scene-level detection which characters are present,
+            # include those characters (they're likely being referred to by pronouns)
+            if not chunk_characters and characters:
+                chunk_lower = chunk_text.lower()
+                # Check for pronouns + action verbs (indicating a character is present but unnamed)
+                # Use word boundaries to catch pronouns at sentence boundaries too
+                import re
+                pronoun_patterns = [r'\bhe\b', r'\bshe\b', r'\bthey\b', r'\bhis\b', r'\bher\b', r'\btheir\b', r'\bhim\b']
+                has_pronouns = any(re.search(pattern, chunk_lower) for pattern in pronoun_patterns)
+                action_verbs = ['stood', 'walked', 'moved', 'looked', 'turned', 'entered', 'sat', 'hailed', 'said', 'spoke', 'reached', 'watched', 'felt', 'stepped', 'stopped', 'pulled', 'slumped', 'sliding', 'waiting', 'began', 'struggled', 'calibrate', 'seized', 'leaving', 'forcing', 'exhaled', 'swallowing', 'adjust', 'intensified', 'vibrated', 'was', 'is', 'did', 'had']
+                has_actions = any(verb in chunk_lower for verb in action_verbs)
+                
+                if has_pronouns and has_actions:
+                    # Use scene-level characters (they're likely being referred to by pronouns in this chunk)
+                    chunk_characters = characters
             
             # Pass detected characters to panel instruction generation for explicit naming
             panel_instructions = derive_panel_instructions(chunk_text, args.panel_count, detected_characters=chunk_characters)

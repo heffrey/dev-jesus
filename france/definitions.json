@@ -1,0 +1,139 @@
+{
+  "characters": {
+    "elouan_de_vassy": {
+      "name": "Elouan de Vassy",
+      "aliases": [
+        "The Cartographer",
+        "The Little Fox"
+      ],
+      "description": "A brilliant but anxious young cartographer forced into espionage. He is driven by a desire for a peaceful France where borders are drawn with ink rather than blood.",
+      "appearance": {
+        "height_and_build": "5'7\" with a lean, wiry build and a slight nervous slouch.",
+        "skin_tone": "Pale olive with ink-stained fingers [RGB: 210, 180, 140]",
+        "hair_style_and_color": "Messy, chin-length dark brown hair often tucked behind ears [RGB: 75, 54, 33]",
+        "eye_color": "Intelligent hazel eyes with flecks of gold [RGB: 107, 142, 35]",
+        "facial_features": "Sharp, bird-like nose and a thin, expressive mouth.",
+        "distinctive_features": "A small, jagged scar across his left knuckles from a quill-knife accident.",
+        "clothing": "A travel-worn doublet of forest green wool [RGB: 34, 48, 30] over a stained linen shirt [RGB: 245, 245, 220]. He wears sturdy leather breeches [RGB: 62, 39, 35] and mud-splattered knee-high boots.",
+        "accessories": "A waterproof leather cylinder for maps slung across his back and a hidden dagger in his boot."
+      },
+      "role": "Protagonist and Courier",
+      "era": "Kingdom of France 1592"
+    },
+    "father_bastien_thorne": {
+      "name": "Father Bastien Thorne",
+      "aliases": [
+        "The Inquisitor",
+        "The Red Shadow"
+      ],
+      "description": "A high-ranking member of the League’s secret police, the Red Capes. He is a zealot who believes that any cruelty is justified to purge heresy from Paris.",
+      "appearance": {
+        "height_and_build": "6'2\" with a gaunt, skeletal frame that makes him appear taller.",
+        "skin_tone": "Sallow, parchment-like skin [RGB: 235, 220, 200]",
+        "hair_style_and_color": "Tonsured, with a fringe of salt-and-pepper hair [RGB: 169, 169, 169]",
+        "eye_color": "Piercing, cold steel grey [RGB: 112, 128, 144]",
+        "facial_features": "Deep-set eyes, high cheekbones, and a thin, bloodless lip.",
+        "distinctive_features": "A burn mark in the shape of a cross on his right palm.",
+        "clothing": "A heavy, crimson wool cape with a high collar [RGB: 139, 0, 0] over a black Jesuit cassock [RGB: 20, 20, 20].",
+        "accessories": "A heavy iron rosary with sharp-edged beads and a silver-hilted rapier."
+      },
+      "role": "Primary Antagonist",
+      "era": "Kingdom of France 1592"
+    },
+    "marquise_genevieve_daubigne": {
+      "name": "Marquise Genevieve d'Aubigné",
+      "aliases": [
+        "The Iron Widow",
+        "The Politique Muse"
+      ],
+      "description": "A brilliant strategist and covert leader of the Politique network in Paris. She navigates the dangerous social waters of the League while plotting Henri's coronation.",
+      "appearance": {
+        "height_and_build": "5'5\" with a graceful, poised posture and an authoritative air.",
+        "skin_tone": "Fair and porcelain-like, often powdered [RGB: 255, 248, 240]",
+        "hair_style_and_color": "Elaborately braided and pinned up, auburn in color [RGB: 139, 69, 19]",
+        "eye_color": "Deep sapphire blue [RGB: 15, 82, 186]",
+        "facial_features": "Soft features but with a firm, determined jawline.",
+        "distinctive_features": "A beauty mark just above her left lip.",
+        "clothing": "A high-collared gown of tarnished silver silk [RGB: 192, 192, 192] with black lace detailing [RGB: 10, 10, 10].",
+        "accessories": "A fan that hides a coded cipher and a ring containing a secret compartment for poison."
+      },
+      "role": "Strategist and Mentor",
+      "era": "Kingdom of France 1592"
+    }
+  },
+  "settings": {
+    "the_barricades_of_paris": {
+      "name": "The Barricades of Paris",
+      "aliases": [
+        "The Fortress of the Sixteen",
+        "The Radical Maw"
+      ],
+      "description": "A claustrophobic labyrinth of narrow streets blocked by overturned wagons, barrels of stones, and heavy chains. It is the heart of the League's power, smelling of woodsmoke and damp earth.",
+      "visual_details": {
+        "architecture_landscape": "Timber-framed houses leaning over muddy alleys, reinforced with makeshift wooden walls and iron grates.",
+        "colors": "Grimy browns [RGB: 80, 60, 45], charcoal greys [RGB: 50, 50, 50], and the flickering orange of torches [RGB: 255, 140, 0].",
+        "lighting_conditions": "Low, high-contrast lighting; deep shadows cast by flickering braziers and hanging lanterns.",
+        "textures_and_materials": "Rough-hewn wood, cold cobblestones, rusted iron, and wet, trampled straw.",
+        "atmospheric_elements": "A perpetual haze of coal smoke and the distant, rhythmic tolling of church bells.",
+        "time_of_day_weather": "Twilight under a heavy, overcast sky; a light, persistent drizzle."
+      },
+      "era": "Kingdom of France 1592"
+    },
+    "the_camp_of_the_white_plume": {
+      "name": "The Camp of the White Plume",
+      "aliases": [
+        "Henri's Court on the Move",
+        "The Iron City"
+      ],
+      "description": "A sprawling mobile city of tents and wagons located in the Loire Valley. It is a place of military discipline mixed with the desperate hope of a kingdom in exile.",
+      "visual_details": {
+        "architecture_landscape": "Vast fields filled with canvas tents of varying sizes, centered around a large, royal pavilion made of reinforced leather.",
+        "colors": "Weathered canvas white [RGB: 220, 220, 200], steel blue [RGB: 70, 130, 180], and the bright white of Henri's plume [RGB: 255, 255, 255].",
+        "lighting_conditions": "Bright, harsh daylight reflecting off polished armor and spear tips.",
+        "textures_and_materials": "Heavy canvas, oiled leather, polished steel, and the green grass of the valley flattened by thousands of boots.",
+        "atmospheric_elements": "The sound of Huguenot psalms, the smell of roasting meat and horse manure, and the snap of banners in the wind.",
+        "time_of_day_weather": "Clear morning with a crisp, cool breeze."
+      },
+      "era": "Kingdom of France 1592"
+    }
+  },
+  "extras": {
+    "the_sword_joyeuse": {
+      "name": "The Sword Joyeuse",
+      "aliases": [
+        "The Sword of Charlemagne",
+        "The King's Right Hand"
+      ],
+      "description": "The legendary coronation sword of the Kings of France, rumored to possess divine power and legitimacy.",
+      "appearance": "A 32-inch blade of shimmering Damascus steel [RGB: 192, 192, 192] with a hilt encased in gold filigree [RGB: 212, 175, 55]. The pommel is set with a large, uncut ruby [RGB: 155, 17, 30], and the grip is wrapped in purple velvet and gold wire."
+    },
+    "the_league_pamphlet": {
+      "name": "The League Pamphlet",
+      "aliases": [
+        "The Voice of the Sixteen",
+        "The Holy Vitriol"
+      ],
+      "description": "A crudely printed but effective propaganda sheet used to incite the Parisian mobs against Henri.",
+      "appearance": "A single sheet of rough, yellowed hemp paper [RGB: 240, 230, 140] featuring a woodblock illustration of a multi-headed beast wearing a crown. The ink is thick and unevenly applied [RGB: 10, 10, 10]."
+    },
+    "the_alchemical_alembic": {
+      "name": "The Alchemical Alembic",
+      "aliases": [
+        "The Greek Fire Vessel",
+        "Saint-Cloud’s Secret"
+      ],
+      "description": "A complex glass and copper apparatus used for distilling the volatile components of 'Greek Fire'.",
+      "appearance": "A bulbous glass flask [RGB: 173, 216, 230] connected by spiraling copper tubes [RGB: 184, 115, 51] to a collection jar filled with a glowing, viscous green liquid [RGB: 50, 205, 50]. It stands roughly 18 inches tall."
+    }
+  },
+  "style": {
+    "description": "A 'Decaying Renaissance' aesthetic that blends the opulence of the 16th century with the grime and brutality of 16th-century warfare. It draws heavily from Chiaroscuro painting techniques.",
+    "typeface": "A combination of elegant, slightly weathered serif for body text and bold, woodblock-style blackletter for headings.",
+    "inking": "Dense, textural inking with heavy use of cross-hatching and deep blacks to create a sense of weight and dread.",
+    "coloring": "A desaturated, earthy palette punctuated by high-saturation symbolic colors like 'League Crimson' and 'Royalist White'.",
+    "line_width": "Variable line weights; thin and delicate for architectural details, thick and expressive for characters and foreground elements.",
+    "palette": "Dominant tones of Mud [RGB: 90, 75, 60], Steel [RGB: 150, 150, 160], and Smoke [RGB: 110, 110, 110], with accents of Gold [RGB: 180, 150, 50] and Blood Red [RGB: 120, 0, 0].",
+    "shading": "Dramatic chiaroscuro shading, emphasizing single light sources (torches, candles, sunbeams) to create deep, cinematic shadows.",
+    "texture": "Heavy use of grit, film grain, and organic textures like distressed parchment, rusted metal, and damp stone."
+  }
+}

@@ -1,0 +1,6 @@
+- **Location**: Transitioned from the Rue Saint-Jacques barricades to a trench in No Man’s Land outside the Paris walls; heading toward the "White Plume" campfires.
+- **Items**: Leather cylinder containing vellum maps ("the marrow of the kingdom").
+- **Character state (Elouan)**: Starving (has refused "bone bread"), physically exhausted, ears ringing from a shell blast, and covered in mud/soot.
+- **Character state (Thorne)**: Positioned atop the Porte Saint-Jacques watchtower; has visually identified Elouan and the maps.
+- **Plot**: Elouan ("The Little Fox") successfully escaped the city and the "Red Capes"; Thorne has "marked" him for death with a sign of the cross.
+- **Time of day**: Dawn (transitioned from pre-dawn during the escape).

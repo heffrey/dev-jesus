@@ -1,0 +1,7 @@
+- **Transportation**: Marquise Genevieve rides a bay gelding; the Camp of the White Plume is filled with warhorses and lathered messenger mounts.
+- **Location**: The King’s Pavilion within the Camp of the White Plume (Loire Valley), having traveled from a ruined toll-bridge near Vendôme.
+- **Objects**: The hiltless blade of *Joyeuse* (Charlemagne’s sword, wrapped in velvet, smells of ozone) and a map cylinder containing precise blueprints of Paris’s secret passages and defenses.
+- **Character state (Elouan)**: Exhausted and soot-covered; eyes sunken; voice cracking; wearing boots made of leather scraps and twine.
+- **Character state (Henri/Marquise)**: King Henri is weary and dressed in leather/iron; the Marquise is commanding in charcoal silks.
+- **Plot**: Elouan and the Marquise have delivered the maps and the relic to Henri of Navarre, providing him the tactical and symbolic means to take Paris.
+- **Time of day**: Night (the scene progresses from Midday to Dusk to Night).
