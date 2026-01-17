@@ -1,0 +1,107 @@
+{
+  "characters": {
+    "xpm": {
+      "name": "XPM",
+      "aliases": [
+        "The Exiled Precept",
+        "The Wick-Keeper",
+        "Elara"
+      ],
+      "description": "A stoic, weathered survivor tasked with carrying the last fragment of a fallen star through a predatory forest. He is a man of heavy, rhythmic movements, driven by a primal instinct for duty despite the parasitic nature of his mission.",
+      "appearance": "Height: 6'2\", body and head shape resembles a LEGO minifigure or Roblox character. Skin: Pale, frost-scarred flesh (#E0E4E8) with silver-nitrate branding on the collarbone. Hair: Shaved close to the scalp, peppered grey (#808080). Eyes: Permanently stained a pale, glowing violet (#9370DB). Facial features: Sunken cheeks, a jagged scar running from his brow to his jawline, and lips parched by the freezing air. Clothing: A heavy, hooded cloak of 'Grave-Wool' in deep charcoal (#2F2F2F) that absorbs light; beneath it, rusted iron-plate pauldrons and leather bindings in dark umber (#4B3621). Accessories: A cracked glass lantern containing the Solemn Ember, and a Cinder-Staff made of petrified wood.",
+      "role": "Protagonist and bearer of the Solemn Ember.",
+      "era": "The 99 Nights"
+    },
+    "jack": {
+      "name": "Jack",
+      "aliases": [
+        "The Tinder-Lad",
+        "The Echo-Reader",
+        "The Flicker-Bound"
+      ],
+      "description": "A youth whose spirit is tethered to the physical world to serve as a navigator and scout. He is jittery and hyper-perceptive, able to hear the forest's movements through its iron-bark trees.",
+      "appearance": "Height: 5'0\", wiry and slight frame with a body and head shape resembling a LEGO minifigure or Roblox character. Skin: Texture of charred parchment with a warm, copper undertone (#A0522D). Hair: A crown of soft, flickering orange embers (#FF4500) that shed a constant, faint light. Eyes: Bright, reflective gold (#FFD700) with no visible pupils. Facial features: Sharp, youthful features with a permanent expression of alert anxiety. Clothing: A tattered tunic of woven Silver-Thistle fibers in pale ash-grey (#B2BEB5) and fingerless gloves. Accessories: A leather Filter-Satchel (#5C4033) containing various stained-glass lenses.",
+      "role": "Companion, navigator, and secondary light source.",
+      "era": "The 99 Nights"
+    },
+    "the_great_stillness": {
+      "name": "The Great Stillness",
+      "aliases": [
+        "The Bipedal Terror",
+        "The Ancient Stag",
+        "The Architect of Stasis"
+      ],
+      "description": "An ancient, red eyed entity that resembles a bipedal stag representing the forest's desire for eternal frost and silence. It stalks the protagonists, manifesting as a terrifying bipedal predator that consumes heat and sound. The stag fears light, so shining light sources on him will cause him to retreat into the shadows.",
+      "appearance": "Height: 15'0\" when standing bipedally. Skin: Pale, leathery hide stretched over a skeletal frame. Head: A bleached prehistoric elk skull (#F5F5DC) with sprawling, bone-white antlers. Eyes: Red, glowing eyes. Limbs: Elongated hind legs with joints that snap like ice; forelimbs ending in three-foot obsidian 'Scythe-Talons' (#0A0A0A) dripping with silver mercury. Mouth: A 'Void-Gullet'—a jaw that hangs unhinged to reveal a throat of absolute, light-consuming blackness (#000000).",
+      "role": "Primary Antagonist and guardian of the Obsidian Weald.",
+      "era": "The 99 Nights"
+    }
+  },
+  "settings": {
+    "the_obsidian_weald": {
+      "name": "The Obsidian Weald",
+      "aliases": [
+        "The Living Labyrinth",
+        "The Violet Twilight"
+      ],
+      "description": "A sentient, breathing forest where the sun is dead and the flora pulses in time with a traveler's heartbeat. It is a place of permanent twilight where geometry fractures and memories are used as currency.",
+      "visual_details": "Architecture/Landscape: Iron-barked trees with scales of rusted iron (#8B4513) and bioluminescent fungi. Colors: Dominant violet twilight (#483D8B), deep indigo shadows (#191970), and neon cyan bioluminescence (#00FFFF). Lighting: Dim, pulsing glows from 'Eye-Stalks' and 'Lure-Lichen.' Textures: Metallic bark, soft 'Whisper-Moss' (#2E8B57), and crystalline frost. Atmosphere: Thick, metallic fog known as 'Iron Breath' (#708090). Time: Permanent night, divided by lunar intensity.",
+      "era": "The 99 Nights"
+    },
+    "the_hollow_cairn": {
+      "name": "The Hollow-Cairn",
+      "aliases": [
+        "The Sanctuary of Soot",
+        "The Hearth-Point"
+      ],
+      "description": "A temporary sanctuary for the Wick-Keeper, centered around a volcanic Hearth-Stone. It provides a brief respite from the predatory shadows of the Weald.",
+      "visual_details": "Architecture/Landscape: A natural depression shielded by the massive, calcified ribs of ancient leviathans (#DCDCDC). Features: A central 'Hearth-Stone' made of jagged volcanic glass (#1A1A1B) etched with golden glowing runes (#FFD700). Firepit: A 'Cradle of Soot' where the Solemn Ember flows like liquid gold. Atmospheric elements: Spirit-Chimes made of finger-bones hanging from surrounding briars. Lighting: Warm, flickering amber (#FFBF00) against the cold violet of the forest background.",
+      "era": "The 99 Nights"
+    }
+  },
+  "extras": {
+    "solemn_ember": {
+      "name": "Solemn Ember",
+      "aliases": [
+        "The Star-Fragment",
+        "The Last Light"
+      ],
+      "description": "The last fragment of a fallen star, housed in a cracked glass lantern. It is the only source of warmth and survival in the Weald.",
+      "appearance": "A jagged, pulsating core of white-hot plasma (#FFFFFF) with an outer corona of deep orange (#FF4500), contained within a frame of tarnished brass and cracked lead-glass."
+    },
+    "whisper_moss": {
+      "name": "Whisper-Moss",
+      "aliases": [
+        "The Echo-Carpet"
+      ],
+      "description": "A sentient ground cover that records and plays back the sounds of previous travelers to confuse the current ones.",
+      "appearance": "A thick, velvety carpet of iridescent teal and deep green moss (#008080) that glows faintly when stepped upon, releasing small spores of silver light (#C0C0C0)."
+    },
+    "memory_shards": {
+      "name": "Memory Shards",
+      "aliases": [
+        "Sacrificial Echoes"
+      ],
+      "description": "Crystalline fragments of the protagonist's past, used as fuel for the Solemn Ember during the final stages of the journey.",
+      "appearance": "Jagged, translucent crystals (#E6E6FA) that display moving, holographic images of faces, homes, and sunlight when held close to the lantern."
+    },
+    "cinder_staff": {
+      "name": "Cinder-Staff",
+      "aliases": [
+        "The Testing Pole"
+      ],
+      "description": "A polearm made of petrified wood used to test the density of moss and ward off minor sprites.",
+      "appearance": "A six-foot staff of blackened, petrified wood (#333333) wrapped in silver-thistle twine, with a glowing ember tip that never fully extinguishes."
+    }
+  },
+  "style": {
+    "description": "A dark, atmospheric fusion of Gothic Horror and Ethereal Fantasy, characterized by high-contrast lighting and bioluminescent accents.",
+    "typeface": "Weathered, hand-pressed serif with runic flourishes and irregular kerning.",
+    "inking": "Intricate, scratchy linework with heavy cross-hatching to emphasize the textures of iron-bark and grave-wool.",
+    "coloring": "A restricted palette of cold violets and greys contrasted sharply against warm, liquid-looking oranges and cyans.",
+    "line_width": "Variable; fine and sharp for the environment, thick and heavy for the silhouettes of the protagonists.",
+    "palette": "Obsidian Black (#050505), Violet Twilight (#483D8B), Ember Orange (#FF4500), Iron Grey (#43464B), and Bioluminescent Cyan (#00FFFF).",
+    "shading": "Dramatic chiaroscuro with soft, glowing gradients emanating from light sources.",
+    "texture": "Heavy use of organic textures: rusted metal, calcified bone, damp moss, and cracked glass."
+  }
+}

@@ -1,0 +1,17 @@
+# Scene 3
+
+## Night 11: The Frost-Lace Hollows
+
+The eleventh night descended with a predatory chill that turned the violet twilight of the Obsidian Weald into a bruising shade of indigo. XPM moved with a mechanical heaviness, his boots crunching through a layer of rime that had not been there an hour prior. The iron-bound cradle strapped to his chest felt leaden, the Solemn Ember pulsing with a fitful, hungry orange light that seemed to leach the very warmth from his marrow. His leather hand wraps were stiff with frozen condensation, and every joint in his weathered frame protested the rhythmic march toward the Altar of the First Dawn.
+
+Beside him, Jack was little more than a frantic smudge of cerulean light. The boy’s spirit-form flickered violently, his translucent fingers twitching as they brushed against the iron-bark trees. He wasn’t looking at the path; he was leaning his head against the frozen wood, listening to the vibrations of the forest. Suddenly, Jack jerked back, his form turning a sharp, icy blue that cast long, distorted shadows against the Briars. The navigational charms hanging from his belt rattled with a frantic, metallic chatter, though there was no wind to stir them.
+
+"It’s not the wind, Wick-Keeper," Jack hissed, his voice a dry rasp that barely carried over the hum of the Ember. "The forest has stopped breathing. The trees... they’re holding their sap. Something has stepped out of the deep frost." XPM halted instantly, his staff biting into the crystalline soil. He felt the shift in the air—a sudden, vacuum-like pressure that sucked the moisture from his lips and the sound from the thicket. The Great Stillness was no longer a distant threat recorded in Whisper-Moss; it was a presence, a localized extinction of motion.
+
+## The Hour of the Bated Breath
+
+From the dense geometry of the Echo-Thickets, a shape detached itself from the shadows. It stood on two elongated, skeletal legs, yet its head bore the massive, crystalline antlers of an ancient stag. The Great Stillness moved without the rustle of leaves or the snap of twigs, a bipedal terror that seemed to glide through the fractured space of the Weald. Its eyes were twin voids of frozen red, glowing with the dull intensity of cooling embers. As it approached, the violet flora around it didn't just wither; it froze mid-pulse, locked in a permanent, brittle stasis.
+
+"The shroud, Jack. Now," XPM commanded, his voice a low rumble that felt dangerously loud in the growing silence. Jack acted with practiced, terrified fluidness, wrapping his spirit-tether around the iron-bound cradle. He pulled the navigational charms tight, weaving a veil of Echo-Reader energy that dampened the Ember’s amber glow until it was nothing more than a faint, smothered heartbeat. The boy then vanished into the crook of an iron-bark tree, his form becoming a mere ripple in the air, leaving XPM alone to face the Architect of Stasis.
+
+XPM dropped to one knee, grounding his staff. He closed his eyes and began the Toll of Breath. It was a grueling discipline of the Exiled Precept—a rhythmic, shallow inhalation followed by a long, silent expulsion of air designed to mask the heat of his lungs from the predator’s senses. With each breath, he felt the Great Stillness draw closer, the air around him turning into a wall of needles. The entity paused mere feet away, the scent of ozone and ancient ice wafting off its fur. XPM remained a statue, his mind locked on the duty of the Ember, his body a cold vessel of iron and will, waiting for the silence to pass.

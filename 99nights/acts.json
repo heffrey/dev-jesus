@@ -1,0 +1,73 @@
+{
+  "acts": [
+    {
+      "number": 1,
+      "title": "The Pilgrimage of the Flickering Star",
+      "description": "Corresponding to the Search Cycle, XPM and Jack embark on their 99-night quest, venturing into the Nursery of Briars to locate the path to the Altar of the First Dawn. This act focuses on the mechanics of survival, the gathering of resources, and the desperate pursuit of a light that can pierce the eternal twilight.",
+      "scenes": [
+        {
+          "number": 1,
+          "purpose": "XPM and Jack ignite the Solemn Ember at the forest's edge, officially beginning their search for the Altar of the First Dawn while the Whisper-Moss records their first steps."
+        },
+        {
+          "number": 2,
+          "purpose": "Jack uses his expertise to navigate the Nursery of Briars, helping XPM gather Oyl-Berries and Silver-Thistle while avoiding the deceptive echoes of previous travelers."
+        },
+        {
+          "number": 3,
+          "purpose": "The Great Stillness makes its first appearance on the eleventh night, forcing XPM to perform a Toll of Breath while Jack hides the lantern's glow to avoid detection."
+        },
+        {
+          "number": 4,
+          "purpose": "XPM discovers the tattered journals of a previous Wick-Keeper, providing the final clue and map needed to complete the search for the path into the deeper woods."
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "title": "The Siege of the Gloaming Throat",
+      "description": "Embodying the Troy Cycle, the Obsidian Weald transitions from a passive labyrinth into an active combatant, launching a metaphorical siege against the travelers. This act focuses on the escalating conflict between XPM, Jack, and the manifestations of The Great Stillness, leading to the destruction of their morale.",
+      "scenes": [
+        {
+          "number": 5,
+          "purpose": "The Gloaming Throat closes the path behind XPM and Jack, beginning a siege where the moving trees and Iron Breath attempt to suffocate their light and resolve."
+        },
+        {
+          "number": 6,
+          "purpose": "Hollow-Walkers initiate a psychological war, using their mirror-faces to trick Jack into a trap that XPM must fight through using the lantern’s Amber filter."
+        },
+        {
+          "number": 7,
+          "purpose": "XPM and Jack are forced into a violent standoff at a Hearth-Stone, where they must defend their camp against a massive wave of Predatory Shadows attracted by the lantern's heat."
+        },
+        {
+          "number": 8,
+          "purpose": "The Great Stillness descends in full force to destroy the travelers' secondary supplies, leaving XPM and Jack to face the fall of their hope in the freezing, absolute dark."
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "title": "The Ascent of the Forsaken Sun",
+      "description": "Mapping to the Return Cycle, the narrative moves toward the restoration of the world as XPM reaches the Heart of the Root. This act culminates in the homecoming of the light, where the protagonist must sacrifice her own identity to return the sun to a dead world.",
+      "scenes": [
+        {
+          "number": 9,
+          "purpose": "Entering the Heart of the Root, XPM begins sacrificing Memory Shards of her past life to keep the Solemn Ember alive as the forest's geometry begins to fracture."
+        },
+        {
+          "number": 10,
+          "purpose": "Jack offers a final 'Secret-Told' to activate the last Hearth-Stone, providing XPM with the necessary anchor to survive the transition into the non-Euclidean canopy."
+        },
+        {
+          "number": 11,
+          "purpose": "During a final blizzard of Ash-Snow, XPM uses her remaining strength to shield the flame from The Great Stillness as she climbs the spiral staircase toward the sky."
+        },
+        {
+          "number": 12,
+          "purpose": "XPM reaches the Altar and restores the First Dawn, completing the cycle of return by igniting the sky and witnessing the rebirth of the world from the forest’s cocoon."
+        }
+      ]
+    }
+  ]
+}

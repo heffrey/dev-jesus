@@ -1,0 +1,6 @@
+- **Location/Heading:** The Nursery of Briars/Echo-Thickets in the Obsidian Weald; heading deeper into the labyrinth as the path braids shut behind them.
+- **Time:** Night 1 of a 99-night pilgrimage; oppressive violet twilight.
+- **Character states:** XPM is dehydrated (parched throat, aching joints) and wearing fraying leather hand wraps; Jack is a translucent spirit-form that flickers icy blue when nervous.
+- **Objects/Inventory:** Solemn Ember (pulsing amber in an iron-bound cradle); XPM’s staff; pack containing freshly harvested Oyl-Berries and vibrating Silver-Thistle.
+- **Plot/Revelations:** The Whisper-Moss has recorded their heartbeats for tracking; the forest "echoes" use mimicry to lure victims into briars.
+- **Threat/Antagonist:** The Architect of Stasis (a towering, stag-headed silhouette) is pursuing them, causing a drop in temperature and trails of frost.

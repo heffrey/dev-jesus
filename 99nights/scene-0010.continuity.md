@@ -1,0 +1,6 @@
+- Location: Base of the World-Spire (Sanctuary of Soot); heading up a crystalline staircase toward the Heart of the Root.
+- Character state (Elara): Physically exhausted and frostbitten; silver-thistle bruise on her arm throbs near the monster; losing personal memories (mother/home) to the Ember’s "hunger."
+- Character state (Jack): No longer a mobile navigator/spirit; sacrificed his "Secret-Told" memory to become the "anchor" in the Hearth-Stone; can no longer speak to Elara.
+- Objects: Elara carries the iron cradle containing the "Solemn Ember" (pulsing gold light); the volcanic Hearth-Stone is now ignited and radiating domestic warmth.
+- Plot development: The Great Stillness (10ft bipedal stag with crimson eyes) was repelled by the hearth fire; the non-Euclidean canopy has shifted into a physical staircase.
+- Time/Environment: Night 19; violet twilight; "Iron Breath" (frost-dust) cleared from Elara's lungs by the new heat source.

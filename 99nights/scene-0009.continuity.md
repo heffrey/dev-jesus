@@ -1,0 +1,6 @@
+- Location: Deep Obsidian Weald, approaching the Heart of the Root; environment is distorted/non-Euclidean and turning into geometric glass shards.
+- Objects: Solemn Ember (reignited to fierce, hungry gold) held in an iron cradle; Jack (a blue spark) is attached to XPM’s collar.
+- Character State (XPM/Elara): Physically exhausted with "Iron Breath" inhalations; has permanently sacrificed the memory of her childhood home (smell of rye/golden summer) to the Ember.
+- Character State (Jack): Regained clarity and speech; expresses concern that Elara is becoming "thinner" (fading/losing herself).
+- Plot: The Great Stillness (red eyes) is stalking them from the shadows; the map is lost, and memory sacrifice is now the only "currency" to fuel the light and open paths.
+- Time: Transition from Night 18 to Night 19.

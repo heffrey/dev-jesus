@@ -1,0 +1,6 @@
+- **Location/Time**: Night 14, Marrow-Groves within the Obsidian Weald; heading toward the "Sanctuary of Soot" via the "Nursery of Briars."
+- **Objects/Items**: The Solemn Ember (pulsing amber in an iron cradle), a predecessor’s tattered journal (containing a vellum map of "Hearth-Points" and ley-lines), vibrating Silver-Thistle, and Oyl-Berries.
+- **XPM Physical State**: Weathered, dehydrated, and aching from "humid chill"; wearing leather hand wraps stiffened by dried salt and Silver-Thistle residue; maintaining a disciplined breathing rhythm.
+- **Jack Physical/Emotional State**: Cerulean spirit-form; sensitive to subsonic vibrations and "frequencies"; currently determined and attuned to a "low hum" that marks the route.
+- **Plot/Revelations**: The forest (and the "Architect") tracks travelers by synchronizing flora pulses with the traveler’s heartbeat; the path to the Altar of the First Dawn is a "blind spot" in the Great Stillness's attention.
+- **Threat**: The "Great Stillness" is identified as a "bipedal shadow" actively hunting them from the darkness.

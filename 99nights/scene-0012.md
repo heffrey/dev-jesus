@@ -1,0 +1,25 @@
+# Scene 12
+
+## Night 19 | The Heart of the Root
+
+The summit of the World-Spire was a jagged crown of glass and frozen memory, suspended above the gasping lungs of the Obsidian Weald. Elara—or the woman who had once answered to that name—moved with a mechanical, heavy rhythm. Her boots crunched against the frost-slicked stone, each step a victory over the "Iron Breath" that sought to turn her blood into slush. The iron cradle in her hands no longer felt like a weight; it felt like a part of her own skeletal structure, the Solemn Ember within pulsing with a gold light so fierce it rendered the surrounding violet twilight into a bruised, sickly grey.
+
+The Great Stillness was waiting. The bipedal terror stood at the edge of the central aperture, its ten-foot frame casting a shadow that seemed to swallow the very concept of light. Its antlers, branched like frozen lightning, scraped against the sky, and its crimson eyes burned with the cold fury of a thousand dead winters. As Elara approached, the silver-thistle bruise on her arm flared into a scream of violet agony, a sensory warning that the Architect of Stasis was drawing near to claim its prize: the absolute silence of a world without a heart.
+
+She had no words left for the beast. The Ember had already eaten the memory of her father’s laughter and the smell of rain on dry earth; now, it began to gnaw at the very shape of her face. She was a hollowed-out husk, a Wick-Keeper whose only remaining purpose was to bridge the gap between the dying dark and the unborn day. The Great Stillness let out a sound like grinding tectonic plates, a command for the world to stop, but Elara did not falter. She stepped into the entity’s freezing aura, her frostbitten palms smoking as they gripped the searing iron of the cradle.
+
+## The Apex of the Spire | The First Dawn
+
+At the center of the platform lay the Altar of the Root, a circular depression that mirrored the sun’s ancient dimensions. Elara knelt, her movements slow and deliberate, ignoring the way the Great Stillness lunged forward, its claws of absolute zero raking the air inches from her spine. The entity recoiled as the Solemn Ember sensed its proximity, the gold light lashing out like a solar flare. In that moment of blinding radiance, Elara offered the final scrap of her identity. She forgot the color of her own eyes; she forgot the weight of Jack’s hand on her shoulder; she forgot that she was human.
+
+As the iron cradle touched the Altar, the "Ash-Snow" ceased to fall. The world held its breath. A low, resonant hum began to vibrate through the crystalline staircase, traveling down the length of the World-Spire and into the very marrow of the Obsidian Weald below. The Solemn Ember did not merely burn; it erupted. The gold light poured into the Altar’s grooves, tracing ancient ley lines that had been dry for ninety-nine nights. The sky, once a fractured canopy of violet and grey, began to tear open, revealing the raw, bleeding gold of a resurrected horizon.
+
+The Great Stillness let out a final, hollowed roar as the warmth hit its hide. The bipedal stag, the guardian of the frost, began to dissolve into mist and shadow, its form unable to coexist with the return of thermal equilibrium. It did not die so much as it ceased to be a necessity. Elara watched through eyes that no longer recognized what they saw, witnessing the "Iron Breath" evaporate from the atmosphere. The predatory forest below shifted, its non-Euclidean geometry collapsing into the simple, honest shapes of trees and earth.
+
+## The Obsidian Weald | The Return Cycle
+
+The sun broke over the edge of the world, a forsaken sun no longer, but a crown of fire that reclaimed the sky. The light washed over the World-Spire in a physical wave, stripping away the last of the violet twilight. Below, the Obsidian Weald began to pulse, not with the predatory heartbeat of a labyrinth, but with the steady, slow awakening of a living forest. The silver-thistle bruise on Elara’s arm faded into a faint, white scar, the parasitic connection to the darkness finally severed by the dawn.
+
+Elara sat at the edge of the aperture, a weathered survivor whose mission was complete. She looked down at her hands, seeing the soot and the frostbite, but feeling only the strange, domestic warmth that Jack had anchored into the world before his departure. The "Hollow-Cairn" was no longer a temporary sanctuary; the entire world was becoming a hearth. Though she could not remember her name, she felt the phantom weight of a navigator’s hand at her collar, a lingering echo of the boy who had guided her through the dark.
+
+The first true wind in a century stirred her hair, carrying the scent of thawing earth and green things. The cycle of return was finished. The Wick-Keeper had become the wick, and the wick had been consumed to light the world. As the gold light of the First Dawn turned the glass spire into a pillar of flame, the woman who was once Elara closed her eyes, listening to the silence—not the silence of the Great Stillness, but the quiet, peaceful breathing of a world that had finally woken up.

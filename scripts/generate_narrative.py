@@ -745,8 +745,8 @@ def main() -> int:
     print(f"\nNext steps:")
     print(f"  1. Review and edit {acts_path}")
     print(f"  2. Review and edit {definitions_path}")
-    print(f"  3. Generate scenes: python scripts/generate_scenes.py --acts-file {story_dir}/acts.json")
-    print(f"  4. Generate storyboards: python scripts/generate_storyboards.py --scene-glob {story_dir}/scene-*.md --output-dir {story_dir}/boards")
+    print(f"  3. Generate scenes: python3 scripts/generate_scenes.py --acts-file {story_dir}/acts.json --output-dir {story_dir}")
+    print(f"  4. Generate storyboards: python3 scripts/generate_storyboards.py --scene-glob {story_dir}/scene-*.md --output-dir {story_dir}/boards")
     print()
 
     return 0

@@ -1,0 +1,7 @@
+- Location/Destination: Entering the Obsidian Weald (Nursery of Briars); heading toward the Altar of the First Dawn.
+- Time/Duration: Night 1 of a 99-night pilgrimage; the sky is a permanent, sunless twilight.
+- Key Items (XPM): Iron-bound cradle containing the "Solemn Ember" (a pulsing amber star-fragment that draws moisture/life-force from the bearer), flint, catalytic marrow, and a staff.
+- Key Items (Jack): Translucent spirit-tether and navigational charms.
+- Character States: XPM is stoic and physically burdened; Jack is a flickering spirit-form who turns pale blue when terrified and can "hear" the forest.
+- Plot Development: The path behind them has vanished into thorns and fractured space; Whisper-Moss has recorded their presence in its "ledger."
+- Antagonist: "The Great Stillness" (Architect of Stasis) has sensed the Ember's ignition and begun hunting the duo.

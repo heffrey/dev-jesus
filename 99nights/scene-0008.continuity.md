@@ -1,0 +1,6 @@
+- **Location/Time:** Transitions from Night 17 to Night 18; currently at the Hollow-Cairn (Sanctuary of Soot) within the Obsidian Weald.
+- **Status of Supplies:** All Oyl-Berries (chemical flares) are destroyed (turned to blackened slush); the ancient vellum map has disintegrated into frozen shards.
+- **Key Objects:** The iron cradle containing the Solemn Ember (low orange pulse); XPM’s staff; a heavy, weathered cloak; salt-stained wraps.
+- **XPM Physical State:** Suffering from "Iron Breath" (exhaling frost dust); fingers numb/stiff; silver-thistle residue has turned into a violet bruise on the skin.
+- **Jack Physical/Emotional State:** Spirit-form is "fraying," reduced to a dim, flickering grey-blue spark on XPM's collar; disoriented and fearful.
+- **Plot/Revelation:** XPM was formerly known as "Elara"; the Great Stillness (stag-like entity) has retreated, leaving the travelers without navigation or secondary light in a forest that rearranges its geometry.

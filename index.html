@@ -72,6 +72,15 @@
             object-fit: contain;
             display: block;
             transition: opacity 0.3s ease;
+            touch-action: pan-y;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .image-container {
+            touch-action: pan-y;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         .image-container img.loading {
@@ -331,8 +340,10 @@
             <label for="story-folder">Story:</label>
             <select id="story-folder" onchange="changeStoryFolder()">
                 <option value="story">Story</option>
-                <option value="hunter">Hunter</option>
+                <option value="99nights">99 Nights</option>
                 <option value="executive">Executive</option>
+                <option value="france">France</option>
+                <option value="hunter">Hunter</option>
             </select>
         </div>
         
@@ -409,15 +420,13 @@
                 'story/boards/scene-0014-2.jpg',
                 'story/boards/scene-0014-3.jpg'
             ],
-            'hunter': [
-                'hunter/boards/scene-0001-1.jpg',
-                'hunter/boards/scene-0001-2.jpg',
-                'hunter/boards/scene-0001-3.jpg',
-                'hunter/boards/scene-0002-1.jpg',
-                'hunter/boards/scene-0002-2.jpg',
-                'hunter/boards/scene-0002-3.jpg',
-                'hunter/boards/scene-0003-1.jpg',
-                'hunter/boards/scene-0003-2.jpg'
+            '99nights': [
+                '99nights/boards/scene-0001-1.jpg',
+                '99nights/boards/scene-0001-2.jpg',
+                '99nights/boards/scene-0001-3.jpg',
+                '99nights/boards/scene-0001-4.jpg',
+                '99nights/boards/scene-0001-5.jpg',
+                '99nights/boards/scene-0001-6.jpg'
             ],
             'executive': [
                 'executive/boards/scene-0001-1.jpg',
@@ -434,7 +443,29 @@
                 'executive/boards/scene-0003-3.jpg',
                 'executive/boards/scene-0003-4.jpg',
                 'executive/boards/scene-0003-5.jpg',
-                'executive/boards/scene-0003-6.jpg'
+                'executive/boards/scene-0003-6.jpg',
+                'executive/boards/scene-0004-1.jpg',
+                'executive/boards/scene-0004-2.jpg',
+                'executive/boards/scene-0004-3.jpg',
+                'executive/boards/scene-0004-4.jpg',
+                'executive/boards/scene-0004-5.jpg',
+                'executive/boards/scene-0004-6.jpg'
+            ],
+            'france': [
+                'france/boards/scene-0001-1.jpg',
+                'france/boards/scene-0001-2.jpg',
+                'france/boards/scene-0001-3.jpg',
+                'france/boards/scene-0001-4.jpg'
+            ],
+            'hunter': [
+                'hunter/boards/scene-0001-1.jpg',
+                'hunter/boards/scene-0001-2.jpg',
+                'hunter/boards/scene-0001-3.jpg',
+                'hunter/boards/scene-0002-1.jpg',
+                'hunter/boards/scene-0002-2.jpg',
+                'hunter/boards/scene-0002-3.jpg',
+                'hunter/boards/scene-0003-1.jpg',
+                'hunter/boards/scene-0003-2.jpg'
             ]
         };
 
@@ -532,6 +563,51 @@
                 toggleAutoPlay();
             }
         });
+
+        // Touch/swipe navigation for mobile
+        let touchStartX = null;
+        let touchStartY = null;
+        const minSwipeDistance = 50; // Minimum distance in pixels to trigger a swipe
+        const maxVerticalDistance = 100; // Maximum vertical distance to still consider it a horizontal swipe
+
+        const imageContainer = document.querySelector('.image-container');
+        
+        imageContainer.addEventListener('touchstart', (e) => {
+            const touch = e.touches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+        }, { passive: true });
+
+        imageContainer.addEventListener('touchend', (e) => {
+            if (touchStartX === null || touchStartY === null) {
+                return;
+            }
+
+            const touch = e.changedTouches[0];
+            const touchEndX = touch.clientX;
+            const touchEndY = touch.clientY;
+
+            const deltaX = touchEndX - touchStartX;
+            const deltaY = touchEndY - touchStartY;
+
+            // Check if it's primarily a horizontal swipe
+            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaY) < maxVerticalDistance) {
+                // Check if swipe distance is sufficient
+                if (Math.abs(deltaX) > minSwipeDistance) {
+                    if (deltaX > 0) {
+                        // Swipe right - go to previous image
+                        previousImage();
+                    } else {
+                        // Swipe left - go to next image
+                        nextImage();
+                    }
+                }
+            }
+
+            // Reset touch coordinates
+            touchStartX = null;
+            touchStartY = null;
+        }, { passive: true });
 
         function changeStoryFolder() {
             const select = document.getElementById('story-folder');

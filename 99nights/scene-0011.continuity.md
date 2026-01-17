@@ -1,0 +1,7 @@
+- **Time & Environment**: Night 19; a heavy blizzard of "Ash-Snow" (grey sheets) and "Iron Breath" (toxic air) is active.
+- **Location**: The World-Spire, ascending a shifting glass/mist staircase to a jagged platform at the "Heart of the Root"; the Obsidian Weald lies below.
+- **Key Item**: The Solemn Ember in an iron cradle; it consumes Elara's memories (father’s workshop, mother’s eyes, her name/identity) to stay lit and is currently a "pillar of blinding radiance."
+- **Elara’s Physical State**: Frostbitten palms, "Iron Breath" rattling in her chest, and a silver-thistle bruise on her arm that throbs/flares violet in the presence of the enemy.
+- **Elara’s Mental State**: She is a "hollowed-out husk" with no memory of her name or origin; she feels the "phantom weight" of the absent Jack at her collar.
+- **Antagonist**: The Great Stillness (Bipedal Terror), a 10-foot entity with lightning-like antlers and crimson eyes that radiates "absolute zero" cold.
+- **Plot Development**: Elara has reached the central aperture at the top of the spire and is preparing for a "final sacrifice" to bring the dawn.

@@ -1,0 +1,7 @@
+- **Time and Location**: Night 15; the Gloaming Throat within the Obsidian Weald. The path behind is sealed by shifting iron-bark trees; they are heading toward the Sanctuary of Soot.
+- **Objects and Items**: Iron-bound cradle containing the "Solemn Ember" (pulses with orange light/heat); a staff; leather hand wraps coated in silver-thistle residue (glows sickly pale in the cold).
+- **Consumables**: Oyl-Berries (crushed against the cradle to create a brief, pungent chemical flare of heat).
+- **Character State (XPM)**: Physically exhausted with stiff joints and heavy limbs; struggling against the "Iron Breath" (a predatory metallic cold wind); addressed as "Elara" by Jack.
+- **Character State (Jack)**: Cerulean spirit-form; flickering, dimming toward invisibility, and losing his tether to the physical realm due to terror and the "Great Stillness."
+- **Plot Developments**: The forest is a sentient "siege engine" controlled by "The Architect/Great Stillness"; it is physically folding its geometry to trap the travelers and extinguish the Ember.
+- **Environmental Factors**: The "Iron Breath" saps kinetic energy and smells of wet metal/frost; the forest walls move rhythmically to mimic and psychological sync with XPM’s heartbeat.

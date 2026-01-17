@@ -1,0 +1,6 @@
+- Location: Sanctuary of Soot (a volcanic "Hollow-Cairn") in the Obsidian Weald; Time: Night 17.
+- Key Items: The Solemn Ember in an iron cradle (resting on the central Hearth-Stone); XPM’s staff; Oyl-Berries (used as chemical flares).
+- Character State (XPM): Physically exhausted and salt-crusted; suffering from "Iron Breath" (lung frost); silver-thistle residue on hands has faded to a non-warming violet.
+- Character State (Jack): Flickering, translucent gray spirit-form; mentally fragmented (referring to "Elara"); currently reduced to a tiny blue spark on XPM’s collar.
+- Plot: The Sanctuary is under siege by heat-drinking Predatory Shadows and animated iron-bark roots.
+- Major Threat: The Architect (a stag-headed "Bipedal Terror" with red eyes) is present at the tree-line, projecting localized extreme cold to crack the volcanic stone.

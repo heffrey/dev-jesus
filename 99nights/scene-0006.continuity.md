@@ -1,0 +1,7 @@
+- **Location**: Mirror-Galleries of the Gloaming Throat (Obsidian Weald); heading toward the Sanctuary of Soot.
+- **Time**: Night 16; the forest is rearranging itself; precious time was lost in the mirror-trap.
+- **Objects**: Solemn Ember (iron cradle, light is dangerously low); Amber filter (brass hilt, now scorched brown and cooling); vellum map in XPM's pocket.
+- **Character state (XPM)**: Physically exhausted with stiff joints caused by salt and silver-thistle residue; leather hand wraps are salt-crusted.
+- **Character state (Jack)**: Spirit-form is "gray and tattered" and clinging to XPM after his essence was partially drained by a Hollow-Walker.
+- **Plot/Threats**: The Architect of Stasis (stag-like silhouette, red eyes) is actively stalking them; the Hollow-Walkers' mirror-faces were shattered into black sand by the filtered light.
+- **Environmental Clues**: The smell of soot and volcanic ash is becoming prominent, indicating the Sanctuary of Soot is nearby.

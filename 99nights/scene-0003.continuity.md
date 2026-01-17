@@ -1,0 +1,6 @@
+- **Time and Location**: Night 11; the Frost-Lace Hollows (Obsidian Weald), heading toward the Altar of the First Dawn.
+- **XPM State**: Physically exhausted with frozen leather hand wraps and stiff joints; currently kneeling in a "Toll of Breath" discipline to mask heat and respiration.
+- **Jack State**: Cerulean spirit-form; currently invisible/hidden within an iron-bark tree after shrouding the Ember.
+- **Key Items**: Iron-bound cradle (strapped to XPM’s chest) containing the Solemn Ember (orange light currently dampened); Jack's belt of navigational charms; XPM’s staff.
+- **Plot/Threat**: The duo is being hunted by "The Great Stillness," a bipedal, stag-antlered predator that freezes flora; the entity is currently standing mere feet from a motionless XPM.
+- **Environmental State**: Extreme "predatory chill" and localized stasis; the forest has "stopped breathing" and moisture is being sucked from the air.
