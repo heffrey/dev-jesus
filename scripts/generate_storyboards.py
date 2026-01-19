@@ -287,6 +287,11 @@ def update_character_references(
         character_references[character_name] = character_references[character_name][:10]
 
 
+def has_quote_chars(text: str) -> bool:
+    """Check if text contains any quote characters (straight or curly)."""
+    return any(q in text for q in ['"', "'", '"', '"', ''', '''])
+
+
 def detect_entities(scene_text: str, definitions: dict) -> tuple[list[dict], list[dict], list[dict]]:
     """Detect which characters, settings, and extras appear in the scene text.
     
@@ -340,7 +345,8 @@ def detect_entities(scene_text: str, definitions: dict) -> tuple[list[dict], lis
                     # Indicators of visual presence:
                     # - Character doing actions (verbs before/after name)
                     # - Character speaking (quotes nearby)
-                    has_quotes = '"' in context or "'" in context
+                    # Check for both straight and curly quotes
+                    has_quotes = any(q in context for q in ['"', "'", '"', '"', ''', '''])
                     # - Character being directly observed (pronouns, "he", "she", "they" nearby)
                     has_pronouns = any(pronoun in context for pronoun in [' he ', ' she ', ' they ', ' his ', ' her ', ' their '])
                     # - Character name in subject position (followed by verb)
@@ -357,7 +363,7 @@ def detect_entities(scene_text: str, definitions: dict) -> tuple[list[dict], lis
                     matched = True
                     break
                 # If not visually present but mentioned, only add if it's a direct reference (not just in narration)
-                elif any(match for match in matches if '"' in scene_lower[max(0, match.start()-20):match.end()+20]):
+                elif any(match for match in matches if has_quote_chars(scene_lower[max(0, match.start()-20):match.end()+20])):
                     # Character mentioned in dialogue - likely present
                     if char_data not in found_characters:
                         found_characters.append(char_data)
@@ -387,7 +393,7 @@ def detect_entities(scene_text: str, definitions: dict) -> tuple[list[dict], lis
                             start, end = match.span()
                             context = scene_lower[max(0, start-30):min(len(scene_lower), end+30)]
                             # Only match if there are action indicators nearby (stronger requirement)
-                            if any(verb in context for verb in action_verbs) or '"' in context:
+                            if any(verb in context for verb in action_verbs) or has_quote_chars(context):
                                 matched_words.append((word, start))
                                 break
                     
@@ -443,14 +449,15 @@ def detect_entities(scene_text: str, definitions: dict) -> tuple[list[dict], lis
                             # CRITICAL: Require the word to be capitalized (proper noun) to avoid compound noun false positives
                             # This prevents "ghost" in "ghost ship" from matching "The Ghost in the Hamptons"
                             # Proper names are always capitalized, so this is a safe requirement
-                            has_action = any(verb in context for verb in action_verbs) or '"' in context
+                            has_action = any(verb in context for verb in action_verbs) or has_quote_chars(context)
                             
                             if has_action:
                                 # Check if word is capitalized (proper noun) - REQUIRED for single word from multi-word alias
                                 # This avoids false positives from compound nouns like "ghost ship", "wall street", etc.
                                 original_match = scene_text[start:end] if start < len(scene_text) else scene_lower[start:end]
                                 is_capitalized = original_match and original_match[0].isupper() if original_match else False
-                                has_quotes = '"' in context or "'" in context
+                                # Check for both straight and curly quotes
+                                has_quotes = any(q in context for q in ['"', "'", '"', '"', ''', '''])
                                 
                                 # REQUIRE capitalization (or quotes) for single word from multi-word alias
                                 # This is safe because character names/aliases are proper nouns
@@ -480,7 +487,7 @@ def detect_entities(scene_text: str, definitions: dict) -> tuple[list[dict], lis
                             start, end = match.span()
                             context = scene_lower[max(0, start-30):min(len(scene_lower), end+30)]
                             # Check for action context - character doing something
-                            if any(verb in context for verb in action_verbs) or '"' in context:
+                            if any(verb in context for verb in action_verbs) or has_quote_chars(context):
                                 if char_data not in found_characters:
                                     found_characters.append(char_data)
                                     matched = True
@@ -494,7 +501,7 @@ def detect_entities(scene_text: str, definitions: dict) -> tuple[list[dict], lis
                         if match:
                             start, end = match.span()
                             context = scene_lower[max(0, start-30):min(len(scene_lower), end+30)]
-                            if any(verb in context for verb in action_verbs) or '"' in context:
+                            if any(verb in context for verb in action_verbs) or has_quote_chars(context):
                                 if char_data not in found_characters:
                                     found_characters.append(char_data)
                                     matched = True
@@ -512,7 +519,7 @@ def detect_entities(scene_text: str, definitions: dict) -> tuple[list[dict], lis
                     idx = scene_lower.find(name_lower)
                     context = scene_lower[max(0, idx-30):min(len(scene_lower), idx+len(name_lower)+30)]
                     
-                    if '"' in context or any(verb in context for verb in [' said', ' spoke', ' asked', ' replied', ' stood', ' walked', ' moved']):
+                    if has_quote_chars(context) or any(verb in context for verb in [' said', ' spoke', ' asked', ' replied', ' stood', ' walked', ' moved']):
                         if char_data not in found_characters:
                             found_characters.append(char_data)
                         break
@@ -757,7 +764,7 @@ def detect_undefined_characters(scene_text: str, definitions: dict) -> list[str]
             
             # Also check if the role has dialogue
             if not significant:
-                if '"' in context[end - context_start:] or "'" in context[end - context_start:]:
+                if has_quote_chars(context[end - context_start:]):
                     # Check if it looks like dialogue attribution
                     if re.search(r'(said|spoke|whispered|shouted|replied|asked|muttered|murmured)', context):
                         significant = True
@@ -1336,13 +1343,23 @@ def generate_character_reference_image(
     max_retries: int,
     retry_base: float,
     verbose: bool = False,
+    style_reference_path: str = None,
 ) -> str:
     """Generate a single-panel reference image for a character. Returns the path to the generated image."""
     char_name = character.get("name", "Unknown")
     prompt = build_character_reference_prompt(character, definitions)
     
+    # Add style reference instruction if available
+    if style_reference_path:
+        prompt += "\n\nIMPORTANT: Match the visual style shown in the provided style reference image EXACTLY. This includes line weight, color palette, shading technique, and overall aesthetic."
+    
     if verbose:
         print(f"    Generating reference image for {char_name}...", flush=True)
+    
+    # Collect reference images (style reference if available)
+    reference_images = []
+    if style_reference_path and os.path.isfile(style_reference_path):
+        reference_images.append(style_reference_path)
     
     try:
         response = call_gemini(
@@ -1352,7 +1369,7 @@ def generate_character_reference_image(
             max_retries,
             retry_base,
             verbose,
-            reference_images=None,
+            reference_images=reference_images if reference_images else None,
         )
         images = extract_images(response)
         if not images:
@@ -1363,7 +1380,10 @@ def generate_character_reference_image(
         # Use the first image
         mime, data = images[0]
         ext = "png" if mime == "image/png" else "jpg"
-        output_path = os.path.join(output_dir, f"ref-{char_name.lower().replace(' ', '-')}.{ext}")
+        # Save to refs/ subdirectory
+        refs_dir = os.path.join(output_dir, "refs")
+        ensure_dir(refs_dir)
+        output_path = os.path.join(refs_dir, f"ref-{char_name.lower().replace(' ', '-')}.{ext}")
         
         with open(output_path, "wb") as handle:
             handle.write(data)
@@ -1420,13 +1440,23 @@ def generate_extra_reference_image(
     max_retries: int,
     retry_base: float,
     verbose: bool = False,
+    style_reference_path: str = None,
 ) -> str:
     """Generate a single-panel reference image for an extra. Returns the path to the generated image."""
     extra_name = extra.get("name", "Unknown")
     prompt = build_extra_reference_prompt(extra)
     
+    # Add style reference instruction if available
+    if style_reference_path:
+        prompt += "\n\nIMPORTANT: Match the visual style shown in the provided style reference image EXACTLY. This includes line weight, color palette, shading technique, and overall aesthetic."
+    
     if verbose:
         print(f"    Generating reference image for extra: {extra_name}...", flush=True)
+    
+    # Collect reference images (style reference if available)
+    reference_images = []
+    if style_reference_path and os.path.isfile(style_reference_path):
+        reference_images.append(style_reference_path)
     
     try:
         response = call_gemini(
@@ -1436,7 +1466,7 @@ def generate_extra_reference_image(
             max_retries,
             retry_base,
             verbose,
-            reference_images=None,
+            reference_images=reference_images if reference_images else None,
         )
         images = extract_images(response)
         if not images:
@@ -1447,7 +1477,10 @@ def generate_extra_reference_image(
         # Use the first image
         mime, data = images[0]
         ext = "png" if mime == "image/png" else "jpg"
-        output_path = os.path.join(output_dir, f"ref-extra-{extra_name.lower().replace(' ', '-')}.{ext}")
+        # Save to refs/ subdirectory
+        refs_dir = os.path.join(output_dir, "refs")
+        ensure_dir(refs_dir)
+        output_path = os.path.join(refs_dir, f"ref-extra-{extra_name.lower().replace(' ', '-')}.{ext}")
         
         with open(output_path, "wb") as handle:
             handle.write(data)
@@ -1509,6 +1542,7 @@ def generate_setting_reference_image(
     max_retries: int,
     retry_base: float,
     verbose: bool = False,
+    style_reference_path: str = None,
 ) -> str:
     """Generate a reference image for a setting. Returns the path to the generated image.
     
@@ -1517,8 +1551,17 @@ def generate_setting_reference_image(
     setting_name = setting.get("name", "Unknown")
     prompt = build_setting_reference_prompt(setting, view_type)
     
+    # Add style reference instruction if available
+    if style_reference_path:
+        prompt += "\n\nIMPORTANT: Match the visual style shown in the provided style reference image EXACTLY. This includes line weight, color palette, shading technique, and overall aesthetic."
+    
     if verbose:
         print(f"    Generating {view_type} reference image for {setting_name}...", flush=True)
+    
+    # Collect reference images (style reference if available)
+    reference_images = []
+    if style_reference_path and os.path.isfile(style_reference_path):
+        reference_images.append(style_reference_path)
     
     try:
         response = call_gemini(
@@ -1528,7 +1571,7 @@ def generate_setting_reference_image(
             max_retries,
             retry_base,
             verbose,
-            reference_images=None,
+            reference_images=reference_images if reference_images else None,
         )
         images = extract_images(response)
         if not images:
@@ -1539,7 +1582,10 @@ def generate_setting_reference_image(
         # Use the first image
         mime, data = images[0]
         ext = "png" if mime == "image/png" else "jpg"
-        output_path = os.path.join(output_dir, f"ref-setting-{setting_name.lower().replace(' ', '-')}-{view_type}.{ext}")
+        # Save to refs/ subdirectory
+        refs_dir = os.path.join(output_dir, "refs")
+        ensure_dir(refs_dir)
+        output_path = os.path.join(refs_dir, f"ref-setting-{setting_name.lower().replace(' ', '-')}-{view_type}.{ext}")
         
         with open(output_path, "wb") as handle:
             handle.write(data)
@@ -1655,7 +1701,10 @@ def generate_style_reference_image(
         # Use the first image
         mime, data = images[0]
         ext = "png" if mime == "image/png" else "jpg"
-        output_path = os.path.join(output_dir, f"ref-style.{ext}")
+        # Save to refs/ subdirectory
+        refs_dir = os.path.join(output_dir, "refs")
+        ensure_dir(refs_dir)
+        output_path = os.path.join(refs_dir, f"ref-style.{ext}")
         
         with open(output_path, "wb") as handle:
             handle.write(data)
@@ -2229,6 +2278,7 @@ def main() -> int:
                 args.max_retries,
                 args.retry_base,
                 args.verbose,
+                style_reference_path=style_reference_path,
             )
             
             if ref_path:
@@ -2378,6 +2428,7 @@ def main() -> int:
                     args.max_retries,
                     args.retry_base,
                     args.verbose,
+                    style_reference_path=style_reference_path,
                 )
                 if ref_path:
                     # Add reference image to database
@@ -2404,6 +2455,7 @@ def main() -> int:
                     args.max_retries,
                     args.retry_base,
                     args.verbose,
+                    style_reference_path=style_reference_path,
                 )
                 if ref_path:
                     # Add reference image to database
@@ -2442,6 +2494,7 @@ def main() -> int:
                         args.max_retries,
                         args.retry_base,
                         args.verbose,
+                        style_reference_path=style_reference_path,
                     )
                     if ref_path:
                         if setting_name not in setting_references:
@@ -2474,6 +2527,7 @@ def main() -> int:
                         args.max_retries,
                         args.retry_base,
                         args.verbose,
+                        style_reference_path=style_reference_path,
                     )
                     if ref_path:
                         if setting_name not in setting_references:
@@ -2542,6 +2596,63 @@ def main() -> int:
             if args.verbose:
                 print(f"    Generating {len(panel_instructions)} panel(s)...", flush=True)
             
+            # Generate reference images for characters detected in this chunk that weren't at scene level
+            # This catches characters who appear mid-scene and weren't detected in the full scene text
+            for char in chunk_characters:
+                char_name = char.get("name", "")
+                if char_name and char_name not in character_references:
+                    # First time seeing this character - generate reference image
+                    if args.verbose:
+                        print(f"    Generating reference image for chunk-detected character: {char_name}...", flush=True)
+                    ref_path = generate_character_reference_image(
+                        args.api_key,
+                        args.model,
+                        char,
+                        definitions,
+                        args.output_dir,
+                        args.max_retries,
+                        args.retry_base,
+                        args.verbose,
+                        style_reference_path=style_reference_path,
+                    )
+                    if ref_path:
+                        update_character_references(
+                            character_references, char_name, ref_path, args.output_dir
+                        )
+                        save_character_references(character_references_path, character_references)
+                        if args.sleep_between > 0:
+                            time.sleep(args.sleep_between)
+            
+            # Generate reference images for extras detected in this chunk that weren't at scene level
+            for extra in chunk_extras:
+                extra_name = extra.get("name", "")
+                if extra_name and extra_name not in extra_references:
+                    if args.verbose:
+                        print(f"    Generating reference image for chunk-detected extra: {extra_name}...", flush=True)
+                    ref_path = generate_extra_reference_image(
+                        args.api_key,
+                        args.model,
+                        extra,
+                        args.output_dir,
+                        args.max_retries,
+                        args.retry_base,
+                        args.verbose,
+                        style_reference_path=style_reference_path,
+                    )
+                    if ref_path:
+                        if extra_name not in extra_references:
+                            extra_references[extra_name] = []
+                        if os.path.isabs(ref_path):
+                            rel_path = os.path.relpath(ref_path, args.output_dir)
+                        else:
+                            rel_path = ref_path
+                        if rel_path not in extra_references[extra_name]:
+                            extra_references[extra_name].insert(0, rel_path)
+                            extra_references[extra_name] = extra_references[extra_name][:10]
+                        save_extra_references(extra_references_path, extra_references)
+                        if args.sleep_between > 0:
+                            time.sleep(args.sleep_between)
+            
             # Collect reference images for characters, extras, settings, and style
             # Prioritize canonical ref- images (use max 1 if canonical exists, otherwise 2)
             reference_images = []
@@ -2596,23 +2707,14 @@ def main() -> int:
                         if os.path.isfile(full_path):
                             reference_images.append(full_path)
             
-            # Add setting references (indoor and outdoor)
-            for setting in chunk_settings:
+            # Add setting references (only indoor - outdoor is less useful for most panels)
+            # Limit to first setting only to avoid reference overload
+            for setting in chunk_settings[:1]:  # Only first setting
                 setting_name = setting.get("name", "")
                 if setting_name and setting_name in setting_references:
                     refs = setting_references[setting_name]
-                    # Add indoor reference if available
+                    # Add indoor reference only (outdoor rarely needed for panel composition)
                     for ref_path in refs.get("indoor", [])[:1]:  # Use only first indoor ref
-                        if os.path.isabs(ref_path):
-                            full_path = ref_path
-                        else:
-                            full_path = os.path.join(args.output_dir, ref_path)
-                            if not os.path.isfile(full_path):
-                                full_path = os.path.join(os.getcwd(), ref_path)
-                        if os.path.isfile(full_path):
-                            reference_images.append(full_path)
-                    # Add outdoor reference if available
-                    for ref_path in refs.get("outdoor", [])[:1]:  # Use only first outdoor ref
                         if os.path.isabs(ref_path):
                             full_path = ref_path
                         else:
@@ -2638,6 +2740,35 @@ def main() -> int:
                     seen.add(img_path)
                     unique_reference_images.append(img_path)
             reference_images = unique_reference_images
+            
+            # Cap total reference images to prevent model overload and bleeding artifacts
+            # Setting refs already have the style baked in, so we prefer them over ref-style
+            # Only use ref-style as fallback when no setting ref is available
+            MAX_REFERENCE_IMAGES = 4
+            
+            # Separate reference images by type
+            char_refs = [p for p in reference_images if '/ref-' in p and '-setting-' not in p and '-extra-' not in p and '-style' not in p]
+            setting_refs = [p for p in reference_images if '-setting-' in p]
+            extra_refs = [p for p in reference_images if '-extra-' in p]
+            style_ref = [p for p in reference_images if '-style.' in p]
+            
+            # Rebuild with priority: characters first, then setting OR style (not both)
+            reference_images = []
+            
+            # Add character refs (up to MAX-1 to leave room for style/setting)
+            max_char_refs = MAX_REFERENCE_IMAGES - 1
+            reference_images.extend(char_refs[:max_char_refs])
+            
+            # Add setting ref if available (it already has the style), otherwise fall back to style ref
+            if setting_refs:
+                reference_images.extend(setting_refs[:1])  # Just one setting ref
+            elif style_ref:
+                reference_images.extend(style_ref)  # Fall back to style ref if no setting
+            
+            # Extra refs only if we have room (rare)
+            if len(reference_images) < MAX_REFERENCE_IMAGES:
+                remaining = MAX_REFERENCE_IMAGES - len(reference_images)
+                reference_images.extend(extra_refs[:remaining])
             
             if args.verbose and reference_images:
                 print(f"    Using {len(reference_images)} reference image(s) for character consistency", flush=True)

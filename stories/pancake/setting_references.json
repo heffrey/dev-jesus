@@ -1,0 +1,26 @@
+{
+  "The Kitchen": {
+    "indoor": [
+      "stories/pancake/boards/refs/ref-setting-the-kitchen-indoor.jpg"
+    ],
+    "outdoor": [
+      "stories/pancake/boards/refs/ref-setting-the-kitchen-outdoor.jpg"
+    ]
+  },
+  "The Living Room": {
+    "indoor": [
+      "stories/pancake/boards/refs/ref-setting-the-living-room-indoor.jpg"
+    ],
+    "outdoor": [
+      "stories/pancake/boards/refs/ref-setting-the-living-room-outdoor.jpg"
+    ]
+  },
+  "The Trashcan": {
+    "indoor": [
+      "stories/pancake/boards/refs/ref-setting-the-trashcan-indoor.jpg"
+    ],
+    "outdoor": [
+      "stories/pancake/boards/refs/ref-setting-the-trashcan-outdoor.jpg"
+    ]
+  }
+}

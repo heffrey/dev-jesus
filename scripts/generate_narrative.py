@@ -344,13 +344,16 @@ For example:
 If your story has multiple eras (e.g., a simulation story with biblical characters AND present-day observers), 
 you MUST create SEPARATE characters for each era. Do NOT reuse characters across eras.
 
-CRITICAL RULE - NAME UNIQUENESS:
-Choose distinctive, memorable names that are NOT commonly used in fiction. AVOID these overused names:
+CRITICAL RULE - PRESERVE USER-PROVIDED NAMES:
+If the user has provided specific character names, you MUST use those EXACT names as the primary "name" field.
+Do NOT rename characters that the user has already named. User-provided names take priority over any other naming rules.
+
+Only for characters where the user has NOT provided a specific name, choose distinctive names that are NOT commonly used in fiction. AVOID these overused names:
 - Elias, Thorne, Henderson, Marcus, Elena, Clara, James, John, Michael, Sarah, Elizabeth
 - Generic surnames like Smith, Jones, Miller, Williams, Brown, Davis, Wilson
 - Names that sound like "default" fiction names (Aria, Luna, Zara, Kai, Finn, etc.)
 
-Instead, draw from:
+For unnamed characters only, draw from:
 - Unusual but real names from diverse cultures (Yoruba, Georgian, Basque, Welsh, Finnish, etc.)
 - Historical figures with distinctive names
 - Names with unusual letter combinations or sounds
@@ -359,7 +362,7 @@ Instead, draw from:
 Create a comprehensive definitions.json structure with:
 
 1. **Characters**: For each character mentioned, provide:
-   - name: Character's primary name (must be distinctive and unique - see naming rules above)
+   - name: Character's primary name (MUST use the user's provided name if given; only create new names for unnamed characters)
    - aliases: Array of alternative names
    - description: Character's role, personality, motivations (2-3 sentences)
    - appearance: EXTREMELY detailed physical description including:

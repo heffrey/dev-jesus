@@ -1,0 +1,6 @@
+- Time/Location: 11:45 AM to 12:15 PM; the backyard ("Garden of Gluten") near a humming AC unit.
+- Character state (Galia): Hysterical and grieving; wearing a snagged vanilla-scented sweater and a lace-edged napkin veil; fingers are stained with espresso grounds and hair is dusty with dirt.
+- Character state (Mom & Amelia): Mom is wearing a stained floral apron and fogged glasses; Amelia (toddler) is messy with blonde hair full of leaves and static.
+- Objects (The Deceased): Sir Pokes-a-Lot, a pancake with a chocolate-chip eye, anointed in espresso grounds and resting in a grass-lined mahogany cigar box.
+- Objects (Burial Tools): A silver-plated cocktail fork (used for digging), a headless plastic dinosaur (grave marker), and a half-empty bottle of Grade A Amber maple syrup.
+- Plot/Environment: The sky is overcast and the air is humid; the group is concluding a "sanctified" burial of a pancake in clay-heavy soil.

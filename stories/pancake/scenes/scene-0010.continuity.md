@@ -1,0 +1,6 @@
+- **Time/Location**: Tuesday, 1:15 PM – 2:00 PM; "The Garden of Gluten" (backyard), ending as the group heads back toward the house.
+- **Character state**: Galia is grief-stricken, wearing a vanilla sweater and a lace napkin veil, with espresso stains on her cheeks and forehead; Amelia has static-filled hair full of leaves/debris; Mom wears a damp floral apron and fogged glasses.
+- **The Grave**: Sir Pokes-a-Lot (a pancake with chocolate-chip eyes) is buried in a velvet-lined mahogany cigar box topped with a butter pat and espresso-scented dirt.
+- **Grave markers**: The site is marked by a headless neon-green plastic dinosaur and a "moat" of Grade A Amber maple syrup.
+- **Objects/Items**: Galia possesses a silver-plated cocktail fork and a pink spatula (used as burial tools); a half-empty bottle of maple syrup remains at the scene.
+- **Plot development**: The funeral is a reaction to Jeff previously throwing the pancake into a "Glad heavy-duty trash bag"; the burial is now complete.

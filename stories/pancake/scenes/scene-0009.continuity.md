@@ -1,0 +1,8 @@
+- **Time/Location:** Tuesday, 12:40 PM – 1:10 PM; "The Garden of Gluten" (an unclipped section of lawn/garden) near a rattling outdoor AC unit.
+- **Plot/Burial:** Sir Pokes-a-Lot (a buttermilk pancake with one chocolate-chip eye) is buried in a velvet-lined mahogany cigar box filled with espresso grounds.
+- **Objects/Items:** Grave dug with a silver-plated cocktail fork; a pink spatula was dropped into the trench; a headless plastic dinosaur serves as the grave marker.
+- **Galia State:** Grieving and "betrayed"; wearing a snagged vanilla-scented sweater and a lace napkin veil; fingers are stained with dark espresso grounds.
+- **Mom State:** Stoic and morbidly optimistic; wearing a stained floral apron and perpetually fogged glasses.
+- **Amelia State:** 16-month-old with chaotic blonde hair; focused and purposeful; believes she is burying "cake."
+- **Atmosphere:** Overcast sky with oppressive humidity; scents of damp clay, vanilla extract, and espresso.
+- **Sound:** A Bluetooth speaker is playing a violin-heavy version of "Shortnin' Bread."

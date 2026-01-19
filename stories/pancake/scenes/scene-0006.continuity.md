@@ -1,0 +1,6 @@
+- Time of day: 11:40 AM – 11:52 AM (late morning/noon).
+- Location: The "Garden of Gluten" (backyard), specifically at a freshly dug trench near a humming AC unit.
+- Key Objects: Mahogany cigar box (coffin) with crimson velvet/paper towel lining; Sir Pokes-a-Lot (a pancake dusted with espresso grounds); a silver-plated cocktail fork; a headless plastic dinosaur toy.
+- Character states: Galia is emotionally frantic and trembling; Amelia is defiant and playful; Mom is stoic and wearing a stained floral apron.
+- Physical condition: Galia’s vanilla-scented sweater is snagged on a hydrangea bramble; Sir Pokes-a-Lot's chocolate chip eye is mangled and softened after being recovered from the toy dinosaur's neck.
+- Plot development: The burial ritual was interrupted when Amelia stole and hid the pancake's "eye," but Galia successfully performed a "restoration" before the final burial.

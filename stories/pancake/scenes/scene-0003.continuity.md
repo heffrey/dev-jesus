@@ -1,0 +1,5 @@
+- Time/Location: Tuesday, 10:25 AM; kitchen, moving toward the backyard.
+- Primary Object: Sir Pokes-a-Lot (pancake); stained with espresso grounds, left chocolate-chip eye is migrating toward the chin, structural integrity compromised.
+- Character Possessions: Amelia (toddler, blonde curls) is holding a headless plastic dinosaur; Galia needs a cigar box for the burial.
+- Character States: Galia is theatrically distraught and on a "funereal" mission; Mom is stoic/morbidly cynical; Amelia is inquisitive and barefoot.
+- Plot Development: Jeff discarded the pancake in a Glad trash bag as a "biohazard"; Galia rescued it and has declared the kitchen "desecrated," necessitating an outdoor burial.

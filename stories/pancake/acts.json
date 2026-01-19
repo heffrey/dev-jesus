@@ -1,0 +1,73 @@
+{
+  "acts": [
+    {
+      "number": 1,
+      "title": "The Siege of the Syrupy Citadel",
+      "description": "This act establishes the emotional bond between Galia and The Pancake, then shatters it when someone throws away her beloved breakfast companion. The domestic peace crumbles as Galia declares a state of mourning.",
+      "scenes": [
+        {
+          "number": 1,
+          "purpose": "Galia discovers The Pancake has been thrown away and reacts with genuine, heartfelt grief. Mom tries to comfort her with dark comparative optimism ('At least it wasn't your grandmother's ashes')."
+        },
+        {
+          "number": 2,
+          "purpose": "Galia explains to Mom the sentimental significance of The Pancake—how it had become part of the family. Amelia toddles around, oblivious to the drama."
+        },
+        {
+          "number": 3,
+          "purpose": "Galia performs a high-stakes rescue mission, diving into the kitchen trash to recover The Pancake's remains while Mom watches with bemused concern."
+        },
+        {
+          "number": 4,
+          "purpose": "Galia officially declares that The Pancake deserves a proper funeral. Mom reluctantly agrees to participate, offering another darkly optimistic comparison."
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "title": "The Odyssey of the Glad Bag",
+      "description": "Galia embarks on preparations for The Pancake's funeral, gathering ceremonial items and recruiting her reluctant family members. She must navigate Mom's dark optimism and Amelia's toddler chaos.",
+      "scenes": [
+        {
+          "number": 5,
+          "purpose": "Galia searches for a suitable coffin, settling on a cigar box. She treats the acquisition as a sacred quest while Mom comments that 'at least you're not burying a relative in a shoebox.'"
+        },
+        {
+          "number": 6,
+          "purpose": "Amelia accidentally steals one of The Pancake's chocolate-chip 'eyes,' forcing Galia to lead a gentle but frantic search to recover The Pancake's dignity."
+        },
+        {
+          "number": 7,
+          "purpose": "Mom provides a lace-edged cloth napkin for the funeral veil, acknowledging Galia's grief in her own way with another morbid comparison."
+        },
+        {
+          "number": 8,
+          "purpose": "The family prepares the backyard burial site. Galia digs a small trench while Mom supervises and Amelia 'helps' by throwing dirt everywhere."
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "title": "The Great Griddle Homecoming",
+      "description": "The funeral ceremony serves as the ultimate farewell, as The Pancake is committed to the soil of the backyard. Through the burial, Galia finds closure and the absurd grief transforms into a shared family memory.",
+      "scenes": [
+        {
+          "number": 9,
+          "purpose": "Galia leads the funeral procession to the freshly dug trench, followed by a stoic Mom and a confused but solemn Amelia carrying a pink spatula as a ceremonial object."
+        },
+        {
+          "number": 10,
+          "purpose": "Galia delivers The Pancake's eulogy, speaking of its fluffiness, its loyal companionship, and the injustice of its disposal. Mom nods solemnly."
+        },
+        {
+          "number": 11,
+          "purpose": "The final offering: Galia places a butter pat on The Pancake's remains. Amelia offers an unintentional toddler eulogy ('Bye-bye pan-pan') that makes even Mom tear up."
+        },
+        {
+          "number": 12,
+          "purpose": "The family retreats to the house. Mom offers one final dark comfort ('At least it lived a full breakfast life'), and suggests they make fresh pancakes—signaling restoration and the end of the cycle."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+- Time: Tuesday morning, 10:45 AM to 11:10 AM.
+- Location: The Living Room, moving toward a freshly dug trench in the backyard ("Garden of Gluten").
+- Objects: Mahogany cigar box (velvet interior, gold hinges) holding "Sir Pokes-a-Lot" (a chocolate-chip pancake with one eye); Amelia’s headless plastic dinosaur.
+- Character state (Galia): Devastated and melodramatic; wearing a vanilla-scented sweater and a lace napkin veil.
+- Character state (Amelia/Mom): Amelia is a toddler with blonde curls and sticky hands; Mom is stoic and wearing an apron.
+- Plot: Jeff discarded the pancake in a Glad trash bag; Galia rescued it and is now leading a funeral procession to bury it as a "martyr."

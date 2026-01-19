@@ -1,0 +1,6 @@
+- Location: Kitchen, heading toward the back door/garden ("Garden of Gluten").
+- Time: 11:35 AM.
+- Objects: Sir Pokes-a-Lot (pancake) resting in a velvet-lined mahogany cigar box; pancake is dusted with espresso grounds with one chocolate-chip eye.
+- Key Items: Silver-plated cocktail fork; Amelia’s headless plastic dinosaur; lace-edged napkin (worn as Galia’s veil); grease-stained index card (funeral script).
+- Character States: Galia (solemn, grieving, wearing a vanilla-scented sweater); Amelia (chaotic energy, sticky hands, designated "flower girl"); Mom (stoic, wearing a stained floral apron).
+- Plot Development: Galia has rejected the trash can ("Silver Purgatory") and is leading a formal funeral procession to bury the pancake.

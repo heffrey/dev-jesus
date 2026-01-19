@@ -1,0 +1,6 @@
+- Time: Tuesday, 12:05 PM – 12:35 PM; humid and gloomy afternoon.
+- Location: The "Garden of Gluten" (backyard) at a freshly dug trench, having just moved from the kitchen.
+- Objects: Mahogany cigar box (casket containing "Sir Pokes-a-Lot," a pancake), lace-edged napkin (worn as a veil by Galia), grease-stained index card (eulogy), headless plastic dinosaur, and a half-empty bottle of Grade A Amber maple syrup.
+- Character states: Galia is mourning with red-rimmed eyes, wearing a snagged vanilla sweater; Mom is stoic in a stained floral apron; Amelia is confused, acting as "Tiny Acolyte."
+- Plot: The funeral procession for the pancake has reached the burial site; Amelia has poured a syrup libation into the trench; Galia is positioned to deliver the eulogy.
+- Atmosphere/Sensory: Humming and vibrating AC unit near the trench; scents of damp soil, vanilla extract, and espresso grounds.

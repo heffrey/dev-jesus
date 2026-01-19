@@ -1,0 +1,40 @@
+{
+  "Amelia": [
+    "stories/pancake/boards/scene-0001-4.jpg",
+    "stories/pancake/boards/scene-0002-4.jpg",
+    "stories/pancake/boards/scene-0002-2.jpg",
+    "stories/pancake/boards/refs/ref-amelia.jpg"
+  ],
+  "Galia": [
+    "stories/pancake/boards/refs/ref-galia.jpg",
+    "stories/pancake/boards/scene-0002-4.jpg",
+    "stories/pancake/boards/scene-0002-3.jpg",
+    "stories/pancake/boards/scene-0002-2.jpg",
+    "stories/pancake/boards/scene-0002-1.jpg",
+    "stories/pancake/boards/scene-0001-6.jpg",
+    "stories/pancake/boards/scene-0001-5.jpg",
+    "stories/pancake/boards/scene-0001-4.jpg",
+    "stories/pancake/boards/scene-0001-3.jpg",
+    "stories/pancake/boards/scene-0001-2.jpg",
+    "stories/pancake/boards/scene-0001-1.jpg"
+  ],
+  "Jeff": [
+    "stories/pancake/boards/scene-0002-4.jpg",
+    "stories/pancake/boards/scene-0002-3.jpg",
+    "stories/pancake/boards/scene-0002-2.jpg",
+    "stories/pancake/boards/scene-0001-6.jpg",
+    "stories/pancake/boards/scene-0001-4.jpg",
+    "stories/pancake/boards/scene-0001-3.jpg",
+    "stories/pancake/boards/scene-0001-2.jpg",
+    "stories/pancake/boards/refs/ref-jeff.jpg"
+  ],
+  "Mom": [
+    "stories/pancake/boards/scene-0002-4.jpg",
+    "stories/pancake/boards/scene-0002-3.jpg",
+    "stories/pancake/boards/scene-0002-2.jpg",
+    "stories/pancake/boards/scene-0001-6.jpg",
+    "stories/pancake/boards/scene-0001-5.jpg",
+    "stories/pancake/boards/scene-0001-3.jpg",
+    "stories/pancake/boards/refs/ref-mom.jpg"
+  ]
+}

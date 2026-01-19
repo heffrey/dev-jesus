@@ -1,0 +1,7 @@
+- Time/Location: Tuesday, 2:50 PM; "Garden of Gluten" (backyard trench), heading back into the house.
+- Burial Site: Sir Pokes-a-Lot (pancake) buried in a mahogany cigar box with espresso grounds and a foil-wrapped butter pat; marked by a headless neon-green plastic dinosaur.
+- Character State (Galia): Perspiring and emotionally exhausted but relieved; wearing a vanilla-scented sweater and a lace napkin veil (now around her neck).
+- Character State (Amelia/Mom): Amelia is sticky and syrup-scented; Mom is wearing a damp floral apron and smells of dish soap and old roses.
+- Physical Details: Galia’s hands and jeans are stained dark with espresso "ashes."
+- Objects: Pink spatula (used for digging) and a Bluetooth speaker playing "Shortnin' Bread."
+- Plot: The funeral provides closure for a difficult Tuesday; Jeff is identified as the antagonist/source of the "cruelty" toward the pancake.

@@ -1,0 +1,132 @@
+{
+  "characters": {
+    "mom": {
+      "name": "Mom",
+      "aliases": [
+        "Grandma",
+        "The Morbid Optimist"
+      ],
+      "description": "A seventy-year-old woman, mother of Galia and grandmother of Amelia. She is a hopeless optimist in a strange way—she always says 'At least you weren't X, Y or Z' where X, Y or Z is so extremely bad that it's almost depressing.",
+      "appearance": "A woman in her seventies with shoulder-length reddish-brown hair (#8B4513) that's slightly tousled and voluminous. She has a warm, weathered complexion with visible laugh lines and age spots, giving her face character (#D2A679). She wears large rectangular glasses with dark tortoiseshell frames (#3D2B1F) that frame her dark brown eyes (#4A3728). Her expression is a knowing, slightly wry smirk—the look of someone who has seen it all. She wears a cozy cream and grey plaid fleece shirt-jacket (#E8E4E0 with #708090 stripes) with silver snap buttons over a black top (#1A1A1A). Her build is average and comfortable. The background suggests a lived-in family home with a grey sectional couch, children's toys, and warm wood accents.",
+      "role": "The mother/grandmother and stoic witness to the absurdity, providing dark comparative comfort.",
+      "era": "Modern day suburban town"
+    },
+    "galia": {
+      "name": "Galia",
+      "aliases": [
+        "Aunt Galia",
+        "The High Priestess of Hotcakes"
+      ],
+      "description": "Mom's daughter and Amelia's aunt. She is obsessed with pancakes and views them as sacred. She eulogizes the pancake with genuine grief and treats its disposal as a personal violation.",
+      "appearance": "A young woman with a warm, round face and a soft, pleasant smile. She has medium-length straight brown hair (#5C4033) parted in the middle that falls just past her shoulders. Her skin is a warm olive tone (#D4A574). She has dark brown eyes (#3D2314) and full eyebrows. Her build is average with rounded features. She wears a cozy sage green knit sweater (#6B8E6B) with a cream-colored Fair Isle pattern (#F5F5DC) featuring geometric diamond and zigzag designs. Small hoop earrings are visible. Her expression conveys a gentle, approachable warmth.",
+      "role": "The grieving protagonist who organizes the pancake's funeral and delivers its eulogy.",
+      "era": "Modern day suburban town"
+    },
+    "amelia": {
+      "name": "Amelia",
+      "aliases": [
+        "The Granddaughter",
+        "The Tiny Acolyte"
+      ],
+      "description": "A sixteen-month-old toddler, Jeff's daughter and Mom's granddaughter. She is extremely cute with blonde hair and blue eyes, navigating the world through sensory input and sudden proclamations.",
+      "appearance": "A height of 30 inches with round, pinchable cheeks and skin like creamed honey (#FFFDD0). Her hair is a wild shock of platinum-blonde fluff (#E1D9AC) that stands up like spun sugar. Her eyes are a vibrant, unblinking cornflower blue (#6495ED). She wears a white outfit with a prominent purple stain from food (#4B0082) on the front. She carries a small spatula in hot pink (#FF69B4).",
+      "role": "The toddler participant who provides unintentional commentary and serves as flower girl.",
+      "era": "Modern day suburban town"
+    },
+    "jeff": {
+      "name": "Jeff",
+      "aliases": [
+        "The Brother",
+        "The Great Scrapper",
+        "The Unseen Antagonist"
+      ],
+      "description": "Galia's brother, Mom's son, and Amelia's father. He threw away The Pancake, triggering the entire crisis. He is a pragmatic person who views sentimentality toward food as unhygienic and doesn't understand why anyone would keep a days-old pancake on their nightstand.",
+      "appearance": "A man in his mid-thirties with a sturdy, broad build. He has distinctive silver-blonde hair (#C0C0C0) styled up and back with volume on top, contrasting with a full, well-groomed dark brown beard (#3D2B1F) that covers his jaw and chin. His skin is fair with a slight flush (#E8D0C0). He has dark brown eyes (#4A3728) with thick, dark eyebrows that give him a thoughtful expression. His face is round with full cheeks. He wears a casual olive green t-shirt (#556B2F) with a gold geometric logo design. His expression is a slight smirk—the look of someone who knows he did nothing wrong by throwing away old food.",
+      "role": "The antagonist who disposed of The Pancake, catalyzing Galia's grief and the funeral. Also Amelia's father.",
+      "era": "Modern day suburban town"
+    }
+  },
+  "settings": {
+    "the_backyard": {
+      "name": "The Backyard",
+      "aliases": [
+        "The Garden of Gluten",
+        "The Cemetery",
+        "The Burial Site"
+      ],
+      "description": "A damp, forgotten corner of a suburban backyard shielded by the hum of an air conditioning unit and wilting greenery. It serves as the final resting place for the legendary pancake.",
+      "visual_details": "The ground is composed of dark, loamy soil (#3B2F21) mixed with damp cedar mulch (#8B4513). A wall of hostas with yellowed edges (#BDB76B) provides a backdrop. A pink plastic flamingo with a missing beak (#FF69B4) stands guard nearby. The 'headstone' is a grey river rock (#808080) with makeshift lettering. Lighting is the heavy, flat gloom of a cloudy afternoon (#A9A9A9). A fence of used popsicle sticks (#DEB887) surrounds the small trench.",
+      "era": "Modern day suburban town"
+    },
+    "the_kitchen": {
+      "name": "The Kitchen",
+      "aliases": [
+        "The Birthplace",
+        "The Laboratory of Leavening"
+      ],
+      "description": "A suburban kitchen where The Pancake was born, characterized by well-used cookware and the smell of breakfast.",
+      "visual_details": "Countertops are light laminate with some wear (#DCDCDC). The stovetop features a cast iron griddle that has seen better days. The floors are linoleum tile (#2F4F4F). A bottle of maple syrup and butter dish are prominent. The air smells of vanilla extract (#F3E5AB) and coffee. The lighting is warm morning light through kitchen windows.",
+      "era": "Modern day suburban town"
+    },
+    "the_trashcan": {
+      "name": "The Trashcan",
+      "aliases": [
+        "The Chrome Abyss",
+        "The Silver Purgatory"
+      ],
+      "description": "The cold, mechanical void into which The Pancake was cast; a place of waste and indignity.",
+      "visual_details": "A cylindrical stainless steel canister (#C0C0C0) with a pedal-operated lid. Inside, a heavy-duty black plastic liner (#000000) holds kitchen waste—coffee grounds (#4B3621), eggshell shards (#F0F8FF), and citrus rinds (#CCFF00). The lighting inside is pitch black until the lid opens.",
+      "era": "Modern day suburban town"
+    },
+    "the_living_room": {
+      "name": "The Living Room",
+      "aliases": [
+        "The Nook of Starch",
+        "The Wake Room"
+      ],
+      "description": "A makeshift ceremonial space in the corner of a cluttered suburban living room where the pre-funeral wake was held.",
+      "visual_details": "A small corner table draped in a white linen cloth (#E6E6FA). Colorful cereal boxes are taped to the window to create a faux-stained-glass effect. A single cinnamon stick (#8B4513) smolders in a small glass. The walls are beige paint (#F5F5DC), and the carpet is plush taupe (#B38B6D).",
+      "era": "Modern day suburban town"
+    }
+  },
+  "extras": {
+    "the_pancake": {
+      "name": "The Pancake",
+      "aliases": [
+        "Sir Pokes-a-Lot",
+        "The Deceased",
+        "The Hero of the Griddle"
+      ],
+      "description": "A buttermilk pancake of exceptional fluffiness and tragic fate. It had taken on a role as part of the family and held a sentimental place in Galia's heart before being thrown away.",
+      "appearance": "A golden-brown disc (#DAA520) approximately six inches in diameter with slightly curled, staled edges (#8B4513). Features chocolate-chip eyes (#3D2B1F), one of which has migrated toward the lower edge. Purple blueberry stains (#4B0082) dot its surface. A single shimmering pat of butter (#FFF600) adorns its top."
+    },
+    "the_syrup_bottle": {
+      "name": "The Syrup Bottle",
+      "aliases": [
+        "The Amber Mourner",
+        "Grade A Amber Tears"
+      ],
+      "description": "A half-empty bottle of maple syrup that seems to weep for its lost companion.",
+      "appearance": "A glass bottle shaped like a maple leaf containing viscous, golden-brown syrup (#FFBF00). The cap is encrusted with crystallized, sticky residue (#8B4513). The label is peeling and features a faded illustration of a sugar shack."
+    },
+    "the_cigar_box": {
+      "name": "The Cigar Box",
+      "aliases": [
+        "The Velveteen Sarcophagus",
+        "The Reliquary"
+      ],
+      "description": "A repurposed cigar box that serves as the final vessel for The Pancake.",
+      "appearance": "Polished dark wood (#441609) with a gold-leaf hinge (#D4AF37). The interior is lined with a purple velvet scrunchie (#500050) to provide regal softness."
+    }
+  },
+  "style": {
+    "description": "A blend of 'Kitchen-Sink Melodrama' and 'Saccharine Gothic.' The visual style emphasizes the contrast between the absurd, colorful nature of breakfast food and the somber reality of suburban grief.",
+    "typeface": "A hand-lettered script resembling shaky, ink-heavy writing, as if written by a trembling hand on a grease-stained card.",
+    "inking": "Fine-line detail with heavy use of stippling and cross-hatching to emphasize textures like spongey pancake crumbs and damp soil.",
+    "coloring": "A desaturated suburban palette (greys, taupes, slates) interrupted by hyper-saturated 'syrup-tones' like amber gold, blueberry purple, and butter yellow.",
+    "line_width": "Varied; thin and fragile for character features, but thick and heavy for architectural elements like the trashcan.",
+    "palette": "Suburban Grey (#A9A9A9), Maple Amber (#FFBF00), Burnt Flour (#8B4513), Dusty Rose (#DCAE96), and Blackberry Bruise (#4B0082).",
+    "shading": "Dramatic lighting, casting long, mournful shadows across the lawn, reminiscent of a low-budget noir film set in a breakfast cafe.",
+    "texture": "A tactile focus on 'sticky vs. dry'—glossy syrup highlights contrasting with the matte, dusty texture of old lace and staled flour."
+  }
+}

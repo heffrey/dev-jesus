@@ -1,0 +1,6 @@
+- [Time of day]: Tuesday morning, progressing from 10:45 AM to 11:15 AM.
+- [Location]: Currently in the kitchen ("The Birthplace"); preparing to head to the "Garden of Gluten" for burial.
+- [Objects]: Sir Pokes-a-Lot (6-inch buttermilk pancake with one chocolate-chip eye) is sealed inside a mahogany cigar box with cedar scent, crimson velvet lining, and a paper towel.
+- [Character items]: Amelia is carrying a headless plastic dinosaur; Galia is using a silver-plated cocktail fork.
+- [Character states]: Galia is mourning and trembling with red-rimmed eyes; Amelia has sticky fingers and blue eyes; Mom is wearing a stained floral apron.
+- [Plot development]: The pancake has been officially transitioned from "food" to a "passenger" for the funeral procession; the lid of the cigar box is now closed/latched.

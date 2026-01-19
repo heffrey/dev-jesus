@@ -1,0 +1,21 @@
+# Scene 2
+
+## Tuesday morning, 10:45 AM | The Living Room
+
+Galia sat perched on the edge of the floral armchair, the mahogany cigar box resting on her knees like a holy relic. She traced the lid’s gold hinges with a trembling finger, her eyes fixed on the velvet interior where Sir Pokes-a-Lot lay in state. The Living Room, usually a chaotic sprawl of discarded mail and half-finished knitting projects, had been transformed into the Nook of Starch—a quiet, heavy space where the air felt thick with the ghosts of breakfasts past. The scent of vanilla extract still clung to Galia’s sweater, a fragrant reminder of the morning she had whisked him into existence.
+
+"He was the only one who truly understood the weight of Tuesday," Galia whispered, her voice cracking as she adjusted the lace napkin veil pinned to her hair. "When Jeff was complaining about the Wi-Fi and the world was spinning out of control, Sir Pokes-a-Lot just stayed there. Round. Dependable. He didn't demand to be eaten; he simply offered a soft, porous surface for my anxieties. He was a sponge, Mom. Not just for syrup, but for my very soul."
+
+Mom stood by the window, her silhouette framed by the harsh morning light that exposed the dust motes dancing in the air. She smoothed her apron with a gnarled hand, her expression one of practiced, stoic endurance. "He looks peaceful, Galia. In a way," she said, her voice a low rasp of comfort. "At least he didn't end up in the disposal. That’s a violent way to go—ground into a slurry with the coffee filters and the eggshells. At least he’s still intact enough to recognize. You could have found him in pieces, a mangled mess of gluten and regret. This is a mercy, really."
+
+Amelia, the Tiny Acolyte, navigated the carpeted terrain on her hands and knees, her blonde curls bouncing with every determined movement. She held her headless plastic dinosaur in one hand, using its jagged neck to poke at the corner of the cigar box. "Cake?" she chirped, her blue eyes wide with the hope of a forbidden snack. She reached up, a sticky palm nearly making contact with Sir Pokes-a-Lot’s slightly migrated chocolate-chip eye before Galia gently nudged her hand away.
+
+## Tuesday morning, 11:10 AM | The Living Room, near the Kitchen door
+
+"It’s the betrayal that stings the most," Galia continued, rising from the chair to begin the slow procession toward the back door. She cradled the box against her chest, her gait measured and somber. "Jeff didn't even look him in the eye—the one eye he had left, anyway. He just used the spatula like a bayonet. One swift motion and Sir Pokes-a-Lot was tossed into the Chrome Abyss. I heard him hit the bottom of the bag. It was a dull, thudding sound, Mom. The sound of a life being reduced to 'clutter.'"
+
+Mom followed close behind, pausing to pick up a stray pacifier from the floor. She looked toward the Kitchen, the Laboratory of Leavening where the tragedy had begun, and shook her head slowly. "Jeff has the heart of a tenant, not a family member. But look on the bright side, dear. At least it was a Glad bag. They have that OdorShield technology now. It could have been one of those cheap, thin liners that leaks. He could have been soaked in old tuna juice and coffee dregs. He stayed dry, Galia. He died with his dignity and his structural integrity mostly preserved."
+
+Amelia followed the parade, her dinosaur tucked under her arm like a ceremonial mace. She sensed the gravity of the walk, her usual babbling replaced by a focused, rhythmic stomping. As they reached the threshold of the back door, she pointed a tiny finger toward the backyard—The Garden of Gluten—and let out a sharp, high-pitched squeal of recognition. "Bye-bye!" she proclaimed, waving a hand toward the freshly dug trench in the distance.
+
+Galia stopped at the door, her hand on the knob. She looked down at the pancake, seeing the way the morning light caught the slight sheen of oil on his golden-brown surface. "He wasn't just 'old food,' Mom. He was a witness. And now, he’s a martyr." She took a deep, shaky breath, the humid air of the backyard already beginning to seep through the cracks of the door, smelling of damp earth and the inevitable decay of all things leavened. "Let’s go. Sir Pokes-a-Lot has waited long enough for his rest."

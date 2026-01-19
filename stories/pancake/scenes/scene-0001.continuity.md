@@ -1,0 +1,5 @@
+- Time: Tuesday, mid-morning.
+- Location: The living room; heading to the backyard for a funeral ceremony.
+- Objects: Sir Pokes-a-Lot (a 6-inch buttermilk pancake with chocolate-chip eyes, one eye loose) inside a cigar box; Amelia's headless plastic dinosaur.
+- Character states: Galia is devastated and tearful; Mom (70) is stoic and morbidly optimistic; Amelia (16-month-old) is curious/observant.
+- Plot development: Jeff threw away Galia’s 72-hour-old "confidant" pancake as a health hazard; the family is now organizing a formal burial with lace and ceremony.
