@@ -13,6 +13,8 @@
     "stories/beta/boards/refs/ref-aris.jpg"
   ],
   "Company Technician": [
+    "stories/beta/boards/scene-0006-4.jpg",
+    "stories/beta/boards/scene-0006-3.jpg",
     "stories/beta/boards/scene-0004-4.jpg",
     "stories/beta/boards/scene-0004-3.jpg",
     "stories/beta/boards/refs/ref-company-technician.jpg"
@@ -27,16 +29,16 @@
     "stories/beta/boards/refs/ref-elias.jpg"
   ],
   "Joel": [
+    "stories/beta/boards/scene-0007-1.jpg",
+    "stories/beta/boards/scene-0006-5.jpg",
+    "stories/beta/boards/refs/ref-joel.jpg",
     "stories/beta/boards/scene-0005-4.jpg",
     "stories/beta/boards/scene-0005-3.jpg",
     "stories/beta/boards/scene-0004-6.jpg",
     "stories/beta/boards/scene-0004-5.jpg",
     "stories/beta/boards/scene-0004-3.jpg",
     "stories/beta/boards/scene-0004-2.jpg",
-    "stories/beta/boards/scene-0004-1.jpg",
-    "stories/beta/boards/scene-0002-4.jpg",
-    "stories/beta/boards/scene-0002-2.jpg",
-    "stories/beta/boards/scene-0002-1.jpg"
+    "stories/beta/boards/scene-0004-1.jpg"
   ],
   "Joel's Brother": [
     "stories/beta/boards/scene-0004-2.jpg",
@@ -72,15 +74,15 @@
     "stories/beta/boards/refs/ref-tiberias.jpg"
   ],
   "Yeshua": [
+    "stories/beta/boards/scene-0006-6.jpg",
+    "stories/beta/boards/scene-0006-4.jpg",
+    "stories/beta/boards/refs/ref-yeshua.jpg",
     "stories/beta/boards/scene-0005-4.jpg",
     "stories/beta/boards/scene-0005-3.jpg",
     "stories/beta/boards/scene-0004-6.jpg",
     "stories/beta/boards/scene-0004-5.jpg",
     "stories/beta/boards/scene-0004-4.jpg",
     "stories/beta/boards/scene-0004-3.jpg",
-    "stories/beta/boards/scene-0004-2.jpg",
-    "stories/beta/boards/scene-0004-1.jpg",
-    "stories/beta/boards/scene-0002-4.jpg",
-    "stories/beta/boards/scene-0002-2.jpg"
+    "stories/beta/boards/scene-0004-2.jpg"
   ]
 }
