@@ -686,6 +686,91 @@ def detect_entities(scene_text: str, definitions: dict) -> tuple[list[dict], lis
     return found_characters, found_settings, found_extras
 
 
+def detect_undefined_characters(scene_text: str, definitions: dict) -> list[str]:
+    """Detect potential characters mentioned in scene text that aren't in definitions.
+    
+    Looks for "the [role]" patterns that appear to be significant unnamed characters
+    (doing actions, speaking, etc.) but aren't in the definitions.
+    
+    Returns a list of potential undefined character names.
+    """
+    scene_lower = scene_text.lower()
+    
+    # Build set of all known character names (lowercase)
+    known_names = set()
+    for char_key, char_data in definitions.get("characters", {}).items():
+        known_names.add(char_key.lower())
+        if "name" in char_data:
+            known_names.add(char_data["name"].lower())
+        for alias in char_data.get("aliases", []):
+            known_names.add(alias.lower())
+    
+    # Action verbs that suggest a character is doing something significant
+    action_verbs = ['said', 'spoke', 'asked', 'replied', 'answered', 'whispered', 'shouted',
+                    'stood', 'walked', 'moved', 'looked', 'turned', 'entered', 'sat', 'stepped',
+                    'felt', 'reached', 'watched', 'pulled', 'pushed', 'grabbed', 'held',
+                    'ran', 'stopped', 'paused', 'began', 'started', 'continued', 'finished',
+                    'nodded', 'raised', 'lowered', 'dropped', 'threw', 'caught']
+    
+    potential_undefined = []
+    
+    # Check for "the [role]" patterns that might indicate unnamed characters
+    # These are often significant supporting characters that need visual consistency
+    role_patterns = [
+        # Specific roles
+        r'\bthe\s+(clerk|guard|soldier|servant|maid|butler|driver|doctor|nurse|priest|monk|nun|executioner|jailer|prisoner|captain|lieutenant|sergeant|vendor|merchant|beggar|watchman|sheriff|deputy|bartender|innkeeper|stable\s*boy|scribe|messenger|herald|page)\b',
+        # Descriptive roles
+        r'\bthe\s+(condemned|accused|victim|witness|bystander)\b',
+        # Age/appearance + role
+        r'\bthe\s+(old|young|elderly|aged)\s+(man|woman|priest|soldier|clerk|guard)\b',
+        # Indefinite that becomes specific when repeated
+        r'\ba\s+(clerk|guard|soldier|executioner|prisoner)\b(?=\s+(?:who|that|with|in|from)\b)',
+    ]
+    
+    for pattern in role_patterns:
+        for match in re.finditer(pattern, scene_lower):
+            role = match.group(0)
+            role_key = role.replace(' ', '_').strip()
+            
+            # Skip if this role is already defined
+            if role_key in known_names or role.replace('the ', '').replace('a ', '') in known_names:
+                continue
+            
+            # Check if this role is doing something significant (appears more than just mentioned)
+            start = match.start()
+            end = match.end()
+            
+            # Get broader context to check for significance
+            context_start = max(0, start - 50)
+            context_end = min(len(scene_text), end + 80)
+            context = scene_text[context_start:context_end].lower()
+            
+            # Check for significant actions (character doing something visual)
+            significant = False
+            for verb in action_verbs:
+                # Check if verb appears after the role (role is subject)
+                role_end_in_context = end - context_start
+                after_role = context[role_end_in_context:]
+                if verb in after_role[:40]:  # Verb within 40 chars after role
+                    significant = True
+                    break
+            
+            # Also check if the role has dialogue
+            if not significant:
+                if '"' in context[end - context_start:] or "'" in context[end - context_start:]:
+                    # Check if it looks like dialogue attribution
+                    if re.search(r'(said|spoke|whispered|shouted|replied|asked|muttered|murmured)', context):
+                        significant = True
+            
+            if significant:
+                # Normalize the role name for display
+                role_name = role.title()
+                if role_name not in potential_undefined:
+                    potential_undefined.append(role_name)
+    
+    return potential_undefined
+
+
 def first_sentence(text: str) -> str:
     text = " ".join(text.strip().split())
     if not text:
@@ -997,6 +1082,28 @@ def ensure_character_mentioned(sentence: str, character_names: list[str], contex
     return enhanced
 
 
+def normalize_appearance(appearance) -> str:
+    """Convert appearance field to string, handling both dict and string formats.
+    
+    Args:
+        appearance: Either a string (old format) or dict with appearance keys (new format)
+    
+    Returns:
+        A concatenated string of all appearance information
+    """
+    if isinstance(appearance, str):
+        return appearance
+    elif isinstance(appearance, dict):
+        # Concatenate all values from the dict
+        parts = []
+        for key, value in appearance.items():
+            if isinstance(value, str):
+                parts.append(f"{key.replace('_', ' ')}: {value}")
+        return " ".join(parts)
+    else:
+        return ""
+
+
 def build_character_differentiation_guidance(
     character: dict,
     definitions: dict,
@@ -1007,7 +1114,7 @@ def build_character_differentiation_guidance(
     from other characters, especially those with similar appearances.
     """
     char_name = character.get("name", "Unknown")
-    char_appearance = character.get("appearance", "")
+    char_appearance = normalize_appearance(character.get("appearance", ""))
     char_description = character.get("description", "")
     
     other_characters = []
@@ -1094,7 +1201,7 @@ def build_character_differentiation_guidance(
     similar_chars = []
     for other in other_characters:
         other_name = other.get("name", "Unknown")
-        other_appearance = other.get("appearance", "")
+        other_appearance = normalize_appearance(other.get("appearance", ""))
         other_description = other.get("description", "")
         other_features = extract_features(other_appearance + " " + other_description)
         
@@ -1196,7 +1303,7 @@ def build_character_reference_prompt(
     if "description" in character:
         lines.append(f"Description: {character['description']}")
     if "appearance" in character:
-        lines.append(f"Appearance: {character['appearance']}")
+        lines.append(f"Appearance: {normalize_appearance(character['appearance'])}")
     
     # Add differentiation guidance if there are similar characters
     differentiation = build_character_differentiation_guidance(character, definitions)
@@ -1613,7 +1720,7 @@ def build_prompt(
             # Only include detailed appearance if NO reference images exist
             # If reference images exist, rely on them instead of text descriptions
             if not has_ref_images and "appearance" in char:
-                char_lines.append(f"  Appearance: {char['appearance']}")
+                char_lines.append(f"  Appearance: {normalize_appearance(char['appearance'])}")
             elif has_ref_images:
                 char_lines.append(f"  Visual Reference: A CANONICAL reference image (ref-*.jpg/png) is provided below. This is the ABSOLUTE, DEFINITIVE source for this character's appearance. You MUST match it EXACTLY - do NOT improvise or modify. The canonical reference image overrides ALL text descriptions.")
             
@@ -1720,7 +1827,7 @@ def build_prompt(
             
             # Only include detailed appearance if NO reference images exist
             if not has_ref_images and "appearance" in extra:
-                extra_lines.append(f"  Appearance: {extra['appearance']}")
+                extra_lines.append(f"  Appearance: {normalize_appearance(extra['appearance'])}")
             elif has_ref_images:
                 extra_lines.append(f"  Visual Reference: A canonical reference image is provided below. Use it as the PRIMARY source for this extra's appearance. Match it EXACTLY.")
             
@@ -2209,6 +2316,12 @@ def main() -> int:
             if extras:
                 extra_names = [e.get("name", "Unknown") for e in extras]
                 print(f"  Detected extras: {', '.join(extra_names)}", flush=True)
+        
+        # Check for potential undefined characters and warn
+        undefined_chars = detect_undefined_characters(scene_text, definitions)
+        if undefined_chars:
+            print(f"  ⚠️  Potential undefined characters detected: {', '.join(undefined_chars)}", file=sys.stderr, flush=True)
+            print(f"     Consider adding these to definitions.json for visual consistency", file=sys.stderr, flush=True)
         
         # Divide scene into multiple storyboards
         # Increased defaults to allow for richer dialog and more detailed scenes

@@ -40,6 +40,26 @@
       "role": "Primary Antagonist",
       "era": "Kingdom of France 1592"
     },
+    "the_clerk": {
+      "name": "The Clerk",
+      "aliases": [
+        "The Condemned",
+        "The Châtelet Clerk"
+      ],
+      "description": "A clerk from the Châtelet who helped Elouan source vellum. Now a condemned man, accused of Politique sympathies, awaiting execution on the scaffold.",
+      "appearance": {
+        "height_and_build": "5'9\" with a thin, wiry frame weakened by imprisonment.",
+        "skin_tone": "Pale, sallow from dungeon confinement [RGB: 205, 180, 155], mottled with bruises [RGB: 90, 60, 100]",
+        "hair_style_and_color": "Matted, unkempt dark hair plastered to his forehead with sweat [RGB: 45, 35, 25]",
+        "eye_color": "Bloodshot brown eyes wide with terror [RGB: 100, 70, 50]",
+        "facial_features": "Face swollen and bruised from interrogation, split lip, hollow cheeks.",
+        "distinctive_features": "A mask of bruised pulp - swollen left eye, dried blood at the corner of his mouth, broken nose.",
+        "clothing": "A torn, filthy linen shirt [RGB: 180, 170, 150] stained with blood and dirt. No shoes, bare feet caked with mud.",
+        "accessories": "Hands bound behind him with coarse hemp rope. A wooden placard around his neck declaring his crimes."
+      },
+      "role": "Condemned Prisoner / Victim",
+      "era": "Kingdom of France 1592"
+    },
     "marquise_genevieve_daubigne": {
       "name": "Marquise Genevieve d'Aubigné",
       "aliases": [
