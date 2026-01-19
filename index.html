@@ -13,8 +13,9 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--bg-gradient, linear-gradient(135deg, #050505 0%, #4B0082 100%));
             min-height: 100vh;
+            transition: background 0.5s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -97,7 +98,7 @@
         }
 
         button {
-            background: #667eea;
+            background: var(--accent-color, #4B0082);
             color: white;
             border: none;
             padding: 12px 24px;
@@ -109,9 +110,9 @@
         }
 
         button:hover {
-            background: #5568d3;
+            background: var(--accent-hover, #3a0066);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 5px 15px var(--accent-shadow, rgba(75, 0, 130, 0.4));
         }
 
         button:active {
@@ -153,7 +154,7 @@
 
         .story-selector select {
             padding: 10px 15px;
-            border: 2px solid #667eea;
+            border: 2px solid var(--accent-color, #4B0082);
             border-radius: 8px;
             font-size: 16px;
             background: white;
@@ -163,14 +164,14 @@
         }
 
         .story-selector select:hover {
-            border-color: #5568d3;
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+            border-color: var(--accent-hover, #3a0066);
+            box-shadow: 0 2px 8px var(--accent-shadow, rgba(75, 0, 130, 0.2));
         }
 
         .story-selector select:focus {
             outline: none;
-            border-color: #5568d3;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: var(--accent-hover, #3a0066);
+            box-shadow: 0 0 0 3px var(--accent-shadow, rgba(75, 0, 130, 0.1));
         }
 
         @media (max-width: 768px) {
@@ -370,6 +371,62 @@
     </div>
 
     <script>
+        // Color palettes derived from each story's style definitions
+        // Stories with style sections: executive, 99nights, france
+        // Stories without: alpha, beta, hunter (use sensible defaults based on era/theme)
+        const storyPalettes = {
+            'executive': {
+                // Obsidian #050505, Titanium #A0A0A0, Vantablack #000000, Copper #B87333, Bruised Purple #4B0082
+                gradient: 'linear-gradient(135deg, #050505 0%, #4B0082 100%)',
+                accent: '#B87333',      // Copper
+                accentHover: '#9a6229',
+                accentShadow: 'rgba(184, 115, 51, 0.4)'
+            },
+            'beta': {
+                // Biblical era + futuristic tech - earth tones with tech blue
+                gradient: 'linear-gradient(135deg, #2D1B0E 0%, #1a1a2e 100%)',
+                accent: '#C49A6C',      // Olive-tan from character appearances
+                accentHover: '#a6835c',
+                accentShadow: 'rgba(196, 154, 108, 0.4)'
+            },
+            'alpha': {
+                // Same theme as beta - biblical simulation
+                gradient: 'linear-gradient(135deg, #1a0f08 0%, #2C2C2C 100%)',
+                accent: '#8B7355',      // Natural wool color from costumes
+                accentHover: '#6b5941',
+                accentShadow: 'rgba(139, 115, 85, 0.4)'
+            },
+            '99nights': {
+                // Obsidian Black (#050505), Violet Twilight (#483D8B), Ember Orange (#FF4500), Iron Grey (#43464B), Bioluminescent Cyan (#00FFFF)
+                gradient: 'linear-gradient(135deg, #050505 0%, #483D8B 100%)',
+                accent: '#FF4500',      // Ember Orange
+                accentHover: '#cc3700',
+                accentShadow: 'rgba(255, 69, 0, 0.4)'
+            },
+            'france': {
+                // Mud [90,75,60], Steel [150,150,160], Smoke [110,110,110], Gold [180,150,50], Blood Red [120,0,0]
+                gradient: 'linear-gradient(135deg, #5a4b3c 0%, #780000 100%)',
+                accent: '#b49632',      // Gold
+                accentHover: '#8f7628',
+                accentShadow: 'rgba(180, 150, 50, 0.4)'
+            },
+            'hunter': {
+                // Rural Texas 1985 - earth tones, denim, leather
+                gradient: 'linear-gradient(135deg, #2F4F2F 0%, #3E2723 100%)',
+                accent: '#8B0000',      // Dark red from flannel shirts
+                accentHover: '#6b0000',
+                accentShadow: 'rgba(139, 0, 0, 0.4)'
+            }
+        };
+
+        function applyStoryPalette(storyName) {
+            const palette = storyPalettes[storyName] || storyPalettes['executive'];
+            document.documentElement.style.setProperty('--bg-gradient', palette.gradient);
+            document.documentElement.style.setProperty('--accent-color', palette.accent);
+            document.documentElement.style.setProperty('--accent-hover', palette.accentHover);
+            document.documentElement.style.setProperty('--accent-shadow', palette.accentShadow);
+        }
+
         // Available story folders and their image lists
         const storyImages = {
             'executive': [
@@ -673,6 +730,9 @@
             currentFolder = newFolder;
             images = storyImages[currentFolder] || [];
             
+            // Apply the story's color palette
+            applyStoryPalette(currentFolder);
+            
             // Reset to first image
             currentIndex = 0;
             
@@ -722,6 +782,7 @@
         }
 
         // Initialize
+        applyStoryPalette(currentFolder);
         updateImage();
     </script>
 </body>
