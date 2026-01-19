@@ -503,17 +503,19 @@ def main() -> int:
         story_dir = prompt_user("Enter the name for your story folder", required=True)
         story_dir = story_dir.lower().replace(" ", "-").replace("_", "-")
     
-    story_path = os.path.join(script_root, story_dir)
+    story_path = os.path.join(script_root, "stories", story_dir)
     
     if os.path.exists(story_path):
-        if not prompt_yes_no(f"Directory '{story_dir}' already exists. Continue and overwrite?", default=False):
+        if not prompt_yes_no(f"Directory 'stories/{story_dir}' already exists. Continue and overwrite?", default=False):
             print("Aborted.", file=sys.stderr)
             return 1
     else:
         ensure_dir(story_path)
+        ensure_dir(os.path.join(story_path, "scenes"))
         ensure_dir(os.path.join(story_path, "boards"))
+        ensure_dir(os.path.join(story_path, "boards", "refs"))
 
-    print(f"\n📁 Story directory: {story_path}")
+    print(f"\n📁 Story directory: stories/{story_dir}")
     print()
 
     # Core story concept
@@ -763,12 +765,12 @@ def main() -> int:
     print("\n" + "=" * 70)
     print("✓ NARRATIVE SCAFFOLDING COMPLETE")
     print("=" * 70)
-    print(f"\nStory structure created in: {story_path}")
+    print(f"\nStory structure created in: stories/{story_dir}")
     print(f"\nNext steps:")
     print(f"  1. Review and edit {acts_path}")
     print(f"  2. Review and edit {definitions_path}")
-    print(f"  3. Generate scenes: python3 scripts/generate_scenes.py --acts-file {story_dir}/acts.json --output-dir {story_dir}")
-    print(f"  4. Generate storyboards: python3 scripts/generate_storyboards.py --scene-glob {story_dir}/scene-*.md --output-dir {story_dir}/boards")
+    print(f"  3. Generate scenes: python3 scripts/generate_scenes.py --acts-file stories/{story_dir}/acts.json --output-dir stories/{story_dir}")
+    print(f"  4. Generate storyboards: python3 scripts/generate_storyboards.py --scene-glob stories/{story_dir}/scenes/scene-*.md --output-dir stories/{story_dir}/boards")
     print()
 
     return 0

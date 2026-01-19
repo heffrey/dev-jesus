@@ -1,0 +1,34 @@
+{
+  "Capernaum": {
+    "indoor": [
+      "stories/beta/boards/refs/ref-setting-capernaum-indoor.jpg"
+    ],
+    "outdoor": [
+      "stories/beta/boards/refs/ref-setting-capernaum-outdoor.jpg"
+    ]
+  },
+  "Galilee": {
+    "indoor": [
+      "stories/beta/boards/refs/ref-setting-galilee-indoor.jpg"
+    ],
+    "outdoor": [
+      "stories/beta/boards/refs/ref-setting-galilee-outdoor.jpg"
+    ]
+  },
+  "The Archive": {
+    "indoor": [
+      "stories/beta/boards/refs/ref-setting-the-archive-indoor.jpg"
+    ],
+    "outdoor": [
+      "stories/beta/boards/refs/ref-setting-the-archive-outdoor.jpg"
+    ]
+  },
+  "The Operations Floor": {
+    "indoor": [
+      "stories/beta/boards/refs/ref-setting-the-operations-floor-indoor.jpg"
+    ],
+    "outdoor": [
+      "stories/beta/boards/refs/ref-setting-the-operations-floor-outdoor.jpg"
+    ]
+  }
+}

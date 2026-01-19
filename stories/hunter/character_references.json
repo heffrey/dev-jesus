@@ -1,0 +1,34 @@
+{
+  "Annie": [
+    "stories/hunter/boards/scene-0003-2.jpg",
+    "stories/hunter/boards/scene-0002-3.jpg",
+    "stories/hunter/boards/scene-0003-1.jpg",
+    "stories/hunter/boards/scene-0002-2.jpg",
+    "stories/hunter/boards/scene-0002-1.jpg",
+    "stories/hunter/boards/refs/ref-annie.jpg"
+  ],
+  "Dale": [
+    "stories/hunter/boards/scene-0002-2.jpg",
+    "stories/hunter/boards/refs/ref-dale.jpg"
+  ],
+  "Old Man Henderson": [
+    "stories/hunter/boards/scene-0003-2.jpg",
+    "stories/hunter/boards/scene-0002-3.jpg",
+    "stories/hunter/boards/scene-0002-2.jpg",
+    "stories/hunter/boards/scene-0002-1.jpg",
+    "stories/hunter/boards/refs/ref-old-man-henderson.jpg"
+  ],
+  "Sarah": [
+    "stories/hunter/boards/scene-0003-2.jpg",
+    "stories/hunter/boards/scene-0002-3.jpg",
+    "stories/hunter/boards/scene-0003-1.jpg",
+    "stories/hunter/boards/scene-0002-1.jpg",
+    "stories/hunter/boards/refs/ref-sarah.jpg"
+  ],
+  "Jim Ceruzi": [
+    "executive/boards/ref-jim-ceruzi.jpg"
+  ],
+  "Elias Thorne": [
+    "executive/boards/ref-jim-ceruzi.jpg"
+  ]
+}

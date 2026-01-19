@@ -106,7 +106,7 @@ def sync_canonical_references(
     definitions: dict,
     output_dir: str,
 ) -> bool:
-    """Scan output_dir for canonical ref-*.jpg/png files and add missing ones to character_references.
+    """Scan output_dir/refs for canonical ref-*.jpg/png files and add missing ones to character_references.
     
     This ensures that manually created or externally generated reference images are properly
     linked to their characters in the reference database.
@@ -125,62 +125,73 @@ def sync_canonical_references(
         for alias in char_data.get("aliases", []):
             char_name_map[alias.lower()] = canonical_name
     
-    # Scan for ref-*.jpg and ref-*.png files in output_dir
-    for ext in ["jpg", "jpeg", "png"]:
-        pattern = os.path.join(output_dir, f"ref-*.{ext}")
-        for ref_path in glob.glob(pattern):
-            basename = os.path.basename(ref_path)
-            # Skip non-character refs (settings, extras, style)
-            if basename.startswith("ref-setting-") or basename.startswith("ref-extra-") or basename.startswith("ref-style"):
-                continue
-            
-            # Extract character name from filename: ref-joel.jpg -> joel
-            # Handle names with dashes: ref-joel's-brother.jpg -> joel's brother
-            name_part = basename[4:]  # Remove "ref-" prefix
-            name_part = os.path.splitext(name_part)[0]  # Remove extension
-            name_part = name_part.replace("-", " ").replace("'", "'")  # Normalize
-            
-            # Try to find matching character (exact match only to avoid false positives)
-            canonical_name = None
-            
-            # Try exact match with the extracted name
-            if name_part.lower() in char_name_map:
-                canonical_name = char_name_map[name_part.lower()]
-            else:
-                # Try title case version
-                title_name = name_part.title()
-                if title_name.lower() in char_name_map:
-                    canonical_name = char_name_map[title_name.lower()]
-                # Note: We intentionally do NOT do partial matching here to avoid
-                # false positives like "the pharisees" matching "Aris"
-            
-            if canonical_name:
-                # Get relative path for storage (relative to script root/repo root)
-                script_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-                rel_path = os.path.relpath(ref_path, script_root)
+    # Scan for ref-*.jpg and ref-*.png files in output_dir/refs (new structure)
+    # Also check output_dir directly for legacy compatibility
+    refs_dir = os.path.join(output_dir, "refs")
+    search_dirs = [refs_dir, output_dir] if os.path.isdir(refs_dir) else [output_dir]
+    
+    for search_dir in search_dirs:
+        for ext in ["jpg", "jpeg", "png"]:
+            pattern = os.path.join(search_dir, f"ref-*.{ext}")
+            for ref_path in glob.glob(pattern):
+                basename = os.path.basename(ref_path)
+                # Skip non-character refs (settings, extras, style)
+                if basename.startswith("ref-setting-") or basename.startswith("ref-extra-") or basename.startswith("ref-style"):
+                    continue
                 
-                # Check if this ref is already in the character's references
-                if canonical_name not in character_references:
-                    character_references[canonical_name] = []
+                # Extract character name from filename: ref-joel.jpg -> joel
+                # Handle names with dashes: ref-joel's-brother.jpg -> joel's brother
+                name_part = basename[4:]  # Remove "ref-" prefix
+                name_part = os.path.splitext(name_part)[0]  # Remove extension
+                name_part = name_part.replace("-", " ").replace("'", "'")  # Normalize
                 
-                # Check if ref path is already in the list (in any form)
-                ref_basename = os.path.basename(ref_path)
-                already_present = any(
-                    os.path.basename(existing_path) == ref_basename
-                    for existing_path in character_references[canonical_name]
-                )
+                # Try to find matching character (exact match only to avoid false positives)
+                canonical_name = None
                 
-                if not already_present:
-                    # Insert at the beginning (canonical refs should be first)
-                    character_references[canonical_name].insert(0, rel_path)
-                    changed = True
+                # Try exact match with the extracted name
+                if name_part.lower() in char_name_map:
+                    canonical_name = char_name_map[name_part.lower()]
+                else:
+                    # Try title case version
+                    title_name = name_part.title()
+                    if title_name.lower() in char_name_map:
+                        canonical_name = char_name_map[title_name.lower()]
+                    # Note: We intentionally do NOT do partial matching here to avoid
+                    # false positives like "the pharisees" matching "Aris"
+                
+                if canonical_name:
+                    # Get relative path for storage (relative to script root/repo root)
+                    script_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+                    rel_path = os.path.relpath(ref_path, script_root)
+                    
+                    # Check if this ref is already in the character's references
+                    if canonical_name not in character_references:
+                        character_references[canonical_name] = []
+                    
+                    # Check if ref path is already in the list (in any form)
+                    ref_basename = os.path.basename(ref_path)
+                    already_present = any(
+                        os.path.basename(existing_path) == ref_basename
+                        for existing_path in character_references[canonical_name]
+                    )
+                    
+                    if not already_present:
+                        # Insert at the beginning (canonical refs should be first)
+                        character_references[canonical_name].insert(0, rel_path)
+                        changed = True
     
     return changed
 
 
 def get_style_reference_path(output_dir: str) -> str:
     """Get the path to the master style reference image."""
-    # Check for common extensions
+    # Check in boards/refs subdirectory first (new structure)
+    refs_dir = os.path.join(output_dir, "refs")
+    for ext in ["jpg", "jpeg", "png"]:
+        path = os.path.join(refs_dir, f"ref-style.{ext}")
+        if os.path.isfile(path):
+            return path
+    # Fall back to output_dir directly (legacy structure)
     for ext in ["jpg", "jpeg", "png"]:
         path = os.path.join(output_dir, f"ref-style.{ext}")
         if os.path.isfile(path):
@@ -233,10 +244,14 @@ def find_character_reference_images(
             full_path = ref_path
         else:
             # Try multiple resolution strategies:
-            # 1. Relative to output_dir
-            # 2. Relative to current working directory
-            # 3. Relative to script root (for cross-directory references like executive/boards/ref-*.jpg)
-            full_path = os.path.join(output_dir, ref_path)
+            # 1. Relative to output_dir/refs (new structure for ref-* images)
+            # 2. Relative to output_dir
+            # 3. Relative to current working directory
+            # 4. Relative to script root (for cross-directory references)
+            refs_dir = os.path.join(output_dir, "refs")
+            full_path = os.path.join(refs_dir, ref_path)
+            if not os.path.isfile(full_path):
+                full_path = os.path.join(output_dir, ref_path)
             if not os.path.isfile(full_path):
                 full_path = os.path.join(os.getcwd(), ref_path)
             if not os.path.isfile(full_path):
@@ -982,6 +997,188 @@ def ensure_character_mentioned(sentence: str, character_names: list[str], contex
     return enhanced
 
 
+def build_character_differentiation_guidance(
+    character: dict,
+    definitions: dict,
+) -> list[str]:
+    """Build differentiation guidance for a character based on other characters in the story.
+    
+    Returns a list of strings with instructions to make this character visually distinct
+    from other characters, especially those with similar appearances.
+    """
+    char_name = character.get("name", "Unknown")
+    char_appearance = character.get("appearance", "")
+    char_description = character.get("description", "")
+    
+    other_characters = []
+    for other_key, other_data in definitions.get("characters", {}).items():
+        other_name = other_data.get("name", other_key)
+        if other_name == char_name:
+            continue
+        other_characters.append(other_data)
+    
+    if not other_characters:
+        return []
+    
+    # Extract key visual features from our character for comparison
+    def extract_features(text: str) -> dict:
+        """Extract visual features from appearance/description text."""
+        features = {}
+        text_lower = text.lower()
+        
+        # Hair color
+        hair_colors = ["black", "brown", "dark brown", "light brown", "blonde", "red", "auburn", "gray", "grey", "white"]
+        for color in hair_colors:
+            if color in text_lower and "hair" in text_lower:
+                features["hair_color"] = color
+                break
+        
+        # Hair style
+        if "curly" in text_lower:
+            features["hair_style"] = "curly"
+        elif "straight" in text_lower:
+            features["hair_style"] = "straight"
+        elif "wavy" in text_lower:
+            features["hair_style"] = "wavy"
+        
+        # Hair length (check more specific patterns first to avoid false matches)
+        if "shoulder-length" in text_lower or "shoulder length" in text_lower:
+            features["hair_length"] = "shoulder-length"
+        elif "medium length" in text_lower or "medium-length" in text_lower:
+            features["hair_length"] = "medium"
+        elif "short" in text_lower and "hair" in text_lower:
+            features["hair_length"] = "short"
+        elif "long" in text_lower and "hair" in text_lower:
+            features["hair_length"] = "long"
+        elif "medium" in text_lower and ("hair" in text_lower or "length" in text_lower):
+            features["hair_length"] = "medium"
+        
+        # Build
+        if "muscular" in text_lower:
+            features["build"] = "muscular"
+        elif "lean" in text_lower:
+            features["build"] = "lean"
+        elif "slim" in text_lower or "slender" in text_lower:
+            features["build"] = "slim"
+        elif "stocky" in text_lower or "broad" in text_lower:
+            features["build"] = "stocky"
+        elif "average" in text_lower:
+            features["build"] = "average"
+        
+        # Facial hair
+        if "clean-shaven" in text_lower or "clean shaven" in text_lower:
+            features["facial_hair"] = "clean-shaven"
+        elif "full beard" in text_lower:
+            features["facial_hair"] = "full beard"
+        elif "short beard" in text_lower:
+            features["facial_hair"] = "short beard"
+        elif "stubble" in text_lower:
+            features["facial_hair"] = "stubble"
+        elif "beard" in text_lower:
+            features["facial_hair"] = "beard"
+        
+        # Distinctive features
+        if "scar" in text_lower:
+            features["has_scar"] = True
+        if "glasses" in text_lower or "spectacles" in text_lower:
+            features["has_glasses"] = True
+        if "tattoo" in text_lower:
+            features["has_tattoo"] = True
+        
+        return features
+    
+    # Extract our character's features
+    our_features = extract_features(char_appearance + " " + char_description)
+    
+    # Find characters with similar features
+    similar_chars = []
+    for other in other_characters:
+        other_name = other.get("name", "Unknown")
+        other_appearance = other.get("appearance", "")
+        other_description = other.get("description", "")
+        other_features = extract_features(other_appearance + " " + other_description)
+        
+        # Count similar features
+        similarities = []
+        for key in our_features:
+            if key in other_features and our_features[key] == other_features[key]:
+                similarities.append(key)
+        
+        if len(similarities) >= 2:  # At least 2 similar features = potential confusion
+            similar_chars.append({
+                "name": other_name,
+                "appearance": other_appearance,
+                "description": other_description,
+                "similarities": similarities,
+                "features": other_features,
+            })
+    
+    if not similar_chars:
+        return []
+    
+    # Build differentiation guidance
+    guidance = [
+        "",
+        "CRITICAL: Character Differentiation",
+        f"This character ({char_name}) shares visual traits with other characters. You MUST make them CLEARLY DISTINGUISHABLE:",
+        "",
+    ]
+    
+    for similar in similar_chars:
+        guidance.append(f"DO NOT confuse {char_name} with {similar['name']}:")
+        
+        # Point out their similar features
+        similar_features_str = ", ".join(similar["similarities"]).replace("_", " ")
+        guidance.append(f"  - Similar traits: {similar_features_str}")
+        
+        # Build specific differentiation instructions
+        diff_instructions = []
+        
+        # Compare and contrast specific features
+        other_features = similar["features"]
+        
+        # Build
+        if "build" in our_features and "build" in other_features:
+            if our_features["build"] != other_features["build"]:
+                diff_instructions.append(f"{char_name} is {our_features['build']}, {similar['name']} is {other_features['build']}")
+            else:
+                diff_instructions.append(f"Both have {our_features['build']} build - differentiate through OTHER features (face shape, posture, expression)")
+        
+        # Facial hair
+        if "facial_hair" in our_features and "facial_hair" in other_features:
+            if our_features["facial_hair"] != other_features["facial_hair"]:
+                diff_instructions.append(f"{char_name} has {our_features['facial_hair']}, {similar['name']} has {other_features['facial_hair']}")
+            else:
+                diff_instructions.append(f"Both have {our_features['facial_hair']} - make beard SHAPE/STYLE clearly different")
+        
+        # Hair
+        if "hair_length" in our_features and "hair_length" in other_features:
+            if our_features["hair_length"] != other_features["hair_length"]:
+                diff_instructions.append(f"{char_name}: {our_features['hair_length']} hair, {similar['name']}: {other_features['hair_length']} hair")
+        
+        if "hair_style" in our_features and "hair_style" in other_features:
+            if our_features["hair_style"] != other_features["hair_style"]:
+                diff_instructions.append(f"{char_name}: {our_features['hair_style']} hair, {similar['name']}: {other_features['hair_style']} hair")
+        
+        for instr in diff_instructions:
+            guidance.append(f"  - {instr}")
+        
+        # Add concrete visual differentiation advice
+        guidance.append(f"  - KEY: Give {char_name} a UNIQUE facial structure, expression, and posture that is IMMEDIATELY recognizable")
+        guidance.append("")
+    
+    guidance.extend([
+        "To avoid confusion:",
+        f"- {char_name} must have a DISTINCTIVE face that looks NOTHING like other characters",
+        "- Pay special attention to: nose shape, eye shape, eyebrow angle, jaw line, cheekbones",
+        "- Use different default expression/demeanor (e.g., intense vs. calm, weathered vs. fresh)",
+        "- Vary posture and body language significantly",
+        "",
+    ])
+    
+    return guidance
+
+
 def build_character_reference_prompt(
     character: dict,
     definitions: dict,
@@ -1000,6 +1197,11 @@ def build_character_reference_prompt(
         lines.append(f"Description: {character['description']}")
     if "appearance" in character:
         lines.append(f"Appearance: {character['appearance']}")
+    
+    # Add differentiation guidance if there are similar characters
+    differentiation = build_character_differentiation_guidance(character, definitions)
+    if differentiation:
+        lines.extend(differentiation)
     
     lines.extend([
         "",
@@ -1791,8 +1993,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Generate comic panels from scene files.")
     parser.add_argument("--api-key", default=os.environ.get("GEMINI_API_KEY"))
     parser.add_argument("--model", default=DEFAULT_MODEL)
-    parser.add_argument("--scene-glob", default="story/scene-*.md")
-    parser.add_argument("--output-dir", default="story/boards")
+    parser.add_argument("--scene-glob", default="stories/story/scenes/scene-*.md")
+    parser.add_argument("--output-dir", default="stories/story/boards")
     parser.add_argument("--panel-count", type=int, default=None, help="Panels per storyboard (default: 4-6 based on content, with dialog prioritized)")
     parser.add_argument("--storyboards-per-scene", type=int, default=None, help="Number of storyboards per scene (default: 4-6 based on content)")
     parser.add_argument("--chunks", type=str, default=None, help="Comma-separated list of chunk indices to regenerate (e.g., '1,3,5' or '2'). If not specified, all chunks are generated. Indices are 1-based.")
@@ -1811,17 +2013,24 @@ def main() -> int:
     parser.add_argument("--no-debug-prompt", dest="debug_prompt", action="store_false", help="Disable prompt debugging")
     parser.add_argument("--save-prompt", default=None, help="Save each prompt to a file (specify directory path, or use 'auto' to save alongside output)")
     parser.add_argument("--dry-run", action="store_true", help="Build and display prompts without calling the Gemini API. Useful for debugging prompt generation.")
+    parser.add_argument("--regenerate-ref", type=str, default=None, help="Regenerate character reference image(s). Specify character name(s) separated by commas (e.g., 'Yeshua,Joel') or 'all' to regenerate all characters. Only requires --definitions-file and --output-dir (no scenes needed). The new reference will include differentiation guidance to avoid visual confusion with other characters.")
     args = parser.parse_args()
 
     if not args.api_key:
         print("Missing API key. Set GEMINI_API_KEY or pass --api-key.", file=sys.stderr)
         return 2
 
-    # Determine definitions file path if not specified
+    # Determine definitions file path and story directory
     if args.definitions_file is None:
-        # Extract directory from scene-glob pattern (e.g., "story/scene-*.md" -> "story")
-        scene_dir = os.path.dirname(args.scene_glob) if os.path.dirname(args.scene_glob) else "story"
-        args.definitions_file = os.path.join(scene_dir, "definitions.json")
+        # Extract story directory from scene-glob pattern 
+        # New structure: stories/story/scenes/scene-*.md -> stories/story
+        scene_dir = os.path.dirname(args.scene_glob) if os.path.dirname(args.scene_glob) else "stories/story/scenes"
+        # Go up one level from scenes/ to get story root
+        story_dir = os.path.dirname(scene_dir) if os.path.basename(scene_dir) == "scenes" else scene_dir
+        args.definitions_file = os.path.join(story_dir, "definitions.json")
+    else:
+        # Derive story_dir from definitions file path (definitions.json is in story root)
+        story_dir = os.path.dirname(args.definitions_file) if os.path.dirname(args.definitions_file) else "."
 
     # Load character and setting definitions
     definitions = load_definitions(args.definitions_file)
@@ -1830,11 +2039,10 @@ def main() -> int:
         setting_count = len(definitions.get("settings", {}))
         print(f"Loaded {char_count} character(s) and {setting_count} setting(s) from definitions", flush=True)
     
-    # Load all visual references
-    scene_dir = os.path.dirname(args.scene_glob) if os.path.dirname(args.scene_glob) else "story"
-    character_references_path = os.path.join(scene_dir, "character_references.json")
-    extra_references_path = os.path.join(scene_dir, "extra_references.json")
-    setting_references_path = os.path.join(scene_dir, "setting_references.json")
+    # Load all visual references from story_dir
+    character_references_path = os.path.join(story_dir, "character_references.json")
+    extra_references_path = os.path.join(story_dir, "extra_references.json")
+    setting_references_path = os.path.join(story_dir, "setting_references.json")
     
     character_references = load_character_references(character_references_path)
     extra_references = load_extra_references(extra_references_path)
@@ -1846,6 +2054,100 @@ def main() -> int:
         save_character_references(character_references_path, character_references)
         if args.verbose:
             print(f"Synced canonical reference images to {character_references_path}", flush=True)
+    
+    # Handle --regenerate-ref: regenerate character reference images
+    if args.regenerate_ref:
+        all_characters = definitions.get("characters", {})
+        
+        if not all_characters:
+            print("No characters found in definitions file. Cannot regenerate references.", file=sys.stderr)
+            return 1
+        
+        # Determine which characters to regenerate
+        if args.regenerate_ref.lower() == "all":
+            chars_to_regenerate = list(all_characters.values())
+            print(f"Regenerating reference images for ALL {len(chars_to_regenerate)} character(s)...", flush=True)
+        else:
+            # Parse comma-separated character names
+            requested_names = [name.strip() for name in args.regenerate_ref.split(",")]
+            chars_to_regenerate = []
+            
+            for requested_name in requested_names:
+                # Find matching character (case-insensitive, check name and aliases)
+                found = False
+                for char_key, char_data in all_characters.items():
+                    char_name = char_data.get("name", char_key)
+                    aliases = char_data.get("aliases", [])
+                    all_names = [char_name] + aliases
+                    
+                    if requested_name.lower() in [n.lower() for n in all_names]:
+                        chars_to_regenerate.append(char_data)
+                        found = True
+                        break
+                
+                if not found:
+                    print(f"Warning: Character '{requested_name}' not found in definitions. Available: {', '.join(c.get('name', k) for k, c in all_characters.items())}", file=sys.stderr)
+            
+            if not chars_to_regenerate:
+                print("No valid characters specified. Use --regenerate-ref='CharacterName' or --regenerate-ref='all'", file=sys.stderr)
+                return 1
+            
+            print(f"Regenerating reference images for {len(chars_to_regenerate)} character(s): {', '.join(c.get('name', 'Unknown') for c in chars_to_regenerate)}", flush=True)
+        
+        # Ensure refs output directory exists
+        refs_dir = os.path.join(args.output_dir, "refs")
+        ensure_dir(refs_dir)
+        
+        # Regenerate each character's reference
+        for char_idx, char in enumerate(chars_to_regenerate, start=1):
+            char_name = char.get("name", "Unknown")
+            print(f"\n[{char_idx}/{len(chars_to_regenerate)}] Regenerating reference for {char_name}...", flush=True)
+            
+            if args.dry_run:
+                # Just show the prompt without generating
+                prompt = build_character_reference_prompt(char, definitions)
+                print(f"\n{'='*60}")
+                print(f"DRY RUN - Prompt for {char_name}:")
+                print(f"{'='*60}")
+                print(prompt)
+                print(f"{'='*60}\n")
+                continue
+            
+            ref_path = generate_character_reference_image(
+                args.api_key,
+                args.model,
+                char,
+                definitions,
+                refs_dir,
+                args.max_retries,
+                args.retry_base,
+                args.verbose,
+            )
+            
+            if ref_path:
+                # Update reference in database
+                # First, remove old ref- entries for this character
+                if char_name in character_references:
+                    character_references[char_name] = [
+                        p for p in character_references[char_name]
+                        if not os.path.basename(p).lower().startswith("ref-")
+                    ]
+                
+                # Add new reference
+                update_character_references(
+                    character_references, char_name, ref_path, args.output_dir
+                )
+                save_character_references(character_references_path, character_references)
+                print(f"  ✓ Regenerated reference for {char_name}: {ref_path}", flush=True)
+                
+                # Sleep between generations to avoid rate limits
+                if char_idx < len(chars_to_regenerate) and args.sleep_between > 0:
+                    time.sleep(args.sleep_between)
+            else:
+                print(f"  ✗ Failed to regenerate reference for {char_name}", file=sys.stderr, flush=True)
+        
+        print(f"\nReference regeneration complete.", flush=True)
+        return 0  # Exit after regenerating refs (don't process scenes)
     
     if args.verbose:
         if character_references:

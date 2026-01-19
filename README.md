@@ -14,6 +14,40 @@ Dev-Jesus is a text-first art and software concept built around an AI-driven sto
 - Enable collaborative story shaping through guided inputs.
 - Translate story progress into visual boards via AI.
 
+## Project Structure
+
+```
+dev-jesus/
+├── stories/                    # All story projects
+│   └── {story-name}/           # Individual story folder
+│       ├── acts.json           # Story structure (acts and scenes)
+│       ├── definitions.json    # Characters, settings, extras, style
+│       ├── core-premise.md     # Story premise (optional)
+│       ├── README.md           # Story-specific readme
+│       ├── character_references.json   # Character visual tracking
+│       ├── setting_references.json     # Setting visual tracking
+│       ├── extra_references.json       # Extra visual tracking
+│       ├── scenes/             # Scene markdown files
+│       │   ├── scene-0001.md
+│       │   ├── scene-0001.continuity.md
+│       │   └── ...
+│       └── boards/             # Generated storyboard images
+│           ├── refs/           # Reference images
+│           │   ├── ref-{character}.jpg
+│           │   ├── ref-setting-{name}-indoor.jpg
+│           │   ├── ref-setting-{name}-outdoor.jpg
+│           │   ├── ref-extra-{name}.jpg
+│           │   └── ref-style.jpg
+│           ├── scene-0001-1.jpg
+│           └── ...
+├── scripts/                    # Python generation scripts
+│   ├── generate_narrative.py
+│   ├── generate_scenes.py
+│   ├── generate_storyboards.py
+│   └── tag_storyboards.py
+└── README.md
+```
+
 ## Scripts
 
 The `scripts/` directory contains Python utilities for generating story content:
@@ -31,7 +65,7 @@ Interactive narrative scaffolding tool that creates a new story structure based 
   3. **The Return Cycle**: Homecoming, recognition, and restoration
   4. **The Sacrifice Cycle**: Ritual, transformation, and transcendence
 - Generates comprehensive `acts.json` and `definitions.json` files
-- Creates a new story folder with all necessary scaffolding
+- Creates a new story folder in `stories/` with all necessary scaffolding
 
 **Usage:**
 ```bash
@@ -60,32 +94,33 @@ The script uses Gemini API to:
 ```bash
 python scripts/generate_narrative.py
 # Follow the interactive prompts
-# Script creates: story-name/acts.json, story-name/definitions.json, story-name/README.md
+# Script creates: stories/{story-name}/acts.json, definitions.json, scenes/, boards/, boards/refs/
 ```
 
 ### `generate_scenes.py`
 
 Generates scene markdown files from an acts structure using Gemini AI. The script:
-- Reads act and scene definitions from `story/acts.json`
-- Uses the core premise from `story/core-premise.md` (or a default)
-- Generates each scene as a markdown file in the story directory
+- Reads act and scene definitions from `stories/{story}/acts.json`
+- Uses the core premise from `stories/{story}/core-premise.md` (optional)
+- Generates each scene as a markdown file in `stories/{story}/scenes/`
 - Maintains context by referencing previous scenes
 - Handles rate limiting and retries automatically
 
 **Usage:**
 ```bash
-python scripts/generate_scenes.py [--api-key KEY] [--start-scene N] [--end-scene M]
+python scripts/generate_scenes.py --acts-file stories/{story}/acts.json --output-dir stories/{story} [--api-key KEY] [--start-scene N] [--end-scene M]
 ```
 
 ### `generate_storyboards.py`
 
 Generates comic book-style storyboard images from scene markdown files using Gemini's image generation. The script:
-- Processes scene markdown files matching `story/scene-*.md`
+- Processes scene markdown files matching `stories/{story}/scenes/scene-*.md`
 - Divides each scene into 3-5 storyboard chunks
-- Detects characters, settings, and extras from `story/definitions.json` to maintain visual consistency
+- Detects characters, settings, and extras from `stories/{story}/definitions.json` to maintain visual consistency
 - **Uses visual references from previous storyboards** to ensure character, extra, and setting appearance continuity
 - Generates multi-panel comic images with consistent character, extra, setting, and style appearances
-- Saves images to `story/boards/` directory
+- Saves storyboard images to `stories/{story}/boards/` directory
+- Saves reference images to `stories/{story}/boards/refs/` directory
 - Automatically tracks character appearances in `character_references.json`
 - Automatically tracks extra appearances in `extra_references.json`
 - Automatically tracks setting references in `setting_references.json`
@@ -93,7 +128,7 @@ Generates comic book-style storyboard images from scene markdown files using Gem
 
 **Usage:**
 ```bash
-python scripts/generate_storyboards.py [--api-key KEY] [--scene-glob PATTERN]
+python scripts/generate_storyboards.py --scene-glob "stories/{story}/scenes/scene-*.md" --output-dir stories/{story}/boards [--api-key KEY]
 ```
 
 **Visual Continuity System:**
@@ -137,18 +172,18 @@ Utility script to manually tag existing storyboard images with character appeara
 **Usage:**
 ```bash
 # Auto-tag based on scene files (recommended for existing storyboards)
-python scripts/tag_storyboards.py --auto-tag
+python scripts/tag_storyboards.py --boards-dir stories/{story}/boards --auto-tag
 
 # Tag a specific image
-python scripts/tag_storyboards.py --image scene-0001-1.jpg --characters Annie Sarah
+python scripts/tag_storyboards.py --boards-dir stories/{story}/boards --image scene-0001-1.jpg --characters Annie Sarah
 
 # Interactive mode (tag all images one by one)
-python scripts/tag_storyboards.py
+python scripts/tag_storyboards.py --boards-dir stories/{story}/boards
 ```
 
 ## File Formats
 
-### `story/acts.json.example`
+### `stories/{story}/acts.json`
 
 Defines the story structure as a JSON file with acts and scenes. Each act contains:
 - `number`: Act number (integer)
@@ -177,9 +212,7 @@ Defines the story structure as a JSON file with acts and scenes. Each act contai
 }
 ```
 
-Copy `acts.json.example` to `acts.json` and customize it for your story structure.
-
-### `story/definitions.json`
+### `stories/{story}/definitions.json`
 
 Defines characters, settings, extras, and style with detailed appearance and description information to ensure visual consistency across generated storyboards. The file contains four main sections:
 
@@ -230,7 +263,7 @@ The storyboard generator uses these definitions to:
 
 The storyboard generator automatically creates and maintains several JSON files to track visual references:
 
-#### `story/character_references.json`
+#### `stories/{story}/character_references.json`
 
 Tracks which storyboard images contain which characters. Used to maintain visual continuity by referencing previous character appearances when generating new storyboards.
 
@@ -238,21 +271,21 @@ Tracks which storyboard images contain which characters. Used to maintain visual
 ```json
 {
   "Annie": [
-    "boards/ref-annie.jpg",
-    "boards/scene-0001-1.jpg",
-    "boards/scene-0001-2.jpg"
+    "stories/{story}/boards/refs/ref-annie.jpg",
+    "stories/{story}/boards/scene-0001-1.jpg",
+    "stories/{story}/boards/scene-0001-2.jpg"
   ],
   "Sarah": [
-    "boards/ref-sarah.jpg",
-    "boards/scene-0001-1.jpg",
-    "boards/scene-0002-1.jpg"
+    "stories/{story}/boards/refs/ref-sarah.jpg",
+    "stories/{story}/boards/scene-0001-1.jpg",
+    "stories/{story}/boards/scene-0002-1.jpg"
   ]
 }
 ```
 
-Canonical reference images (prefixed with `ref-`) are prioritized over storyboard images. The file is automatically maintained by `generate_storyboards.py`, but can be manually edited.
+Canonical reference images (in `boards/refs/`, prefixed with `ref-`) are prioritized over storyboard images. The file is automatically maintained by `generate_storyboards.py`, but can be manually edited.
 
-#### `story/extra_references.json`
+#### `stories/{story}/extra_references.json`
 
 Tracks which storyboard images contain which extras (non-character entities). Used to maintain visual consistency for vehicles, props, clothing items, and other important objects.
 
@@ -260,19 +293,19 @@ Tracks which storyboard images contain which extras (non-character entities). Us
 ```json
 {
   "1985 Camaro": [
-    "boards/ref-extra-1985-camaro.jpg",
-    "boards/scene-0001-1.jpg"
+    "stories/{story}/boards/refs/ref-extra-1985-camaro.jpg",
+    "stories/{story}/boards/scene-0001-1.jpg"
   ],
   "Folding Knife": [
-    "boards/ref-extra-folding-knife.jpg",
-    "boards/scene-0002-3.jpg"
+    "stories/{story}/boards/refs/ref-extra-folding-knife.jpg",
+    "stories/{story}/boards/scene-0002-3.jpg"
   ]
 }
 ```
 
-Canonical reference images (prefixed with `ref-extra-`) are generated on first appearance and prioritized for consistency.
+Canonical reference images (in `boards/refs/`, prefixed with `ref-extra-`) are generated on first appearance and prioritized for consistency.
 
-#### `story/setting_references.json`
+#### `stories/{story}/setting_references.json`
 
 Tracks indoor and outdoor reference images for each setting. Used to maintain architectural and environmental consistency between scenes.
 
@@ -281,18 +314,18 @@ Tracks indoor and outdoor reference images for each setting. Used to maintain ar
 {
   "The Farmhouse": {
     "indoor": [
-      "boards/ref-setting-the-farmhouse-indoor.jpg"
+      "stories/{story}/boards/refs/ref-setting-the-farmhouse-indoor.jpg"
     ],
     "outdoor": [
-      "boards/ref-setting-the-farmhouse-outdoor.jpg"
+      "stories/{story}/boards/refs/ref-setting-the-farmhouse-outdoor.jpg"
     ]
   },
   "The Gas Station": {
     "indoor": [
-      "boards/ref-setting-the-gas-station-indoor.jpg"
+      "stories/{story}/boards/refs/ref-setting-the-gas-station-indoor.jpg"
     ],
     "outdoor": [
-      "boards/ref-setting-the-gas-station-outdoor.jpg"
+      "stories/{story}/boards/refs/ref-setting-the-gas-station-outdoor.jpg"
     ]
   }
 }
@@ -302,7 +335,7 @@ Both indoor and outdoor references are automatically generated when a setting is
 
 #### Master Style Reference
 
-The master style reference image (`ref-style.{ext}`) is generated once in the output directory and defines the visual style for the entire comic series. This single image takes precedence over all other style instructions and ensures consistent:
+The master style reference image (`boards/refs/ref-style.{ext}`) is generated once and defines the visual style for the entire comic series. This single image takes precedence over all other style instructions and ensures consistent:
 - Typography and lettering
 - Inking technique and line work
 - Coloring approach and palette

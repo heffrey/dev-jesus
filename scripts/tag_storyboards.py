@@ -70,8 +70,8 @@ def main() -> int:
     )
     parser.add_argument(
         "--boards-dir",
-        default="story/boards",
-        help="Directory containing storyboard images (default: story/boards)",
+        default="stories/story/boards",
+        help="Directory containing storyboard images (default: stories/story/boards)",
     )
     parser.add_argument(
         "--definitions-file",
@@ -129,7 +129,11 @@ def main() -> int:
 
     if args.auto_tag:
         # Auto-tag based on scene files
-        scene_dir = parent_dir
+        # New structure: scenes are in {story}/scenes/
+        scene_dir = os.path.join(parent_dir, "scenes")
+        if not os.path.isdir(scene_dir):
+            # Fall back to parent_dir for legacy structure
+            scene_dir = parent_dir
         scene_files = sorted(glob.glob(os.path.join(scene_dir, "scene-*.md")))
         
         if not scene_files:

@@ -1,0 +1,26 @@
+{
+  "142 Miller Street": {
+    "indoor": [
+      "stories/executive/boards/refs/ref-setting-142-miller-street-indoor.jpg"
+    ],
+    "outdoor": [
+      "stories/executive/boards/refs/ref-setting-142-miller-street-outdoor.jpg"
+    ]
+  },
+  "The Gilded Reach": {
+    "indoor": [
+      "stories/executive/boards/refs/ref-setting-the-gilded-reach-indoor.jpg"
+    ],
+    "outdoor": [
+      "stories/executive/boards/refs/ref-setting-the-gilded-reach-outdoor.jpg"
+    ]
+  },
+  "The Manhattan Monolith": {
+    "indoor": [
+      "stories/executive/boards/refs/ref-setting-the-manhattan-monolith-indoor.jpg"
+    ],
+    "outdoor": [
+      "stories/executive/boards/refs/ref-setting-the-manhattan-monolith-outdoor.jpg"
+    ]
+  }
+}

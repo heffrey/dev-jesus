@@ -1,0 +1,86 @@
+{
+  "A laborer": [
+    "stories/beta/boards/refs/ref-a-laborer.jpg"
+  ],
+  "A technician": [
+    "stories/beta/boards/refs/ref-a-technician.jpg"
+  ],
+  "Aris": [
+    "stories/beta/boards/scene-0005-2.jpg",
+    "stories/beta/boards/scene-0005-1.jpg",
+    "stories/beta/boards/scene-0002-4.jpg",
+    "stories/beta/boards/scene-0002-3.jpg",
+    "stories/beta/boards/refs/ref-aris.jpg"
+  ],
+  "Company Technician": [
+    "stories/beta/boards/scene-0004-4.jpg",
+    "stories/beta/boards/scene-0004-3.jpg",
+    "stories/beta/boards/refs/ref-company-technician.jpg"
+  ],
+  "Elara": [
+    "stories/beta/boards/scene-0003-4.jpg",
+    "stories/beta/boards/scene-0003-3.jpg",
+    "stories/beta/boards/scene-0003-2.jpg",
+    "stories/beta/boards/refs/ref-elara.jpg"
+  ],
+  "Elias": [
+    "stories/beta/boards/refs/ref-elias.jpg"
+  ],
+  "Joel": [
+    "stories/beta/boards/scene-0005-4.jpg",
+    "stories/beta/boards/scene-0005-3.jpg",
+    "stories/beta/boards/scene-0004-6.jpg",
+    "stories/beta/boards/scene-0004-5.jpg",
+    "stories/beta/boards/scene-0004-3.jpg",
+    "stories/beta/boards/scene-0004-2.jpg",
+    "stories/beta/boards/scene-0004-1.jpg",
+    "stories/beta/boards/scene-0002-4.jpg",
+    "stories/beta/boards/scene-0002-2.jpg",
+    "stories/beta/boards/scene-0002-1.jpg"
+  ],
+  "Joel's Brother": [
+    "stories/beta/boards/scene-0004-2.jpg",
+    "stories/beta/boards/scene-0004-1.jpg",
+    "stories/beta/boards/scene-0005-4.jpg",
+    "stories/beta/boards/refs/ref-joel's-brother.jpg"
+  ],
+  "Sarah": [
+    "stories/beta/boards/refs/ref-sarah.jpg"
+  ],
+  "The Engineer": [
+    "stories/beta/boards/refs/ref-the-engineer.jpg"
+  ],
+  "The Nazarene": [
+    "stories/beta/boards/refs/ref-the-nazarene.jpg"
+  ],
+  "The Pharisees": [
+    "stories/beta/boards/refs/ref-the-pharisees.jpg"
+  ],
+  "The Sabbath": [
+    "stories/beta/boards/refs/ref-the-sabbath.jpg"
+  ],
+  "The Shore": [
+    "stories/beta/boards/refs/ref-the-shore.jpg"
+  ],
+  "The boy": [
+    "stories/beta/boards/refs/ref-the-boy.jpg"
+  ],
+  "The man": [
+    "stories/beta/boards/refs/ref-the-man.jpg"
+  ],
+  "Tiberias": [
+    "stories/beta/boards/refs/ref-tiberias.jpg"
+  ],
+  "Yeshua": [
+    "stories/beta/boards/scene-0005-4.jpg",
+    "stories/beta/boards/scene-0005-3.jpg",
+    "stories/beta/boards/scene-0004-6.jpg",
+    "stories/beta/boards/scene-0004-5.jpg",
+    "stories/beta/boards/scene-0004-4.jpg",
+    "stories/beta/boards/scene-0004-3.jpg",
+    "stories/beta/boards/scene-0004-2.jpg",
+    "stories/beta/boards/scene-0004-1.jpg",
+    "stories/beta/boards/scene-0002-4.jpg",
+    "stories/beta/boards/scene-0002-2.jpg"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "Jack": [
+    "stories/99nights/boards/scene-0001-6.jpg",
+    "stories/99nights/boards/scene-0001-5.jpg",
+    "stories/99nights/boards/scene-0001-4.jpg",
+    "stories/99nights/boards/scene-0001-2.jpg",
+    "stories/99nights/boards/refs/ref-jack.jpg"
+  ],
+  "The Great Stillness": [
+    "stories/99nights/boards/scene-0001-6.jpg",
+    "stories/99nights/boards/refs/ref-the-great-stillness.jpg"
+  ],
+  "The Solemn Ember": [
+    "stories/99nights/boards/refs/ref-solemn-ember.jpg"
+  ],
+  "The Whisper-Moss": [
+    "stories/99nights/boards/refs/ref-whisper-moss.jpg"
+  ],
+  "XPM": [
+    "stories/99nights/boards/scene-0001-6.jpg",
+    "stories/99nights/boards/scene-0001-5.jpg",
+    "stories/99nights/boards/scene-0001-4.jpg",
+    "stories/99nights/boards/scene-0001-3.jpg",
+    "stories/99nights/boards/scene-0001-2.jpg",
+    "stories/99nights/boards/scene-0001-1.jpg",
+    "stories/99nights/boards/refs/ref-xpm.jpg"
+  ]
+}

@@ -239,11 +239,12 @@ def load_continuity_notes(
     Returns concise continuity summaries from the last max_scenes scenes.
     """
     continuity_notes = []
+    scenes_dir = os.path.join(output_dir, "scenes")
     
     # Load scenes in reverse order (most recent first)
     for scene_num in range(current_scene_number - 1, max(0, current_scene_number - max_scenes - 1), -1):
-        scene_path = os.path.join(output_dir, f"scene-{scene_num:04d}.md")
-        continuity_cache_path = os.path.join(output_dir, f"scene-{scene_num:04d}.continuity.md")
+        scene_path = os.path.join(scenes_dir, f"scene-{scene_num:04d}.md")
+        continuity_cache_path = os.path.join(scenes_dir, f"scene-{scene_num:04d}.continuity.md")
         
         if os.path.isfile(scene_path):
             notes = ""
@@ -451,9 +452,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Generate scenes procedurally based on act structure.")
     parser.add_argument("--api-key", default=os.environ.get("GEMINI_API_KEY"))
     parser.add_argument("--model", default=DEFAULT_MODEL)
-    parser.add_argument("--acts-file", default="story/acts.json", help="JSON file defining acts and scenes")
-    parser.add_argument("--core-premise-file", default="story/core-premise.md", help="File with core premise")
-    parser.add_argument("--output-dir", default="story", help="Directory to save generated scenes")
+    parser.add_argument("--acts-file", default="stories/story/acts.json", help="JSON file defining acts and scenes")
+    parser.add_argument("--core-premise-file", default="stories/story/core-premise.md", help="File with core premise")
+    parser.add_argument("--output-dir", default="stories/story", help="Story directory (scenes saved to {output-dir}/scenes/)")
     parser.add_argument("--definitions-file", default=None, help="Path to character and setting definitions JSON file (defaults to {output-dir}/definitions.json)")
     parser.add_argument("--max-retries", type=int, default=5)
     parser.add_argument("--retry-base", type=float, default=5.0)
@@ -511,6 +512,8 @@ def main() -> int:
         acts_data = json.load(handle)
 
     ensure_dir(args.output_dir)
+    scenes_dir = os.path.join(args.output_dir, "scenes")
+    ensure_dir(scenes_dir)
 
     all_scenes = []
     for act in acts_data.get("acts", []):
@@ -597,7 +600,7 @@ def main() -> int:
                 print(f"  ✗ No text returned for Scene {scene_num}", file=sys.stderr, flush=True)
                 continue
 
-            output_path = os.path.join(args.output_dir, f"scene-{scene_num:04d}.md")
+            output_path = os.path.join(scenes_dir, f"scene-{scene_num:04d}.md")
             with open(output_path, "w", encoding="utf-8") as handle:
                 handle.write(scene_text)
                 if not scene_text.endswith("\n"):

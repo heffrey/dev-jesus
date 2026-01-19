@@ -1,0 +1,10 @@
+{
+  "The Barricades of Paris": {
+    "indoor": [
+      "stories/france/boards/refs/ref-setting-the-barricades-of-paris-indoor.jpg"
+    ],
+    "outdoor": [
+      "stories/france/boards/refs/ref-setting-the-barricades-of-paris-outdoor.jpg"
+    ]
+  }
+}
