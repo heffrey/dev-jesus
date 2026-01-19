@@ -184,7 +184,7 @@ Higher temperature means more creative variation—essential for generating dist
 
 ## Project Reorganization (January 19, 2026)
 
-The final significant change moved all stories into a `stories/` subdirectory:
+An early change moved all stories into a `stories/` subdirectory:
 
 ```diff
 -story_path = os.path.join(script_root, story_dir)
@@ -196,6 +196,55 @@ And introduced a proper directory structure:
 - `stories/{name}/scenes/` - Generated scene markdown files
 - `stories/{name}/boards/` - Generated storyboard images
 - `stories/{name}/boards/refs/` - Reference images
+
+## Non-Linear Extras Introduction (January 19, 2026)
+
+A subtle but story-breaking bug emerged when testing the "pancake" story: **extras appearing before their narrative introduction**.
+
+### The Problem
+
+Consider a story where a mysterious cigar box is revealed in scene 5 as a key plot element. Without extras filtering, the LLM might mention the cigar box in scene 2 because it's in the definitions file—destroying the narrative surprise.
+
+This is different from character or setting filtering. Characters and settings are filtered by *era* (biblical vs. present-day). But extras (objects, props, MacGuffins) need filtering by *narrative introduction point*—the moment they first appear in the story structure.
+
+### The Solution: Introduction-Aware Extras
+
+The fix scans scene purposes from the `acts.json` to determine when each extra is first mentioned:
+
+```python
+def get_introduced_extras(acts_data: dict, current_scene_number: int, all_extras: dict) -> dict:
+    """Get extras that have been introduced in previous scenes or the current scene.
+    
+    Scans scene purposes from scene 1 up to and including current_scene_number to find
+    which extras have been mentioned, ensuring extras don't appear before their narrative introduction.
+    """
+    introduced_extras = {}
+    
+    for act in acts_data.get("acts", []):
+        for scene_def in act.get("scenes", []):
+            scene_num = scene_def.get("number", 0)
+            if scene_num > current_scene_number:
+                break
+            
+            scene_purpose = scene_def.get("purpose", "")
+            extras_in_scene = extract_extras_from_purpose(scene_purpose, all_extras)
+            introduced_extras.update(extras_in_scene)
+    
+    return introduced_extras
+```
+
+The prompt now explicitly warns the LLM about extras it shouldn't use:
+
+```python
+not_yet_introduced = set(all_extras.keys()) - set(introduced_extras.keys())
+if not_yet_introduced:
+    not_introduced_names = [all_extras[k].get("name", k) for k in not_yet_introduced]
+    extras_context += f"\nIMPORTANT: Do NOT mention or use these extras yet (they will be introduced in later scenes): {', '.join(not_introduced_names)}\n"
+```
+
+### Name Matching Flexibility
+
+The implementation handles common naming patterns—"The Cigar Box" matches "cigar box" in scene purposes by stripping the "The " prefix. This prevents brittle matching while maintaining accuracy.
 
 ## Key Lessons Learned
 
@@ -219,6 +268,10 @@ The Borges Four Cycles framework isn't limiting—it's enabling. Having a struct
 
 Zero-padded, consistent file naming (`scene-0001.md`) seems trivial until you have 100 scenes and need them in order.
 
+### 6. Narrative Timing is Data
+
+The extras filtering bug revealed an important principle: narrative structure contains temporal information that must be respected. It's not enough to give the LLM all the story elements—you must give them at the right time.
+
 ## The Pipeline Today
 
 The current workflow:
@@ -233,3 +286,5 @@ Each script builds on the others, creating a pipeline from concept to comic.
 ---
 
 *This development journal was reconstructed from git history spanning January 14-19, 2026. The project continues to evolve as new continuity challenges emerge.*
+
+*Last updated: January 19, 2026 — added non-linear extras introduction filtering.*
