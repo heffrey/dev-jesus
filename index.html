@@ -356,7 +356,6 @@
             
             <div class="controls">
                 <button id="prev-btn" onclick="previousImage()">← Previous</button>
-                <button id="play-pause-btn" onclick="toggleAutoPlay()">▶ Play</button>
                 <button id="next-btn" onclick="nextImage()">Next →</button>
             </div>
             
@@ -365,7 +364,7 @@
             </div>
             
             <div class="keyboard-hint">
-                Use arrow keys to navigate, Space to play/pause
+                Use arrow keys to navigate
             </div>
         </div>
     </div>
@@ -578,14 +577,11 @@
         let currentFolder = 'executive';
         let images = storyImages[currentFolder];
         let currentIndex = 0;
-        let autoPlayInterval = null;
-        const autoPlayDelay = 3000; // 3 seconds per image
 
         const imageElement = document.getElementById('storyboard-image');
         const imageInfo = document.getElementById('image-info');
         const prevBtn = document.getElementById('prev-btn');
         const nextBtn = document.getElementById('next-btn');
-        const playPauseBtn = document.getElementById('play-pause-btn');
 
         function updateImage() {
             const imagePath = images[currentIndex];
@@ -631,42 +627,12 @@
             }
         }
 
-        function toggleAutoPlay() {
-            if (autoPlayInterval) {
-                stopAutoPlay();
-            } else {
-                startAutoPlay();
-            }
-        }
-
-        function startAutoPlay() {
-            autoPlayInterval = setInterval(() => {
-                if (currentIndex < images.length - 1) {
-                    nextImage();
-                } else {
-                    stopAutoPlay();
-                }
-            }, autoPlayDelay);
-            playPauseBtn.textContent = '⏸ Pause';
-        }
-
-        function stopAutoPlay() {
-            if (autoPlayInterval) {
-                clearInterval(autoPlayInterval);
-                autoPlayInterval = null;
-            }
-            playPauseBtn.textContent = '▶ Play';
-        }
-
         // Keyboard navigation
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowLeft') {
                 previousImage();
             } else if (e.key === 'ArrowRight') {
                 nextImage();
-            } else if (e.key === ' ') {
-                e.preventDefault();
-                toggleAutoPlay();
             }
         });
 
@@ -722,9 +688,6 @@
             if (newFolder === currentFolder) {
                 return;
             }
-            
-            // Stop autoplay if running
-            stopAutoPlay();
             
             // Update folder and images
             currentFolder = newFolder;
