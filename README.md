@@ -1,5 +1,7 @@
 # dev-jesus
 
+**[View Live Demo](https://heffrey.github.io/dev-jesus/)**
+
 Dev-Jesus is a text-first art and software concept built around an AI-driven story. The story lives in markdown files and evolves through user-assisted inputs. A procedural engine uses those inputs to generate a cohesive story arc, and as the narrative develops we invoke Gemini to produce storyboard imagery for the current state of the story.
 
 ## How it works
