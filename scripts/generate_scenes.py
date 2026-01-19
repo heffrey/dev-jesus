@@ -149,6 +149,80 @@ def extract_settings_from_purpose(scene_purpose: str, all_settings: dict) -> dic
     return matching_settings
 
 
+def extract_extras_from_purpose(scene_purpose: str, all_extras: dict) -> dict:
+    """Extract extras mentioned in scene purpose by matching names and aliases.
+    
+    Returns a filtered dict containing only extras that are mentioned in the scene purpose.
+    Also matches names without common prefixes like "The " (e.g., "cigar box" matches "The Cigar Box").
+    """
+    if not scene_purpose or not all_extras:
+        return {}
+    
+    scene_purpose_lower = scene_purpose.lower()
+    matching_extras = {}
+    
+    for extra_key, extra_data in all_extras.items():
+        # Check if extra name appears in scene purpose
+        extra_name = extra_data.get("name", extra_key)
+        extra_name_lower = extra_name.lower()
+        
+        # Try exact match first
+        if extra_name_lower in scene_purpose_lower:
+            matching_extras[extra_key] = extra_data
+            continue
+        
+        # Try without "The " prefix (common for object names)
+        if extra_name_lower.startswith("the "):
+            name_without_the = extra_name_lower[4:]  # Remove "The "
+            if name_without_the in scene_purpose_lower:
+                matching_extras[extra_key] = extra_data
+                continue
+        
+        # Check if any alias appears in scene purpose
+        aliases = extra_data.get("aliases", [])
+        for alias in aliases:
+            alias_lower = alias.lower()
+            if alias_lower in scene_purpose_lower:
+                matching_extras[extra_key] = extra_data
+                break
+            # Also try alias without "The " prefix
+            if alias_lower.startswith("the "):
+                alias_without_the = alias_lower[4:]
+                if alias_without_the in scene_purpose_lower:
+                    matching_extras[extra_key] = extra_data
+                    break
+    
+    return matching_extras
+
+
+def get_introduced_extras(acts_data: dict, current_scene_number: int, all_extras: dict) -> dict:
+    """Get extras that have been introduced in previous scenes or the current scene.
+    
+    Scans scene purposes from scene 1 up to and including current_scene_number to find
+    which extras have been mentioned, ensuring extras don't appear before their narrative introduction.
+    
+    Returns a filtered dict of extras that are appropriate for the current scene.
+    """
+    if not acts_data or not all_extras:
+        return {}
+    
+    introduced_extras = {}
+    
+    # Scan all scenes up to and including current scene
+    for act in acts_data.get("acts", []):
+        for scene_def in act.get("scenes", []):
+            scene_num = scene_def.get("number", 0)
+            if scene_num > current_scene_number:
+                break
+            
+            scene_purpose = scene_def.get("purpose", "")
+            # Find extras mentioned in this scene's purpose
+            extras_in_scene = extract_extras_from_purpose(scene_purpose, all_extras)
+            introduced_extras.update(extras_in_scene)
+    
+    return introduced_extras
+
+
 def get_eras_from_settings(settings: dict) -> set:
     """Extract unique eras from a dict of settings.
     
@@ -298,6 +372,7 @@ def build_scene_prompt(
     core_premise: str,
     definitions: dict,
     output_dir: str,
+    acts_data: dict = None,
     api_key: str = None,
     model: str = None,
     max_retries: int = 5,
@@ -316,12 +391,14 @@ def build_scene_prompt(
     if not previous_context and previous_scenes:
         previous_context = "\n\nPrevious scenes summary:\n" + "\n".join(f"- {s}" for s in previous_scenes[-3:])
 
-    # Build character and setting context
+    # Build character, setting, and extras context
     character_context = ""
     setting_context = ""
+    extras_context = ""
     
     all_characters = definitions.get("characters", {})
     all_settings = definitions.get("settings", {})
+    all_extras = definitions.get("extras", {})
     
     # IMPORTANT: Characters and settings have "era" fields that must match.
     # Characters should only appear in settings from their own era.
@@ -406,6 +483,29 @@ def build_scene_prompt(
                 setting_info += f": {setting_data['description']}"
             setting_context += setting_info + "\n"
     
+    # Build extras context - only include extras that have been introduced in previous scenes
+    # or are mentioned in this scene's purpose. This prevents extras from appearing before
+    # their narrative introduction (e.g., the cigar box shouldn't appear before scene 5).
+    if all_extras and acts_data:
+        # Get extras introduced up to and including this scene
+        introduced_extras = get_introduced_extras(acts_data, scene_number, all_extras)
+        
+        if introduced_extras:
+            extras_context = "\n\nAvailable Extras for this scene (non-character objects/entities - use consistently):\n"
+            for extra_key, extra_data in introduced_extras.items():
+                extra_info = f"- {extra_data.get('name', extra_key)}"
+                if "aliases" in extra_data:
+                    extra_info += f" (also known as: {', '.join(extra_data['aliases'])})"
+                if "description" in extra_data:
+                    extra_info += f": {extra_data['description']}"
+                extras_context += extra_info + "\n"
+            
+            # Add warning about not using extras that haven't been introduced yet
+            not_yet_introduced = set(all_extras.keys()) - set(introduced_extras.keys())
+            if not_yet_introduced:
+                not_introduced_names = [all_extras[k].get("name", k) for k in not_yet_introduced]
+                extras_context += f"\nIMPORTANT: Do NOT mention or use these extras yet (they will be introduced in later scenes): {', '.join(not_introduced_names)}\n"
+    
     # Extract story name from output directory (e.g., "executive" from "executive" or "executive/")
     story_name = os.path.basename(os.path.normpath(output_dir))
     if story_name == "story":
@@ -418,7 +518,7 @@ def build_scene_prompt(
     if core_premise:
         premise_section = f"\nCore premise: {core_premise}\n"
     
-    prompt = f"""Generate a scene for a story called {story_name}. Write in the same style and format as the existing scenes.{premise_section}{character_context}{setting_context}
+    prompt = f"""Generate a scene for a story called {story_name}. Write in the same style and format as the existing scenes.{premise_section}{character_context}{setting_context}{extras_context}
 Act {act_number}: {act_title}
 Act description: {act_description}
 
@@ -432,7 +532,8 @@ Requirements:
 - Create 2-3 distinct sections with ## headings (time/location markers)
 - Each section should be 3-5 paragraphs
 - Maintain the tone: avoid reverence, avoid mockery, treat humanity as understandable
-- Use the characters and settings defined above consistently - reference them by name when they appear
+- Use the characters, settings, and extras defined above consistently - reference them by name when they appear
+- IMPORTANT: Only use extras that are listed in "Available Extras" above. Do NOT introduce or mention extras that haven't been introduced yet in the story
 - Follow the existing scene format exactly
 
 Generate the complete scene text now, starting with "# Scene {scene_number}" and including all sections:"""
@@ -575,6 +676,18 @@ def main() -> int:
                 print(f"  Selected characters: {', '.join(char_info)}", flush=True)
             else:
                 print(f"  No era-appropriate characters found in scene purpose", flush=True)
+            
+            # Show extras that are available for this scene (introduced up to this point)
+            all_extras = definitions.get("extras", {})
+            if all_extras:
+                introduced_extras = get_introduced_extras(acts_data, scene_num, all_extras)
+                if introduced_extras:
+                    extra_names = [e.get("name", key) for key, e in introduced_extras.items()]
+                    print(f"  Available extras: {', '.join(extra_names)}", flush=True)
+                not_yet_introduced = set(all_extras.keys()) - set(introduced_extras.keys())
+                if not_yet_introduced:
+                    not_introduced_names = [all_extras[k].get("name", k) for k in not_yet_introduced]
+                    print(f"  NOT YET introduced: {', '.join(not_introduced_names)}", flush=True)
 
         prompt = build_scene_prompt(
             act_number=scene_def["act_number"],
@@ -586,6 +699,7 @@ def main() -> int:
             core_premise=core_premise,
             definitions=definitions,
             output_dir=args.output_dir,
+            acts_data=acts_data,
             api_key=args.api_key,
             model=args.model,
             max_retries=args.max_retries,
