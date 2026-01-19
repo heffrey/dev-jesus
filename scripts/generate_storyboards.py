@@ -101,6 +101,83 @@ def save_setting_references(path: str, references: dict) -> None:
         json.dump(references, handle, indent=2, sort_keys=True)
 
 
+def sync_canonical_references(
+    character_references: dict,
+    definitions: dict,
+    output_dir: str,
+) -> bool:
+    """Scan output_dir for canonical ref-*.jpg/png files and add missing ones to character_references.
+    
+    This ensures that manually created or externally generated reference images are properly
+    linked to their characters in the reference database.
+    
+    Returns True if any changes were made.
+    """
+    changed = False
+    
+    # Build a mapping of character names (lowercase) to their canonical names
+    char_name_map = {}  # lowercase -> canonical name
+    for char_key, char_data in definitions.get("characters", {}).items():
+        canonical_name = char_data.get("name", char_key)
+        # Map the canonical name
+        char_name_map[canonical_name.lower()] = canonical_name
+        # Also map aliases
+        for alias in char_data.get("aliases", []):
+            char_name_map[alias.lower()] = canonical_name
+    
+    # Scan for ref-*.jpg and ref-*.png files in output_dir
+    for ext in ["jpg", "jpeg", "png"]:
+        pattern = os.path.join(output_dir, f"ref-*.{ext}")
+        for ref_path in glob.glob(pattern):
+            basename = os.path.basename(ref_path)
+            # Skip non-character refs (settings, extras, style)
+            if basename.startswith("ref-setting-") or basename.startswith("ref-extra-") or basename.startswith("ref-style"):
+                continue
+            
+            # Extract character name from filename: ref-joel.jpg -> joel
+            # Handle names with dashes: ref-joel's-brother.jpg -> joel's brother
+            name_part = basename[4:]  # Remove "ref-" prefix
+            name_part = os.path.splitext(name_part)[0]  # Remove extension
+            name_part = name_part.replace("-", " ").replace("'", "'")  # Normalize
+            
+            # Try to find matching character (exact match only to avoid false positives)
+            canonical_name = None
+            
+            # Try exact match with the extracted name
+            if name_part.lower() in char_name_map:
+                canonical_name = char_name_map[name_part.lower()]
+            else:
+                # Try title case version
+                title_name = name_part.title()
+                if title_name.lower() in char_name_map:
+                    canonical_name = char_name_map[title_name.lower()]
+                # Note: We intentionally do NOT do partial matching here to avoid
+                # false positives like "the pharisees" matching "Aris"
+            
+            if canonical_name:
+                # Get relative path for storage (relative to script root/repo root)
+                script_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+                rel_path = os.path.relpath(ref_path, script_root)
+                
+                # Check if this ref is already in the character's references
+                if canonical_name not in character_references:
+                    character_references[canonical_name] = []
+                
+                # Check if ref path is already in the list (in any form)
+                ref_basename = os.path.basename(ref_path)
+                already_present = any(
+                    os.path.basename(existing_path) == ref_basename
+                    for existing_path in character_references[canonical_name]
+                )
+                
+                if not already_present:
+                    # Insert at the beginning (canonical refs should be first)
+                    character_references[canonical_name].insert(0, rel_path)
+                    changed = True
+    
+    return changed
+
+
 def get_style_reference_path(output_dir: str) -> str:
     """Get the path to the master style reference image."""
     # Check for common extensions
@@ -1380,6 +1457,10 @@ def build_prompt(
             if "description" in setting:
                 setting_lines.append(f"  Description: {setting['description']}")
             
+            # Include era information for the setting
+            if "era" in setting:
+                setting_lines.append(f"  Era: {setting['era']}")
+            
             # Check if we have reference images for this setting
             has_ref_images = False
             if setting_references and setting_name in setting_references:
@@ -1394,6 +1475,27 @@ def build_prompt(
             
             lines.extend(setting_lines)
         lines.append("")
+        
+        # Add era context based on detected settings
+        eras = set()
+        for setting in settings:
+            if "era" in setting:
+                eras.add(setting["era"])
+        
+        if eras:
+            lines.append("CRITICAL - ERA CONTEXT:")
+            if "biblical" in eras:
+                lines.append("- Biblical-era scenes (1st century Judea/Galilee): ALL characters must wear period-appropriate clothing.")
+                lines.append("  * Jewish religious officials: Simple wool or linen robes, prayer shawls (tallitot), head coverings. NOT Catholic vestments.")
+                lines.append("  * Temple officials/Pharisees: Distinguished by quality of robes, phylacteries, fringed garments. Bearded, with traditional Jewish appearance.")
+                lines.append("  * Laborers/common people: Simple undyed wool tunics, sandals, head cloths for sun protection.")
+                lines.append("  * Roman officials: Military attire with leather armor, red cloaks, metal helmets if soldiers.")
+                lines.append("  * Architecture: Stone buildings, flat roofs, arched doorways, oil lamps, no modern elements.")
+            if "present-day" in eras:
+                lines.append("- Present-day scenes (modern/futuristic): Characters wear contemporary or high-tech attire.")
+                lines.append("  * Technicians/operators: Sterile uniforms, form-fitting tech-integrated clothing.")
+                lines.append("  * Environments: Clean, minimalist, with holographic displays, glass surfaces, filtered lighting.")
+            lines.append("")
     
     # Add extra definitions
     if extras:
@@ -1739,6 +1841,12 @@ def main() -> int:
     setting_references = load_setting_references(setting_references_path)
     style_reference_path = get_style_reference_path(args.output_dir)
     
+    # Sync canonical reference images (ref-*.jpg) that may exist on disk but aren't in the JSON
+    if sync_canonical_references(character_references, definitions, args.output_dir):
+        save_character_references(character_references_path, character_references)
+        if args.verbose:
+            print(f"Synced canonical reference images to {character_references_path}", flush=True)
+    
     if args.verbose:
         if character_references:
             total_refs = sum(len(refs) for refs in character_references.values())
@@ -1841,7 +1949,7 @@ def main() -> int:
             else:
                 print(f"  Dividing scene into {total_storyboards} storyboard(s)...", flush=True)
         
-        # Check for first-time characters and generate reference images
+        # Check for first-time defined characters and generate reference images
         for char in characters:
             char_name = char.get("name", "")
             if char_name and char_name not in character_references:
@@ -2001,6 +2109,19 @@ def main() -> int:
                     # Use scene-level characters (they're likely being referred to by pronouns in this chunk)
                     chunk_characters = characters
             
+            # Fallback for settings: If no settings detected in chunk but scene has settings,
+            # and the chunk doesn't start with a new section header (## ), carry over the previous setting
+            # This handles continuity when a scene spans multiple chunks without repeating the location
+            if not chunk_settings and settings:
+                # Check if this chunk starts with a new section header (indicating location change)
+                chunk_lines = chunk_text.strip().splitlines()
+                has_new_header = chunk_lines and chunk_lines[0].startswith("## ")
+                
+                if not has_new_header:
+                    # No new location header - carry over the most recent setting from the scene
+                    # Use the last setting detected at scene level (most likely the current location)
+                    chunk_settings = settings[-1:] if settings else []
+            
             # Pass detected characters to panel instruction generation for explicit naming
             panel_instructions = derive_panel_instructions(chunk_text, args.panel_count, detected_characters=chunk_characters)
             if args.verbose:
@@ -2010,7 +2131,7 @@ def main() -> int:
             # Prioritize canonical ref- images (use max 1 if canonical exists, otherwise 2)
             reference_images = []
             
-            # Add character references
+            # Add character references (for defined characters)
             for char in chunk_characters:
                 char_name = char.get("name", "")
                 if char_name:

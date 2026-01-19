@@ -1,0 +1,6 @@
+- Location/Time: Capernaum (Lower Market to Central Well); daytime (sun-baked dust/salt air).
+- Joel's state: Vision flickering (seeing data columns/glitches); experiencing nausea; dropped his cedar plank at the Central Well.
+- Yeshua's state: Physical "vessel" is overheating/red-lining; hands vibrating (hidden in sleeves); shadow is static/unmoving; movements part the "grain" of reality.
+- Plot/Conflict: Yeshua is broadcasting "high-level logic" on an open frequency, triggering a defensive response from "Institutional sub-routines" (Temple guards).
+- Sector 7G Status: Technicians are monitoring latency spikes and Yeshua's integrity metrics; the system is at risk of a "hard-delete" due to social architecture diagnostics.
+- Revelation: Joel recognizes Yeshua’s terminology (vessel, logic, interface) from his own tech-infused dreams/hallucinations.

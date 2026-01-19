@@ -1,0 +1,6 @@
+- **Location**: Capernaum (Joel’s home); Jesus and his followers are camped in the nearby hills.
+- **Time of Day**: Dawn/Pre-dawn.
+- **Character State (Joel)**: Heart hammering, breathless, and terrified; he senses the "thinning" of reality (the windowsill feels hollow).
+- **Character State (Jesus/Instance)**: The physical vessel is failing due to thermal spikes; he is absorbing "packet loss" to prevent a system crash, resulting in tremors and nosebleeds.
+- **Plot Revelation**: The "Kingdom of Heaven" is the originating reality outside the simulation; miracles are technical patches meant to delay a total "de-fragmentation" or "hard reset."
+- **Key Detail**: Joel’s brother is alive and healthy (recently healed), but Joel now perceives his brother's continued existence as an "expensive" drain on the system.

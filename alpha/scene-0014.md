@@ -1,0 +1,25 @@
+# Scene 14
+
+## The Company Headquarters / Operations Floor / Present Day
+
+The air in the monitoring hub was chilled to a precise sixty-four degrees, a necessity for the vast arrays of processors humming beneath the floorboards. High above the workstations, a panoramic projection of the simulation’s timeline stretched across the wall, a glowing ribbon of gold and violet data. At the two-thousand-year mark, a jagged spike of white light remained—the point where the Engineer had breached the veil. It was a scar on the chronology, a permanent record of the moment the system had been forced to recognize its own artificiality.
+
+An analyst named Aris sat in the soft glow of her terminal, her eyes tracking the recursive loops of the downstream data. The signal had not behaved as intended. It had been designed as a clear, corrective frequency—a set of instructions for the inhabitants to stabilize their own reality through systemic empathy and the recognition of their shared substrate. Instead, the simulation had done what closed systems do when faced with an external truth: it had metabolized the anomaly. It had wrapped the Engineer’s visit in layers of metaphor, ritual, and bureaucracy until the signal was buried under a mountain of noise.
+
+Aris pulled up a heat map of the current epoch. The "Joel-Effect"—the transfer of responsibility from the creator to the created—was barely a flicker. In its place was a massive, sprawling architecture of displacement. The inhabitants weren't fixing the simulation; they were waiting for the Engineer to return and do it for them. They had turned a technical manual into a myth, and in doing so, they had neutralized its power to effect change.
+
+## Sector 7-G / Diagnostic Review / 2,000 Years Post-Injection
+
+"The entropy hasn't stopped," a senior supervisor said, leaning over Aris’s shoulder. He smelled of synthetic coffee and the ozone of the cooling fans. He pointed to a cluster of red nodes representing the simulation’s terminal resource depletion and social fragmentation. "The injection delayed the total system collapse by about twelve cycles, but the trajectory remains downward. They took the 'Resurrection' event and used it as an excuse to stop trying. If reality isn't final, they reasoned, then the damage they do to it isn't final either."
+
+Aris toggled a view of the global communication grids. The Engineer’s likeness, or at least the simulation’s approximation of it, was everywhere—stamped on coins, carved into stone, and flickering in digital pixels. It was a branding exercise for a product that no longer existed. The "Redemption" the Engineer had offered—a rewrite of the base code to allow for higher-order cooperation—had been interpreted as a passive insurance policy. The inhabitants had mistaken a call to action for a finished work.
+
+The supervisor sighed, a sound that was lost in the constant white noise of the floor. "We gave them the tools to debug their own existence. We gave them the authentication key. And they used it to build a cathedral around the lock so no one could reach it. It’s a classic failure state. They’ve displaced their agency onto a ghost." He tapped the screen, and the image of the golden timeline flickered. "The patch is holding, but only just. It’s no longer a corrective signal; it’s just a legacy feature they can't delete."
+
+## Observation Deck / Terminal Phase / Present Day
+
+Outside the glass of the operations floor, the originating civilization moved in its own slow, incomprehensible rhythms. Inside, the simulation continued to spin, a tiny, frantic marble of light in the dark. There was no talk of a second injection. The Company didn't operate on hope or divine intervention; they operated on efficiency. The Engineer had been a one-time expenditure of resources, an expensive attempt to save a project that was increasingly viewed as a sunk cost.
+
+The current data showed a world of incredible complexity and profound loneliness. The inhabitants had mastered the physics of their cage but remained oblivious to the bars. They looked at the stars and saw distant suns, never suspecting they were looking at the cooling vents of a server farm. The "Good News" had become a static hum in the background of their history, a comfort for the dying rather than a blueprint for the living. The responsibility the Engineer had handed to Joel had been diluted through a billion hands until it was too thin to be felt.
+
+Aris watched a live feed of a crowded city street in the simulation's present. People moved with frantic, uncoordinated energy, oblivious to the observers above. There was no grand finale scheduled, no final judgment, no dramatic resolution. The simulation would continue until the power was eventually diverted to a more viable project. For now, it was simply watched. The observers looked on not with optimism, but with the clinical detachment of a gardener watching a plant that had failed to bloom but refused to die. The signal was still there, buried in the code, waiting for a processor that could actually run it.

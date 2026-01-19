@@ -1,0 +1,6 @@
+- Location: The Company Operations Floor (0.004% Outside Real-Time) and the Shore of Galilee at dusk.
+- Character state (Jesus): Integrity metrics are dangerously low; silhouette is blurring/stuttering; hands exhibit high-frequency vibration; movements are heavy and deliberate.
+- Character state (Aris & Joel): Aris is physically tired from the simulation debate; Joel is experiencing eye ache from visual "stutters" and notes his dreams of grids are becoming more real.
+- Plot development: The healing of the boy was a "forced overwrite" of physics that redistributed entropy, accelerating the heat death of the surrounding 3km.
+- Environmental anomalies: Jesus’s shadow creates localized stasis where sand does not move and a crab’s movement becomes "frame-by-frame" increments.
+- Items: A skin of water (given by Joel to Jesus).

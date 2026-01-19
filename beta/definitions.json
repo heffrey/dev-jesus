@@ -1,0 +1,77 @@
+{
+  "characters": {
+    "Joel": {
+      "name": "Joel",
+      "aliases": ["JOEL_0412"],
+      "description": "A laborer in Capernaum who hauls cedar planks. He is perceptive and beginning to notice anomalies in reality - seeing the 'grain of the wood' and the code behind the simulation. He has dark hair, calloused hands, and a quiet, observant demeanor. He wears simple, dusty work clothes typical of a first-century laborer.",
+      "appearance": "Height: 170-175cm (5'7\"-5'9\"). Build: medium, muscular from labor. Skin tone: RGB #C49A6C (olive-tan, sun-weathered). Hair: RGB #2D1B0E (dark brown-black), straight, shoulder-length, often dusty. Eyes: RGB #5C4033 (dark brown). Facial hair: short beard, RGB #1A0F08 (darker than head hair). Hands: calloused, work-worn. Clothing: simple wool tunic, natural undyed color RGB #8B7355, dusty from work.",
+      "role": "Observer and eventual participant in the story. He represents the ordinary person who begins to perceive the underlying structure of reality.",
+      "era": "biblical"
+    },
+    "Yeshua": {
+      "name": "Yeshua",
+      "aliases": ["Jesus", "The Signal", "J. Nazarene"],
+      "description": "The constrained instance of the Creator/lead systems engineer inserted into the simulation. He appears as a man in rough, dusty wool laborer's clothing, but carries himself with clinical precision and economy of movement. His voice is quiet but resonant, cutting through noise with clarity. He speaks in terms of systems, optimization, and alignment rather than traditional religious language.",
+      "appearance": "Height: 172-177cm (5'8\"-5'10\"). Build: average, lean. Skin tone: RGB #C49A6C (olive-tan, typical of the region). Hair: RGB #2D1B0E (dark brown-black), straight, medium length, kept neat. Eyes: RGB #3D2817 (deep brown), intense and focused. Facial hair: full beard, RGB #1A0F08 (dark brown-black), well-maintained. Clothing: rough undyed wool tunic RGB #8B7355, dusty from travel, simple sandals. He resembles Jesus Christ.",
+      "role": "The corrective signal, delivering warnings about system failure and alignment",
+      "era": "biblical"
+    },
+    "Aris": {
+      "name": "Aris",
+      "description": "A technician on The Company's Operations Floor. He monitors the simulation from Sector 7G, watching the Signal's interactions through neural feeds and volumetric displays. He wears sterile work attire and uses haptic interfaces.",
+      "appearance": "Height: 175-180cm (5'9\"-5'11\"). Build: average, slight build from sedentary work. Skin tone: RGB #E8D5C4 (light olive, indoor worker). Hair: RGB #3D2817 (medium brown), straight, short, professional cut. Eyes: RGB #4A3728 (brown), often reflected with silver/blue from neural feed displays. Facial hair: clean-shaven or minimal stubble. Clothing: sterile white or charcoal tunic RGB #2C2C2C, form-fitting, tech-integrated.",
+      "role": "Observer and analyst of the simulation",
+      "era": "present-day"
+    },
+    "Elara": {
+      "name": "Elara",
+      "aliases": ["Director Elara"],
+      "description": "Director of The Company, responsible for overseeing the Archive and the simulation. She stands at observation decks, watching the simulation as a shimmering pillar of light. She makes decisions about intervention and risk management. She has a commanding presence and clinical authority.",
+      "appearance": "Height: 168-173cm (5'6\"-5'8\"). Build: average, poised posture. Skin tone: RGB #E8D5C4 (light olive, professional indoor). Hair: RGB #2D1B0E (dark brown-black), straight, shoulder-length or pulled back, professional style. Eyes: RGB #3D2817 (dark brown), sharp and analytical. Facial features: defined, authoritative. Clothing: professional director's attire, dark colors RGB #1A1A1A or RGB #2C2C2C, form-fitting, high-tech materials. Often seen with reflective surfaces showing her image ghosting over displays.",
+      "role": "Decision-maker and custodian of the simulation",
+      "era": "present-day"
+    },
+    "Joel's Wife": {
+      "name": "Joel's Wife",
+      "description": "Joel's wife, practical and grounded. She ties cloth around her hair, tends to daily household tasks, and provides emotional support. She is concerned about Joel's preoccupation with Yeshua and his strange dreams.",
+      "appearance": "Height: 160-165cm (5'3\"-5'5\"). Build: average, practical strength from daily work. Skin tone: RGB #C49A6C (olive-tan, similar to Joel). Hair: RGB #2D1B0E (dark brown-black), straight, long, always covered with cloth head covering RGB #8B7355 (natural undyed wool). Eyes: RGB #5C4033 (dark brown), warm but concerned. Facial features: kind, practical expression. Clothing: simple wool dress/tunic RGB #8B7355, natural undyed color, practical and well-worn.",
+      "role": "Supporting character, grounding presence",
+      "era": "biblical"
+    },
+    "Joel's Brother": {
+      "name": "Joel's Brother",
+      "description": "Joel's brother who falls ill and is healed by Yeshua. The healing event is visibly constrained and causes system strain.",
+      "appearance": "Height: 170-175cm (5'7\"-5'9\"), similar to Joel. Build: medium, but appears thinner when ill. Skin tone: RGB #C49A6C (olive-tan, same as Joel), but paler/washed out when ill RGB #B8956A, returns to normal after healing. Hair: RGB #2D1B0E (dark brown-black), straight, similar to Joel. Eyes: RGB #5C4033 (dark brown), dull and unfocused when ill, clear after healing. Facial hair: short beard RGB #1A0F08, similar to Joel. Clothing: simple wool tunic RGB #8B7355, same as Joel. When ill: appears weak, pale, lying down. After healing: appears healthy, color returns, strength restored.",
+      "role": "Subject of a constrained miracle",
+      "era": "biblical"
+    }
+  },
+  "settings": {
+    "Capernaum": {
+      "name": "Capernaum",
+      "description": "A biblical-era (1st century CE) fishing town on the Sea of Galilee in Roman Judea. A city of grit and salt, where the air tastes of dried fish and sweat. The lower market is a bustling area with merchants, tanners, and laborers. Stone buildings, dusty roads, town wells, and workshops. The atmosphere is hot, dusty, and lived-in. Religious officials are Jewish (Pharisees, Temple priests, scribes) - NOT Catholic or medieval European. They wear traditional Jewish garments: wool/linen robes, prayer shawls, head coverings, phylacteries.",
+      "visual_details": "Stone buildings, dusty streets, marketplace with merchants, town well, workshops, docks, cedar planks, hot sun, sharp shadows. Jewish religious figures wear simple robes with prayer shawls and head coverings - NOT Catholic vestments.",
+      "era": "biblical"
+    },
+    "The Operations Floor": {
+      "name": "The Operations Floor",
+      "aliases": ["Operations Floor", "The Company Headquarters", "Sector 7G"],
+      "description": "A high-tech observation and control facility outside the simulation. The atmosphere is sterile, pressurized, with low-frequency hums from cooling stacks. Features translucent monitors, volumetric displays showing the simulation as amber light meshes, haptic interfaces, neural feeds, and holographic readouts. The air is cool, dry, filtered. Technicians work at terminals monitoring the simulation in real-time.",
+      "visual_details": "Translucent monitors, volumetric displays with amber/white light meshes, haptic interfaces, sterile white or charcoal uniforms, cool filtered air, holographic readouts, neural feed displays, pressurized silence",
+      "era": "present-day"
+    },
+    "The Archive": {
+      "name": "The Archive",
+      "aliases": ["THE ARCHIVE – SEGMENT 0.0.1 (EXTERNAL)"],
+      "description": "An observation deck that overlooks the simulation as a shimmering, translucent pillar of light stretching infinitely upward. The simulation appears as a density of information with physical weight. Contains containment fields that vibrate at low frequencies. Glass surfaces reflect the twitching geometries of the simulated world below.",
+      "visual_details": "Observation deck with glass edges, shimmering pillar of translucent light, containment fields, infinite height, twitching geometric patterns visible through glass",
+      "era": "present-day"
+    },
+    "Galilee": {
+      "name": "Galilee",
+      "description": "The region of the simulation where the story takes place. A biblical-era landscape with hills, roads, fields, the Sea of Galilee, and small villages. The area shows localized distortions when the Signal is present.",
+      "visual_details": "Rolling hills, dusty roads, fields, the Sea of Galilee, small stone villages, biblical-era landscape",
+      "era": "biblical"
+    }
+  }
+}

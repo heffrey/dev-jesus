@@ -67,7 +67,7 @@ def call_gemini(api_key: str, model: str, prompt: str, max_retries: int = 5, ret
     payload = {
         "contents": [{"role": "user", "parts": [{"text": prompt}]}],
         "generationConfig": {
-            "temperature": 0.8,
+            "temperature": 1.0,
             "topP": 0.95,
             "topK": 40,
         },
@@ -334,10 +334,32 @@ Extras Information: {extras_info}
 
 Style Information: {style_info}
 
+CRITICAL RULE - ERA MATCHING:
+Characters and settings have "era" fields that MUST be consistent. A character can ONLY appear in settings from their own era.
+For example:
+- A "biblical" era character can ONLY appear in "biblical" era settings
+- A "present-day" era character can ONLY appear in "present-day" era settings
+- Characters should NEVER cross between eras (e.g., a biblical laborer should NOT appear in a modern office)
+
+If your story has multiple eras (e.g., a simulation story with biblical characters AND present-day observers), 
+you MUST create SEPARATE characters for each era. Do NOT reuse characters across eras.
+
+CRITICAL RULE - NAME UNIQUENESS:
+Choose distinctive, memorable names that are NOT commonly used in fiction. AVOID these overused names:
+- Elias, Thorne, Henderson, Marcus, Elena, Clara, James, John, Michael, Sarah, Elizabeth
+- Generic surnames like Smith, Jones, Miller, Williams, Brown, Davis, Wilson
+- Names that sound like "default" fiction names (Aria, Luna, Zara, Kai, Finn, etc.)
+
+Instead, draw from:
+- Unusual but real names from diverse cultures (Yoruba, Georgian, Basque, Welsh, Finnish, etc.)
+- Historical figures with distinctive names
+- Names with unusual letter combinations or sounds
+- Surnames that are memorable and specific (occupational names, place names, compound names)
+
 Create a comprehensive definitions.json structure with:
 
 1. **Characters**: For each character mentioned, provide:
-   - name: Character's primary name
+   - name: Character's primary name (must be distinctive and unique - see naming rules above)
    - aliases: Array of alternative names
    - description: Character's role, personality, motivations (2-3 sentences)
    - appearance: EXTREMELY detailed physical description including:
@@ -350,7 +372,7 @@ Create a comprehensive definitions.json structure with:
      * Clothing with detailed descriptions and RGB color codes
      * Accessories
    - role: Character's function in the story
-   - era: The era/time period this character belongs to
+   - era: The era/time period this character belongs to (CRITICAL: must match their settings)
 
 2. **Settings**: For each setting mentioned, provide:
    - name: Setting's primary name
@@ -363,7 +385,7 @@ Create a comprehensive definitions.json structure with:
      * Textures and materials
      * Atmospheric elements
      * Time of day/weather
-   - era: The era/time period this setting belongs to
+   - era: The era/time period this setting belongs to (CRITICAL: must match their characters)
 
 3. **Extras**: For each extra (non-character entity) mentioned, provide:
    - name: Extra's primary name
