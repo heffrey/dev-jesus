@@ -1,0 +1,25 @@
+# Scene 11
+
+## Night / The Farmhouse - Master Bedroom
+
+The master bedroom was a cage of shadows, illuminated only by the rhythmic, jagged strobes of lightning beyond the curtains. Annie knelt on the floorboards, her breath hitching not from fear, but from the searing fire in her shins. The flayed skin wept against the denim of her jeans, a sticky reminder of the price of her escape. Behind her, Sarah lay propped against the base of the heavy oak bedframe, her chest heaving with a wet, bubbling sound that made Annie’s heart ache. The copper tang of blood hung heavy in the air, mixing with the scent of wet dust and the ozone of the storm.
+
+Annie gripped the iron fireplace poker until her knuckles turned white. She had moved the heavy mahogany dresser, angling it to narrow the entrance into a jagged funnel—a kill zone that forced any intruder to turn their shoulder and expose their flank. She reached out, her fingers brushing her mother’s cold, clammy hand. Sarah’s eyes flickered open, glazed with pain but still harboring that fierce, protective spark. She couldn't speak, but she squeezed Annie's hand once, a silent passing of the mantle. The Protector was fading; The Progeny was all that remained.
+
+Carefully, Annie reached into the pocket of her chore coat and pulled out a handful of the white flour she’d scavenged from the punctured sack in the pantry downstairs. She dusted the floor just beyond the dresser's edge, creating a pale, ghostly carpet. It wasn't meant to hide anything; it was meant to reveal. In the darkness, the Hunter’s muddy boots would leave a map of his weight and his reach. She retreated into the deepest corner of the room, blending into the shadows cast by the heavy curtains, the iron poker held low and ready.
+
+## Night / The Farmhouse - The Hallway
+
+Outside the door, the house groaned under the weight of the wind. Then came a sound that didn't belong to the storm: the slow, rhythmic creak of a floorboard in the hallway. Dale moved with a predatory patience that was more terrifying than any sudden assault. He didn't rush the door. He didn't shout. He simply existed in the space outside, a vacuum of sound that seemed to suck the air from the room. Annie watched the heavy iron bolt she had slid home; it was a meager barrier against a man who treated doors like suggestions.
+
+Dale’s voice drifted through the wood, low and conversational, devoid of any heat. "You're making this harder than it needs to be, Annie," he said, his words clipped and precise. "Your granddaddy made a trade. Blood for blood. It’s an old debt, and I’m just the ledger-man." He paused, and Annie could almost see him adjusting his sweat-stained trucker hat, his dead eyes scanning the door for weaknesses. "Your mama’s tired. You can hear it. Why let her suffer in the dark?"
+
+The silver-bladed folding knife clicked—a sharp, metallic snap that cut through the roar of the rain on the tin roof. Dale began to work on the hinges, the blade searching for the gap between the frame and the wood. He wasn't kicking the door down because he didn't want to be off-balance when he entered. He was methodical, calculating the physics of the kill. Annie didn't reply. She focused on the flour on the floor, on the weight of the iron in her hand, and the memory of the scar above Dale's eye. Someone had almost got him once. She intended to finish the job.
+
+## Night / The Farmhouse - The Kill Zone
+
+The door groaned as the top hinge gave way with a screech of tortured metal. Dale stepped into the room, his muddy boots immediately finding purchase on the flour-dusted floor. He saw the dresser first, the bottleneck she’d created, and a ghost of a smile touched his thin lips—a recognition of craft. He adjusted his stance, turning his lead shoulder just as Annie had anticipated, his silver knife held in a professional reverse grip. He was looking for her in the corners, his eyes tracking the movement of the shadows.
+
+"Resourceful," Dale murmured, his gaze falling on the white footprints he was leaving. He took another step, his weight shifting as he navigated the narrow gap between the dresser and the wall. This was the moment. As his center of gravity crossed the threshold of the funnel, Annie lunged. She didn't go for his head; she went for the lead knee, swinging the heavy iron poker with every ounce of grief and desperation she possessed. The iron connected with a sickening crack, the sound of bone splintering under the force of the blow.
+
+Dale grunted, his leg buckling, and for the first time, the mask of professional detachment slipped. He lunged forward, the silver knife whistling through the air where Annie’s throat had been a second before, but the flour on the floor betrayed him. His good foot slipped on the fine powder, and he stumbled into the sharp corner of the mahogany dresser. Annie didn't hesitate. She scrambled back, putting the bed between them, the poker raised again. Across the room, Sarah’s eyes were wide, her hand fumbling for the edge of the mattress, her last strength marshaled for the final struggle. The hunter was no longer tracking prey; he was trapped in the thicket.

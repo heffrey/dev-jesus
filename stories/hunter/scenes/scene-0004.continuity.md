@@ -1,0 +1,6 @@
+- Location: The Deep Woods; moved from a ravine/rock shelf to the edge of a ridge; miles from any paved road.
+- Time of Day: Transition from Late Afternoon to Twilight/Dusk as the first stars appear.
+- Character State (Annie): Scratched shins and a bloody, muddy scratch on her cheek; trembling from an adrenaline crash.
+- Character State (Sarah): Physical exhaustion (ragged breathing); emotionally shocked/staring into the distance.
+- Character State (Dale): Stalking silently and deliberately; described as a predator who knows the terrain better than the women.
+- Plot/Revelation: Dale’s "neighborly" persona was a facade used before his recent ambush; Old Man Henderson’s warning about the "shadow" in the valley is proven true.

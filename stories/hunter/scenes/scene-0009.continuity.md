@@ -1,0 +1,6 @@
+- Time/Environment: Night, heavy rain/storm; Farmhouse interior (Entryway, Kitchen, Pantry, and hidden Crawlspace).
+- Character State (Dale): Wearing a sweat-stained trucker hat and muddy boots; armed with a silver-bladed folding knife; scar above his left eye is throbbing.
+- Character State (Sarah & Annie): Sarah possesses a heavy iron fireplace poker; Annie has raw, weeping flayed skin on her shins and moves with a noticeable hitch/limp.
+- Location/Plot: Sarah and Annie are hiding in a narrow service crawlspace between the kitchen and dining room walls; Dale is in the kitchen/pantry, inches away.
+- Objects/Environment: Muddy prints on the foyer rug; a punctured sack of flour in the pantry; a hidden recessed latch located behind quilts in the upstairs linen closet.
+- Revelation: Dale is a methodical professional who uses scent and "inconsistencies" in sound to track targets, rather than just visual searching.

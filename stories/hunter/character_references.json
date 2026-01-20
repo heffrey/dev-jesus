@@ -1,17 +1,36 @@
 {
   "Annie": [
-    "stories/hunter/boards/scene-0003-2.jpg",
+    "stories/hunter/boards/scene-0002-6.jpg",
+    "stories/hunter/boards/scene-0002-5.jpg",
+    "stories/hunter/boards/scene-0002-4.jpg",
     "stories/hunter/boards/scene-0002-3.jpg",
-    "stories/hunter/boards/scene-0003-1.jpg",
     "stories/hunter/boards/scene-0002-2.jpg",
     "stories/hunter/boards/scene-0002-1.jpg",
-    "stories/hunter/boards/refs/ref-annie.jpg"
+    "stories/hunter/boards/refs/ref-annie.jpg",
+    "stories/hunter/boards/scene-0001-6.jpg",
+    "stories/hunter/boards/scene-0001-4.jpg",
+    "stories/hunter/boards/scene-0001-2.jpg"
   ],
   "Dale": [
+    "stories/hunter/boards/scene-0002-6.jpg",
+    "stories/hunter/boards/scene-0002-4.jpg",
+    "stories/hunter/boards/scene-0004-1.jpg",
+    "stories/hunter/boards/scene-0003-6.jpg",
     "stories/hunter/boards/scene-0002-2.jpg",
     "stories/hunter/boards/refs/ref-dale.jpg"
   ],
+  "Elias Thorne": [
+    "executive/boards/ref-jim-ceruzi.jpg"
+  ],
+  "Jim Ceruzi": [
+    "executive/boards/ref-jim-ceruzi.jpg"
+  ],
   "Old Man Henderson": [
+    "stories/hunter/boards/scene-0002-6.jpg",
+    "stories/hunter/boards/scene-0002-4.jpg",
+    "stories/hunter/boards/scene-0001-5.jpg",
+    "stories/hunter/boards/scene-0001-3.jpg",
+    "stories/hunter/boards/scene-0003-4.jpg",
     "stories/hunter/boards/scene-0003-2.jpg",
     "stories/hunter/boards/scene-0002-3.jpg",
     "stories/hunter/boards/scene-0002-2.jpg",
@@ -19,16 +38,15 @@
     "stories/hunter/boards/refs/ref-old-man-henderson.jpg"
   ],
   "Sarah": [
-    "stories/hunter/boards/scene-0003-2.jpg",
-    "stories/hunter/boards/scene-0002-3.jpg",
-    "stories/hunter/boards/scene-0003-1.jpg",
+    "stories/hunter/boards/scene-0001-1.jpg",
+    "stories/hunter/boards/scene-0002-6.jpg",
+    "stories/hunter/boards/scene-0002-5.jpg",
+    "stories/hunter/boards/scene-0002-2.jpg",
     "stories/hunter/boards/scene-0002-1.jpg",
-    "stories/hunter/boards/refs/ref-sarah.jpg"
-  ],
-  "Jim Ceruzi": [
-    "executive/boards/ref-jim-ceruzi.jpg"
-  ],
-  "Elias Thorne": [
-    "executive/boards/ref-jim-ceruzi.jpg"
+    "stories/hunter/boards/refs/ref-sarah.jpg",
+    "stories/hunter/boards/scene-0001-6.jpg",
+    "stories/hunter/boards/scene-0001-5.jpg",
+    "stories/hunter/boards/scene-0001-4.jpg",
+    "stories/hunter/boards/scene-0001-3.jpg"
   ]
 }

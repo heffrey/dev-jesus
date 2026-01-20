@@ -1,0 +1,7 @@
+- Location: Farmhouse upstairs bedroom/hallway; surrounded by Piney Woods during a heavy rainstorm.
+- Items: Sarah is armed with a heavy iron fireplace poker; Dale possesses a silver-bladed folding knife; front door is secured by an iron bolt.
+- Character Physical State: Annie has flayed skin on her shins; Dale has a scar above his left eye and wears a sweat-stained trucker hat.
+- Character Emotional State: Sarah is in a "predatory focus" defensive stance; Annie is despairing and hopeless after being abandoned.
+- Plot Development: Sheriff Miller arrived in his cruiser but fled out of fear, leaving Sarah and Annie alone to face Dale.
+- Current Action: Dale is back on the porch, deliberately scraping at the front door lock to taunt the women.
+- Time of Day: Night; rhythmic rain on a tin roof.

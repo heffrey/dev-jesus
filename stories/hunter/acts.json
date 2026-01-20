@@ -2,8 +2,8 @@
   "acts": [
     {
       "number": 1,
-      "title": "Introductions",
-      "description": "The characters",
+      "title": "The Shadow Falls",
+      "description": "Annie and Sarah find themselves ensnared in a desperate flight, pursued by an unseen predator. The open road becomes a battlefield, and every stop a potential trap, as the true nature of their harrowing predicament unfolds.",
       "scenes": [
         {
           "number": 1,
@@ -12,17 +12,60 @@
         {
           "number": 2,
           "purpose": "The gas station they meet The Hermit. There is also a black pickup truck. A man that looks like Dale is driving the pickup truck. Annie gets the creeps."
+        },
+        {
+          "number": 3,
+          "purpose": "Annie and Sarah realize Dale is actively tracking them on the road, leading to a desperate chase through the rural Texas backroads, pushing their red Camaro to its limits."
+        },
+        {
+          "number": 4,
+          "purpose": "Sarah and Annie narrowly escape Dale's initial ambush in The Woods, losing him temporarily but understanding the gravity of his relentless pursuit. Old Man Henderson's cryptic warning echoes in their minds."
         }
       ]
     },
     {
       "number": 2,
-      "title": "The farmhouse",
-      "description": "They arrive at their old house",
+      "title": "The Haunted Hearth",
+      "description": "Annie and Sarah seek refuge in their ancestral farmhouse, hoping to find safety and a moment's peace. But the walls that once offered comfort now feel like a cage, as the hunter closes in, turning their homecoming into a harrowing siege.",
       "scenes": [
         {
-          "number": 3,
-          "purpose": "It's nighttime and Annie and Sarah are getting ready to go to bed at the old farmhouse"
+          "number": 5,
+          "purpose": "Annie and Sarah arrive at the isolated farmhouse, finding it weathered but a familiar haven, before they are fully aware of Dale's immediate presence closing in on them."
+        },
+        {
+          "number": 6,
+          "purpose": "It's nighttime and Annie and Sarah are getting ready to go to bed at the old farmhouse."
+        },
+        {
+          "number": 7,
+          "purpose": "Dale attempts to breach the farmhouse, testing its defenses, forcing Annie and Sarah to barricade themselves and use their knowledge of the old house to prepare for a prolonged siege."
+        },
+        {
+          "number": 8,
+          "purpose": "Sheriff Miller arrives, having been called by Old Man Henderson, but his limited resources and Dale's cunning lead to Sheriff Miller's retreat, leaving Annie and Sarah to face Dale alone."
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "title": "Blood and Inheritance",
+      "description": "Trapped and out of options, Annie and Sarah must confront their tormentor directly within the confines of their family home. The night demands a profound sacrifice, revealing the true strength of their bond and the lengths they will go to ensure one another's survival.",
+      "scenes": [
+        {
+          "number": 9,
+          "purpose": "A tense cat-and-mouse game ensues inside the farmhouse, with Dale systematically searching for Annie and Sarah as they use hidden passages and their intimate knowledge of the house to evade him."
+        },
+        {
+          "number": 10,
+          "purpose": "Sarah, gravely injured while protecting Annie from Dale, reveals a family secret related to Dale's relentless hunt, transforming Annie's understanding of their past and her resolve for survival."
+        },
+        {
+          "number": 11,
+          "purpose": "Annie, fueled by grief and the fierce desire to protect her mother, sets a final trap for Dale within the farmhouse, using her resourcefulness and the environment to gain a critical advantage."
+        },
+        {
+          "number": 12,
+          "purpose": "Annie confronts Dale in a brutal, climactic struggle. She defeats him, securing their survival, but the victory comes at a profound cost, redefining Annie's future and her understanding of resilience."
         }
       ]
     }

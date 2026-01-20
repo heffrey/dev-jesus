@@ -1,0 +1,6 @@
+- Location: Cedar farmhouse with gabled roofs and peeling paint; main door is secured with a heavy iron bolt.
+- Time of Day: Transitions from twilight through dusk to absolute nightfall.
+- Character State (Annie): Flayed shins and crusted scratch on cheek; trembling from adrenaline crash; using a flashlight upstairs.
+- Character State (Sarah): Profound physical exhaustion/paralysis; vacant, pale, and "sleepwalker-like" in the kitchen.
+- Antagonist State (Dale): Standing at the base of the porch steps; calm/calculating; knows structural weaknesses like creaky boards and swollen windows.
+- Plot Revelation: Dale has discarded his "neighborly" facade to hunt them; the farmhouse is no longer a haven but a "trap" under siege.

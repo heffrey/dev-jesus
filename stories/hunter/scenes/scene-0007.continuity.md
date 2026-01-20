@@ -1,0 +1,6 @@
+- **Location/Time:** The Farmhouse (East Texas Piney Woods) at night; rain has just begun to fall on the roof.
+- **Character state (Sarah):** Shifted from catatonic to "Protector" mode; focused and armed with a heavy fireplace poker at the top of the stairs.
+- **Character state (Annie):** Resilient but trembling; has "flayed shins" with a noticeable hitch in her stride; currently upstairs with Sarah.
+- **Character state (Dale):** Wearing a sweat-stained trucker hat; scar above left eye throbs; armed with a heavy-bladed folding knife; currently on the front porch scraping the lock.
+- **Objects/Barricades:** Back mudroom door is barricaded by a heavy oak sideboard filled with ceramics/silver; front door iron bolt is engaged.
+- **Plot status:** Siege has begun; help from Sheriff Miller or Henderson’s station is explicitly not coming.

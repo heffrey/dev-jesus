@@ -334,6 +334,35 @@ def detect_entities(scene_text: str, definitions: dict) -> tuple[list[dict], lis
             matches = list(re.finditer(pattern, scene_lower))
             
             if matches:
+                # Filter out possessive place names (e.g., "Henderson's" as a place, not the character)
+                # If the match is followed by "'s" and then a place-like word or verb like "appeared", skip it
+                filtered_matches = []
+                for match in matches:
+                    end = match.end()
+                    # Check if this is a possessive followed by place/establishment indicators
+                    # Use scene_lower since we're already working with lowercase
+                    after_match = scene_lower[end:end+50] if end < len(scene_lower) else ""
+                    # Also check before the match for section header context (## Inside Henderson's)
+                    before_match = scene_lower[max(0, match.start()-20):match.start()]
+                    
+                    # Check for possessive pattern - handle both straight (') and curly (') apostrophes
+                    # Also handle "'s\n" (end of line/section header)
+                    is_possessive = (after_match.startswith("'s") or after_match.startswith("'s") or after_match.startswith("'s"))
+                    
+                    if is_possessive:
+                        # Check if followed by place-indicator verbs or words (after the 's)
+                        after_possessive = after_match[2:].lstrip()  # Skip the 's and any whitespace
+                        place_indicators = ['appeared', 'was', 'is', 'stood', 'sat', 'loomed', 'building', 'place', 'store', 'station', 'shop', 'bar', 'diner', 'cafe', 'restaurant', 'garage', 'house', 'home', 'gas', 'lot', 'parking', 'the interior', 'interior']
+                        is_place_reference = any(after_possessive.startswith(ind) or ind in after_possessive[:30] for ind in place_indicators)
+                        
+                        # Also check if this is in a section header (## ... Henderson's)
+                        is_section_header = '## ' in before_match or after_match.startswith("'s\n")
+                        
+                        if is_place_reference or is_section_header:
+                            continue  # Skip this match - it's a place name, not the character
+                    filtered_matches.append(match)
+                
+                matches = filtered_matches
                 # Check if character is visually present (doing actions, speaking, or being directly observed)
                 for match in matches:
                     start, end = match.span()
@@ -391,6 +420,19 @@ def detect_entities(scene_text: str, definitions: dict) -> tuple[list[dict], lis
                         
                         for match in word_matches:
                             start, end = match.span()
+                            
+                            # Skip possessive place names (e.g., "Henderson's" as gas station)
+                            after_match = scene_lower[end:end+50] if end < len(scene_lower) else ""
+                            before_match = scene_lower[max(0, start-20):start]
+                            is_possessive = (after_match.startswith("'s") or after_match.startswith("'s") or after_match.startswith("'s"))
+                            if is_possessive:
+                                after_possessive = after_match[2:].lstrip()
+                                place_indicators = ['appeared', 'was', 'is', 'stood', 'sat', 'loomed', 'building', 'place', 'store', 'station', 'shop', 'bar', 'diner', 'cafe', 'restaurant', 'garage', 'house', 'home', 'gas', 'lot', 'parking', 'the interior', 'interior']
+                                is_place_reference = any(after_possessive.startswith(ind) or ind in after_possessive[:30] for ind in place_indicators)
+                                is_section_header = '## ' in before_match or after_match.startswith("'s\n")
+                                if is_place_reference or is_section_header:
+                                    continue  # Skip - this is a place name
+                            
                             context = scene_lower[max(0, start-30):min(len(scene_lower), end+30)]
                             # Only match if there are action indicators nearby (stronger requirement)
                             if any(verb in context for verb in action_verbs) or has_quote_chars(context):
@@ -424,6 +466,19 @@ def detect_entities(scene_text: str, definitions: dict) -> tuple[list[dict], lis
                         
                         for match in word_matches:
                             start, end = match.span()
+                            
+                            # Skip possessive place names (e.g., "Henderson's" as gas station)
+                            after_match_full = scene_lower[end:end+50] if end < len(scene_lower) else ""
+                            before_match = scene_lower[max(0, start-20):start]
+                            is_possessive = (after_match_full.startswith("'s") or after_match_full.startswith("'s") or after_match_full.startswith("'s"))
+                            if is_possessive:
+                                after_possessive = after_match_full[2:].lstrip()
+                                place_indicators = ['appeared', 'was', 'is', 'stood', 'sat', 'loomed', 'building', 'place', 'store', 'station', 'shop', 'bar', 'diner', 'cafe', 'restaurant', 'garage', 'house', 'home', 'gas', 'lot', 'parking', 'the interior', 'interior']
+                                is_place_reference = any(after_possessive.startswith(ind) or ind in after_possessive[:30] for ind in place_indicators)
+                                is_section_header = '## ' in before_match or after_match_full.startswith("'s\n")
+                                if is_place_reference or is_section_header:
+                                    continue  # Skip - this is a place name
+                            
                             context = scene_lower[max(0, start-30):min(len(scene_lower), end+30)]
                             
                             # Check if word is part of a compound noun (e.g., "ghost ship", "wall street")
@@ -485,6 +540,19 @@ def detect_entities(scene_text: str, definitions: dict) -> tuple[list[dict], lis
                         
                         for match in single_word_matches:
                             start, end = match.span()
+                            
+                            # Skip possessive place names (e.g., "Henderson's" as gas station)
+                            after_match_full = scene_lower[end:end+50] if end < len(scene_lower) else ""
+                            before_match = scene_lower[max(0, start-20):start]
+                            is_possessive = (after_match_full.startswith("'s") or after_match_full.startswith("'s") or after_match_full.startswith("'s"))
+                            if is_possessive:
+                                after_possessive = after_match_full[2:].lstrip()
+                                place_indicators = ['appeared', 'was', 'is', 'stood', 'sat', 'loomed', 'building', 'place', 'store', 'station', 'shop', 'bar', 'diner', 'cafe', 'restaurant', 'garage', 'house', 'home', 'gas', 'lot', 'parking', 'the interior', 'interior']
+                                is_place_reference = any(after_possessive.startswith(ind) or ind in after_possessive[:30] for ind in place_indicators)
+                                is_section_header = '## ' in before_match or after_match_full.startswith("'s\n")
+                                if is_place_reference or is_section_header:
+                                    continue  # Skip - this is a place name
+                            
                             context = scene_lower[max(0, start-30):min(len(scene_lower), end+30)]
                             # Check for action context - character doing something
                             if any(verb in context for verb in action_verbs) or has_quote_chars(context):
@@ -517,6 +585,19 @@ def detect_entities(scene_text: str, definitions: dict) -> tuple[list[dict], lis
                 if name_lower in scene_lower:
                     # Check if in dialogue or action context
                     idx = scene_lower.find(name_lower)
+                    
+                    # Skip possessive place names (e.g., "Henderson's" as gas station)
+                    after_match_full = scene_lower[idx+len(name_lower):idx+len(name_lower)+50] if idx+len(name_lower) < len(scene_lower) else ""
+                    before_match = scene_lower[max(0, idx-20):idx]
+                    is_possessive = (after_match_full.startswith("'s") or after_match_full.startswith("'s") or after_match_full.startswith("'s"))
+                    if is_possessive:
+                        after_possessive = after_match_full[2:].lstrip()
+                        place_indicators = ['appeared', 'was', 'is', 'stood', 'sat', 'loomed', 'building', 'place', 'store', 'station', 'shop', 'bar', 'diner', 'cafe', 'restaurant', 'garage', 'house', 'home', 'gas', 'lot', 'parking', 'the interior', 'interior']
+                        is_place_reference = any(after_possessive.startswith(ind) or ind in after_possessive[:30] for ind in place_indicators)
+                        is_section_header = '## ' in before_match or after_match_full.startswith("'s\n")
+                        if is_place_reference or is_section_header:
+                            continue  # Skip - this is a place name
+                    
                     context = scene_lower[max(0, idx-30):min(len(scene_lower), idx+len(name_lower)+30)]
                     
                     if has_quote_chars(context) or any(verb in context for verb in [' said', ' spoke', ' asked', ' replied', ' stood', ' walked', ' moved']):
@@ -2578,6 +2659,22 @@ def main() -> int:
                     # Use scene-level characters (they're likely being referred to by pronouns in this chunk)
                     chunk_characters = characters
             
+            # Fallback for co-traveling characters: If chunk mentions a shared vehicle (car, camaro, truck)
+            # and some but not all scene-level characters are detected, include all travelers
+            # This ensures that passengers aren't omitted when only the driver is mentioned
+            if chunk_characters and characters and len(chunk_characters) < len(characters):
+                chunk_lower = chunk_text.lower()
+                # Check for vehicle/travel indicators
+                vehicle_indicators = ['camaro', 'car', 'truck', 'vehicle', 'drove', 'driving', 'passenger', 'cabin', 'steering wheel', 'inside the']
+                has_vehicle = any(ind in chunk_lower for ind in vehicle_indicators)
+                
+                if has_vehicle:
+                    # This chunk involves a vehicle - include all scene-level characters who are likely traveling together
+                    # Add any scene-level characters not already in chunk_characters
+                    for char in characters:
+                        if char not in chunk_characters:
+                            chunk_characters.append(char)
+            
             # Fallback for settings: If no settings detected in chunk but scene has settings,
             # and the chunk doesn't start with a new section header (## ), carry over the previous setting
             # This handles continuity when a scene spans multiple chunks without repeating the location
@@ -2744,7 +2841,7 @@ def main() -> int:
             # Cap total reference images to prevent model overload and bleeding artifacts
             # Setting refs already have the style baked in, so we prefer them over ref-style
             # Only use ref-style as fallback when no setting ref is available
-            MAX_REFERENCE_IMAGES = 4
+            MAX_REFERENCE_IMAGES = 5  # Increased to accommodate extras like vehicles
             
             # Separate reference images by type
             char_refs = [p for p in reference_images if '/ref-' in p and '-setting-' not in p and '-extra-' not in p and '-style' not in p]
@@ -2752,23 +2849,22 @@ def main() -> int:
             extra_refs = [p for p in reference_images if '-extra-' in p]
             style_ref = [p for p in reference_images if '-style.' in p]
             
-            # Rebuild with priority: characters first, then setting OR style (not both)
+            # Rebuild with priority: characters first, then extras (vehicles etc), then setting OR style
             reference_images = []
             
-            # Add character refs (up to MAX-1 to leave room for style/setting)
-            max_char_refs = MAX_REFERENCE_IMAGES - 1
+            # Add character refs (up to MAX-2 to leave room for extras and setting)
+            max_char_refs = MAX_REFERENCE_IMAGES - 2
             reference_images.extend(char_refs[:max_char_refs])
+            
+            # Add extra refs (vehicles, props - these are important for visual continuity)
+            if extra_refs:
+                reference_images.extend(extra_refs[:1])  # One extra ref (e.g., the car)
             
             # Add setting ref if available (it already has the style), otherwise fall back to style ref
             if setting_refs:
                 reference_images.extend(setting_refs[:1])  # Just one setting ref
             elif style_ref:
                 reference_images.extend(style_ref)  # Fall back to style ref if no setting
-            
-            # Extra refs only if we have room (rare)
-            if len(reference_images) < MAX_REFERENCE_IMAGES:
-                remaining = MAX_REFERENCE_IMAGES - len(reference_images)
-                reference_images.extend(extra_refs[:remaining])
             
             if args.verbose and reference_images:
                 print(f"    Using {len(reference_images)} reference image(s) for character consistency", flush=True)

@@ -1,0 +1,6 @@
+- Location/Time: Farmhouse (master bedroom/threshold), night; heavy rain on a tin roof with "skeletal" pines outside.
+- Sarah’s State: Critically wounded by a "wet, soft" knife puncture to the chest/torso; coughing blood; strength failing and losing consciousness.
+- Annie’s State/Gear: Raw, weeping shins; possesses the heavy iron fireplace poker; emotional state has shifted from panic to cold, precise survivalist resolve.
+- Dale’s State/Gear: Silver-bladed folding knife; sweat-stained trucker hat; scar above left eye; calm, methodical, and professional demeanor.
+- Plot: Dale is a hired "Hunter" collecting a debt owed by Sarah’s father; Annie is the "final piece" of a blood inheritance trade.
+- Room Setup: Master bedroom door is secured with a heavy iron bolt; a dresser has been moved by Annie to create a "kill zone" funnel.

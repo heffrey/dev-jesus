@@ -1,0 +1,34 @@
+{
+  "The Farmhouse": {
+    "indoor": [
+      "stories/hunter/boards/refs/ref-setting-the-farmhouse-indoor.jpg"
+    ],
+    "outdoor": [
+      "stories/hunter/boards/refs/ref-setting-the-farmhouse-outdoor.jpg"
+    ]
+  },
+  "The Gas Station": {
+    "indoor": [
+      "stories/hunter/boards/refs/ref-setting-the-gas-station-indoor.jpg"
+    ],
+    "outdoor": [
+      "stories/hunter/boards/refs/ref-setting-the-gas-station-outdoor.jpg"
+    ]
+  },
+  "The Road": {
+    "indoor": [
+      "stories/hunter/boards/refs/ref-setting-the-road-indoor.jpg"
+    ],
+    "outdoor": [
+      "stories/hunter/boards/refs/ref-setting-the-road-outdoor.jpg"
+    ]
+  },
+  "The Woods": {
+    "indoor": [
+      "stories/hunter/boards/refs/ref-setting-the-woods-indoor.jpg"
+    ],
+    "outdoor": [
+      "stories/hunter/boards/refs/ref-setting-the-woods-outdoor.jpg"
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+- **Location/Time:** Night; the farmhouse (interior), specifically the downstairs kitchen/front door and then the upstairs bedroom.
+- **Character state (Annie):** Injured with a crusted scratch on her cheek and flayed skin on her shins; she remains fully dressed with her boots on while in bed.
+- **Character state (Sarah):** Hyper-vigilant and near-catatonic with a "sleepwalker-like glaze"; she possesses an iron-tight, desperate grip on Annie’s hand.
+- **Objects/Items:** Low-beam flashlight (on), basin of pink-tinged water, heavy curtains blocking the windows, and a heavy iron bolt on the front door.
+- **Plot/Threat:** Dale (the "Hunter") is stalking the perimeter; he was last seen at the base of the porch steps wearing a sweat-stained trucker hat.
+- **Environment:** A distant blacktop road is visible through a small gap in the bedroom curtains under the moonlight.

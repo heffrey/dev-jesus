@@ -1,0 +1,25 @@
+# Scene 8
+
+## The Farmhouse – Night
+
+The rain was a rhythmic thrumming against the tin roof, a wet percussion that masked the subtle, terrifying sounds of the house settling. Annie leaned against the window frame in the upstairs bedroom, her fingers twitching at the edge of the heavy curtains. Through the small gap, she saw a flicker of rhythmic light—blue and red, muted by the downpour and the dense humidity of the Piney Woods. "Mom," she whispered, her voice cracking with a fragile, sudden hope. "It’s Miller. Henderson must have gotten through."
+
+Sarah didn't lower the heavy fireplace poker. Her knuckles were white, her eyes fixed on the bedroom door as if she could see through the wood to the hallway beyond. The iron bolt downstairs had held so far, but the rhythmic scraping Dale had been doing on the lock had stopped the moment the cruiser's tires crunched on the gravel driveway. Sarah’s face remained a mask of grim suspicion, the sleepwalker-like glaze replaced by a sharp, predatory focus. She knew the weight of Miller's badge, and she knew it wasn't heavy enough to stop a man like the Hunter.
+
+Annie shifted, a sharp wince crossing her face as the movement pulled at the flayed skin on her shins. She wanted to scream out, to throw the window open and signal the lawman, but the memory of Dale’s dead, calculating eyes kept her throat tight. Below them, the world was a blur of shadows and strobing police lights, a temporary sanctuary built of glass and rotating beacons that felt dangerously fragile against the encroaching, ancient forest.
+
+## The Front Yard – Night
+
+Sheriff Miller stepped out of his cruiser, his boots sinking into the soft mud of the drive. He kept the door open, the interior light casting a dim, sickly glow over his weary features. He adjusted his belt, the leather creaking, and squinted toward the porch of the farmhouse. He’d seen a shadow move—a flicker of a sweat-stained trucker hat disappearing behind a porch pillar just as his headlights hit the peeling white wood. Miller felt the familiar, cold knot of regret tightening in his gut; he was a man who had seen too much and done too little, and he knew when a predator was marking its territory.
+
+"Dale?" Miller called out, his voice lacking the authority of a younger man. It was a tired query, not a command. There was no answer, only the steady hiss of the rain and the groan of the old oaks draped in Spanish moss. Dale didn't reveal himself, but the atmosphere shifted; the air became heavy with that metallic, wrong scent that followed the Hunter. Miller saw a flash of silver—the heavy blade of a folding knife catching the strobe of the cruiser's light—near the base of the steps. It was a warning, a silent declaration that the law stopped at the edge of the blacktop.
+
+The Sheriff took a tentative step toward the house, then stopped. His hand hovered over his holster, but his fingers trembled against the cold rain. He looked at the darkened windows of the farmhouse, knowing Sarah and Annie were likely watching, praying for a rescue he felt powerless to provide. He thought of the vast, labyrinthine woods and the men who went missing within them. Dale’s presence was a suffocating pressure, a reminder that some threats were beyond the reach of a county budget and a tired man's courage.
+
+## The Farmhouse – Night
+
+"I can't see a thing in this mess!" Miller shouted into the dark, though it was unclear if he was talking to the hidden Hunter or his own conscience. He backed toward the cruiser, his movements heavy with the weight of responsibility he was about to shed. He climbed back into the seat, the engine turning over with a reluctant, mechanical roar. He didn't look back as he threw the car into reverse, his headlights cutting a desperate arc across the overgrown yard before he accelerated back toward the county road. He was leaving them, choosing the safety of the station over the slaughterhouse the property had become.
+
+Inside, the silence that followed the fading siren was more deafening than the rain. Annie watched the red taillights vanish into the pine-choked horizon, her hope bleeding out of her like the pink-tinged water in the basin downstairs. She looked at her mother, who hadn't moved from her defensive stance at the top of the stairs. Sarah’s eyes were hard, a dark reflection of the realization that the world outside had abandoned them. The protector had known it all along; the badge was just tin, and tin didn't stop a hunter.
+
+Downstairs, the scraping resumed. It was slower now, more deliberate—a taunt. Dale was back on the porch, his presence a physical weight against the front door. The scar above his left eye likely throbbed with the satisfaction of the chase. He had driven off the law without firing a shot, simply by existing as a shadow Miller wasn't brave enough to challenge. The siege had returned to its natural state: two women, a fireplace poker, and a predator who moved with the patience of the very woods surrounding them.

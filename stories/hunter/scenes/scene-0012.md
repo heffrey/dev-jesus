@@ -1,0 +1,25 @@
+# Scene 12
+
+## Night - The Farmhouse (Master Bedroom)
+
+The door groaned on its single remaining hinge, a tortured shriek of wood and metal that competed with the rhythmic drumming of rain on the tin roof. Dale stepped into the room, his weight shifted heavily onto his good leg. The white flour Annie had scattered across the floorboards was now a chaotic map of frantic footprints and smears of dark, viscous red. Dale’s breath came in short, jagged whistles, the first sign of exertion he had shown all night. He adjusted his sweat-stained trucker hat, his dead, calculating eyes locked on Annie as he navigated the narrow path created by the heavy mahogany dresser.
+
+Sarah lay propped against the oak bedframe, her chest rising and falling in shallow, hitching increments. Each breath was accompanied by a wet, bubbling sound—a visceral reminder of the silver blade’s precision. Her eyes, usually so sharp and practical, were glazed with the onset of shock, yet they remained fixed on her daughter. She couldn't speak, her throat choked with the copper taste of her own life's blood, but her hand twitched against the floor, a final, silent command for Annie to hold her ground.
+
+Annie stood at the end of the funnel, her chore coat dark with rain and her own blood. Her flayed shins burned with every shift of her weight, a white-hot agony that she pushed into a dark corner of her mind. She gripped the iron fireplace poker with both hands, the metal cold and reassuringly heavy. She was no longer the girl who had smiled at the gas station; she was the progeny of a debt she hadn't asked for, and the only thing standing between the Hunter and the final entry in his ledger.
+
+## Night - The Farmhouse (Master Bedroom)
+
+Dale didn't rush. Even with a shattered knee, he moved with the predatory patience of a man who knew the end was inevitable. He flicked the silver folding knife, the blade catching a stray flash of lightning that illuminated the room in a strobe-light jerk. "Debt's due, girl," he rasped, his voice a dry scrape of gravel. "Blood for blood. Your granddaddy’s coin ran out a long time ago." He lunged then, a sudden, explosive movement that defied his injury. The knife whistled through the air, aimed with clinical intent at Annie’s throat.
+
+Annie didn't retreat. She stepped into the arc of the swing, the iron poker swinging upward in a desperate, heavy arc. The metal collided with Dale’s forearm with a sickening crack, the force of the blow jarring Annie’s shoulders. Dale grunted, the knife slipping from his numb fingers and skittering across the floured floorboards. Before he could recover, Annie swung again, fueled by a primal, protective rage. The hook of the poker caught Dale’s shoulder, tearing through his denim jacket and deep into the muscle beneath.
+
+They collapsed into a heap in the narrow space between the dresser and the wall. Dale’s hands, calloused and strong, found Annie’s throat, his thumbs digging into her windpipe with mechanical cruelty. Annie thrashed, her vision swimming as the air was cut off, the smell of Dale’s stale sweat and old tobacco filling her senses. Her hand fumbled blindly along the floor, her fingers brushing against the cold, smooth handle of the silver knife Dale had dropped. With the last of her strength, she drove the blade upward, buried deep beneath the Hunter’s ribs.
+
+## Night - The Farmhouse (Master Bedroom)
+
+The pressure on Annie’s throat vanished instantly. Dale stiffened, his eyes widening as he looked down at the silver hilt protruding from his chest—his own tool turned against him. He let out a long, rattling sigh, the tension leaving his body as he slumped forward. He fell into the white flour, a dark stain spreading rapidly beneath him, turning the dust into a thick, crimson paste. The Hunter was silent now, his ledger closed, his relentless pursuit ended by the very bloodline he had come to harvest.
+
+Annie scrambled backward, her chest heaving as she sucked in the metallic air. She crawled to the bedframe, reaching for her mother’s hand. Sarah’s fingers were cold, the fierce light in her eyes finally extinguished. The wet, bubbling sound had stopped, replaced only by the steady, indifferent roar of the Texas rain outside. Annie pulled her mother’s head onto her lap, stroking the damp hair away from Sarah’s forehead. The house creaked, settling into the silence of the aftermath, no longer a sanctuary or a trap, just a shell of wood and memories.
+
+As the first grey light of dawn began to bleed through the heavy curtains, Annie sat amidst the wreckage of her life. She looked at her hands, stained with the flour and blood of the man who had hunted them. The optimism of her youth was gone, replaced by a cold, hard clarity. She was the survivor now, the keeper of the land and the secrets buried within it. She stood up slowly, her body aching and broken, and looked toward the window. The woods were still there, dark and watchful, but for the first time in her life, Annie wasn't afraid of the shadows. She had become one of them.

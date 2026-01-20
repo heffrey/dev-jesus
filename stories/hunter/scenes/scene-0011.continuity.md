@@ -1,0 +1,6 @@
+- Location/Time: Night at the farmhouse master bedroom; active storm with lightning and heavy rain on a tin roof.
+- Character state (Annie): Shins are flayed and bleeding through her jeans; armed with an iron fireplace poker; wearing a chore coat.
+- Character state (Sarah): Critically injured with a "wet, bubbling" chest wound; fading/dying while propped against the oak bedframe.
+- Character state (Dale): Lead knee bone shattered/fractured; armed with a silver folding knife; wearing a sweat-stained trucker hat; has an existing scar over one eye.
+- Objects: Mahogany dresser used as a barricade/funnel; white flour dusted on the floor (causing Dale to slip and revealing footprints); top door hinge is broken.
+- Plot/Revelation: Dale is a "ledger-man" collecting a "blood for blood" debt incurred by Annie’s grandfather.
