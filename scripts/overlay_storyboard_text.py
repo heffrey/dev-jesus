@@ -52,6 +52,32 @@ if _SCRIPT_DIR not in sys.path:
     sys.path.insert(0, _SCRIPT_DIR)
 import generate_storyboards as gen
 
+# Lettering font: prefer comic/book style from scripts/fonts (e.g. lettering.ttf or any .ttf/.otf)
+_FONTS_DIR = os.path.join(_SCRIPT_DIR, "fonts")
+
+
+def _lettering_font_path() -> Optional[str]:
+    """Path to preferred lettering font (comic-style) if present, else None. Tries lettering.ttf then first .ttf/.otf in scripts/fonts."""
+    if not os.path.isdir(_FONTS_DIR):
+        return None
+    preferred = os.path.join(_FONTS_DIR, "lettering.ttf")
+    if os.path.isfile(preferred):
+        return preferred
+    for name in sorted(os.listdir(_FONTS_DIR)):
+        if name.lower().endswith((".ttf", ".otf")) and "bold" not in name.lower():
+            return os.path.join(_FONTS_DIR, name)
+    return None
+
+
+def _lettering_bold_font_path() -> Optional[str]:
+    """Path to bold lettering font (e.g. lettering-bold.ttf) for setting labels. None if not present."""
+    if not os.path.isdir(_FONTS_DIR):
+        return None
+    preferred = os.path.join(_FONTS_DIR, "lettering-bold.ttf")
+    if os.path.isfile(preferred):
+        return preferred
+    return None
+
 def _extract_scene_content_for_panels(chunk_text: str, max_panels: int = 4) -> list[dict]:
     """Extract dialogue and narrative from chunk text for overlay.
 
@@ -289,7 +315,7 @@ def _setting_label_from_chunk_title(chunk_title: str) -> str:
 
 
 def _draw_setting_label(image, quadrant_bounds: tuple, label: str, font_size: int, style: dict = None, setting_rect: Optional[list] = None) -> int:
-    """Draw setting/location in a caption-style box with bold text at the top of the panel.
+    """Draw setting/location in a caption-style box at the top of the panel. Uses comic/lettering font when available.
     setting_rect: optional [left, top, right, bottom] as fractions 0-1 of quadrant; when present, box is drawn in that rect.
     Returns the height in pixels used (so caller can offset content below). Returns 0 if no label.
     """
@@ -304,9 +330,24 @@ def _draw_setting_label(image, quadrant_bounds: tuple, label: str, font_size: in
     h_panel = y1 - y0
     pad = max(3, min(w, h_panel) // 40)
     size = max(11, min(15, font_size - 2))
-    # Prefer bold font for setting label (consistent "header" look)
+    # Prefer bold comic/lettering font (lettering-bold.ttf), then regular lettering + simulated bold, then system bold
     font = None
-    if os.path.isfile("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"):
+    use_lettering_font = False  # True when using regular lettering font → simulate bold
+    _bold_path = _lettering_bold_font_path()
+    if _bold_path:
+        try:
+            font = ImageFont.truetype(_bold_path, size)
+        except (OSError, IOError):
+            pass
+    if font is None:
+        _path = _lettering_font_path()
+        if _path:
+            try:
+                font = ImageFont.truetype(_path, size)
+                use_lettering_font = True
+            except (OSError, IOError):
+                pass
+    if font is None and os.path.isfile("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"):
         try:
             font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", size)
         except (OSError, IOError):
@@ -381,7 +422,11 @@ def _draw_setting_label(image, quadrant_bounds: tuple, label: str, font_size: in
     box_h = rect_bottom - rect_top
     ty = rect_top + (box_h - th) // 2
     for i, line in enumerate(lines):
-        draw.text((tx, ty + i * line_height), line, font=font, fill=text_color)
+        y_pos = ty + i * line_height
+        if use_lettering_font:
+            # No lettering-bold.ttf; simulate bold with 1px offset double-draw
+            draw.text((tx + 1, y_pos), line, font=font, fill=text_color)
+        draw.text((tx, y_pos), line, font=font, fill=text_color)
     return int(rect_bottom - y0)
 
 
@@ -596,12 +641,18 @@ def _wrap_text_segment_markdown(draw, segment: str, font, max_width: int) -> lis
 
 
 def _load_panel_font(font_size: int, style: Optional[str]) -> "ImageFont.FreeTypeFont":
-    """Load panel font at size; style is None (regular), 'bold', or 'italic'. Underline uses regular + line."""
+    """Load panel font at size; style is None (regular), 'bold', or 'italic'. Underline uses regular + line. Prefers lettering font from scripts/fonts."""
     import os
     from PIL import ImageFont
 
     font = None
-    if style == "bold":
+    _path = _lettering_font_path()
+    if _path:
+        try:
+            font = ImageFont.truetype(_path, font_size)
+        except (OSError, IOError):
+            font = None
+    if font is None and style == "bold":
         try:
             font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", font_size, index=1)
         except (TypeError, OSError, IOError):
@@ -880,23 +931,30 @@ def _draw_panel_text(image, quadrant_bounds: tuple, panel_content: dict, font, f
         # Use a readable minimum (12) and a less aggressive cap (//6) so narrative boxes don't look too small
         font_size = max(12, min(font_size, int((available_h // 6) * 1.2 * 1.1)))
 
-    # Load font at size
-    try:
-        pil_font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", font_size)
-    except (OSError, IOError):
+    # Load font at size (prefer comic/lettering font from scripts/fonts)
+    pil_font = None
+    _lettering_path = _lettering_font_path()
+    if _lettering_path:
         try:
-            pil_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", font_size)
+            pil_font = ImageFont.truetype(_lettering_path, font_size)
         except (OSError, IOError):
-            fonts_dir = os.path.join(_SCRIPT_DIR, "fonts")
-            if os.path.isdir(fonts_dir):
-                for name in os.listdir(fonts_dir):
-                    if name.lower().endswith((".ttf", ".otf")):
-                        try:
-                            pil_font = ImageFont.truetype(os.path.join(fonts_dir, name), font_size)
-                            break
-                        except (OSError, IOError):
-                            continue
-            pil_font = ImageFont.load_default()
+            pil_font = None
+    if pil_font is None:
+        try:
+            pil_font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", font_size)
+        except (OSError, IOError):
+            try:
+                pil_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", font_size)
+            except (OSError, IOError):
+                if os.path.isdir(_FONTS_DIR):
+                    for name in sorted(os.listdir(_FONTS_DIR)):
+                        if name.lower().endswith((".ttf", ".otf")):
+                            try:
+                                pil_font = ImageFont.truetype(os.path.join(_FONTS_DIR, name), font_size)
+                                break
+                            except (OSError, IOError):
+                                continue
+                pil_font = pil_font or ImageFont.load_default()
 
     draw = ImageDraw.Draw(image)
     strip_md = (_MD_BOLD in text or _MD_UNDERLINE in text or _MD_ITALIC in text or "_" in text)
@@ -935,6 +993,12 @@ def _draw_panel_text(image, quadrant_bounds: tuple, panel_content: dict, font, f
         if len(lines) > max_fit_lines:
             # Try smaller font so all lines fit in the box instead of truncating
             def _load_font(size):
+                path = getattr(pil_font, "path", None)
+                if path and os.path.isfile(path):
+                    try:
+                        return ImageFont.truetype(path, size)
+                    except (OSError, IOError):
+                        pass
                 try:
                     return ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", size)
                 except (OSError, IOError):
@@ -979,24 +1043,38 @@ def _draw_panel_text(image, quadrant_bounds: tuple, panel_content: dict, font, f
             fill_font_size = max(8, min(60 if not is_dialogue else 48, int((available_h / n) / 1.15)))
             available_w = max(1, box_w - text_inset - right_inset)
             fill_font = None
-            try:
-                fill_font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", fill_font_size)
-            except (OSError, IOError):
+            _fill_path = getattr(pil_font, "path", None) or _lettering_path
+            if _fill_path and os.path.isfile(_fill_path):
                 try:
-                    fill_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", fill_font_size)
+                    fill_font = ImageFont.truetype(_fill_path, fill_font_size)
                 except (OSError, IOError):
                     pass
+            if fill_font is None:
+                try:
+                    fill_font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", fill_font_size)
+                except (OSError, IOError):
+                    try:
+                        fill_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", fill_font_size)
+                    except (OSError, IOError):
+                        pass
             if fill_font is not None:
                 max_line_w = max(_measure(draw, line, fill_font) for line in lines)
                 if max_line_w > available_w:
                     fill_font_size = max(font_size, min(fill_font_size, int(fill_font_size * available_w / max_line_w)))
-                    try:
-                        fill_font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", fill_font_size)
-                    except (OSError, IOError):
+                    _fill_path = getattr(pil_font, "path", None) or _lettering_path
+                    if _fill_path and os.path.isfile(_fill_path):
                         try:
-                            fill_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", fill_font_size)
+                            fill_font = ImageFont.truetype(_fill_path, fill_font_size)
                         except (OSError, IOError):
                             fill_font = None
+                    if fill_font is None:
+                        try:
+                            fill_font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", fill_font_size)
+                        except (OSError, IOError):
+                            try:
+                                fill_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", fill_font_size)
+                            except (OSError, IOError):
+                                fill_font = None
                 if fill_font is not None and fill_font_size >= font_size:
                     pil_font = fill_font
                     font_size = fill_font_size
