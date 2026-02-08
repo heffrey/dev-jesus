@@ -1,0 +1,75 @@
+{
+  "setting_label": "06:45 AM – The Quiet Floor, Observation Deck",
+  "setting_rect": [
+    0.05,
+    0.025,
+    0.95,
+    0.075
+  ],
+  "panels": [
+    {
+      "narrative": "Jed Kramer was waiting for her by the window, staring out at the Bay Bridge. He looked diminished, his frame pulling inward as if under the weight of a sudden atmospheric pressure.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.05,
+        0.65,
+        0.95,
+        0.95
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "His right hand was wrapped in a white lint-free cloth, but the red-gold moisture had already soaked through, forming a map of the QR Stigmata on the fabric. He didn't turn when she approached.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.05,
+        0.65,
+        0.95,
+        0.95
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "He simply held out his hand, palm up, an invitation to a shared recognition.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.05,
+        0.65,
+        0.95,
+        0.95
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "",
+      "dialogue": "",
+      "narrative_rect": [
+        0.05,
+        0.65,
+        0.95,
+        0.95
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    }
+  ]
+}

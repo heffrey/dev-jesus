@@ -5,15 +5,18 @@ Overlay scene text onto generated storyboard images.
 Uses the actual prose and dialogue from the scene markdown (not the generator's
 panel instructions). The generator (generate_storyboards.py) is told not to draw
 any lettering; if the model still outputs text, OCR (pytesseract + Tesseract)
-detects and covers it before we draw. Requires: pip install Pillow. Optional:
-pip install pytesseract and system Tesseract (e.g. brew install tesseract) to
-strip any remaining model-generated text. Use --no-ocr to skip OCR.
+detects and covers it before we draw. Requires: pip install Pillow. Optional: pytesseract + Tesseract to strip
+model-generated text (--no-ocr to skip); pyphen for syllabic word breaks
+(e.g. mani-folds) so text wraps tighter in boxes; opencv-python-headless for
+--avoid-faces (snap boxes to bottom when faces detected in top of panel).
 """
 import argparse
 import glob
+import json
 import os
 import re
 import sys
+from typing import Optional
 
 # Optional OCR
 try:
@@ -21,6 +24,27 @@ try:
     _OCR_AVAILABLE = True
 except ImportError:
     _OCR_AVAILABLE = False
+
+# Optional syllabic hyphenation (e.g. manifolds -> mani-folds) for tighter wrapping
+_hyphenator = None
+try:
+    import pyphen
+    for _lang in ("en_US", "en_GB", "en"):
+        try:
+            _hyphenator = pyphen.Pyphen(lang=_lang)
+            break
+        except Exception:
+            continue
+except ImportError:
+    pass
+
+# Optional face detection for --avoid-faces (requires opencv-python-headless)
+_CV2_AVAILABLE = False
+try:
+    import cv2
+    _CV2_AVAILABLE = True
+except ImportError:
+    pass
 
 # Import generator logic so chunking and panel instructions match exactly
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -36,6 +60,13 @@ def _extract_scene_content_for_panels(chunk_text: str, max_panels: int = 4) -> l
     """
     # Strip section headers (## Title) so we don't treat them as content
     body = re.sub(r"^## .+$", "", chunk_text, flags=re.MULTILINE).strip()
+    # When chunk has no body (e.g. chunk 1 is only "## Location\n\n## Time"), use a ## line as narrative
+    # only when there are 2+ headers (use the second, e.g. "03:22 AM") so we don't duplicate the setting box
+    if not body:
+        headers = [line[3:].strip() for line in chunk_text.splitlines() if line.strip().startswith("## ")]
+        if len(headers) >= 2 and headers[1] and len(headers[1]) >= 2:
+            return [{"text": headers[1], "is_dialogue": False}]
+        return []
     # Split on double-quoted strings to get alternating [narrative, dialogue, narrative, ...]
     parts = re.split(r'"([^"]*)"', body)
     content = []  # list of (text, is_dialogue)
@@ -130,6 +161,34 @@ def _find_storyboard_images(boards_dir: str, scene_id: str) -> list[tuple[int, s
     return found
 
 
+def _lettering_json_path_for_image(image_path: str, lettering_dir: str) -> str:
+    """Return path to lettering JSON for an image. Strips -lettered from base name.
+    E.g. .../scene-0001-1-lettered.jpg -> lettering_dir/scene-0001-1.json
+    """
+    base = os.path.basename(image_path)
+    name, _ = os.path.splitext(base)
+    # Remove -lettered suffix so lettered and unlettered images use same JSON
+    if name.endswith("-lettered"):
+        name = name[: -len("-lettered")]
+    return os.path.join(lettering_dir, f"{name}.json")
+
+
+def _load_lettering_json(lettering_path: str) -> Optional[dict]:
+    """Load lettering data from JSON file. Returns None if file missing or invalid.
+    Expected keys: setting_label (optional), setting_rect (optional), panels (array of 4).
+    """
+    if not os.path.isfile(lettering_path):
+        return None
+    try:
+        with open(lettering_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    except (json.JSONDecodeError, OSError):
+        return None
+    if not isinstance(data.get("panels"), list) or len(data["panels"]) < 4:
+        return None
+    return data
+
+
 def _parse_style_from_definitions(definitions: dict) -> dict:
     """Extract lettering/box colors from definitions.style and definitions.style.palette.
     Returns dict with box_fill (R,G,B), text_color (R,G,B), outline_color (R,G,B), or empty dict.
@@ -217,36 +276,332 @@ def _merge_overlapping_bboxes(bboxes: list, margin: int = 5) -> list[tuple[int, 
     return merged
 
 
-def _wrap_text(draw, text: str, font, max_width: int) -> list[str]:
-    """Wrap text to fit within max_width pixels. Returns list of lines."""
-    words = text.split()
+def _setting_label_from_chunk_title(chunk_title: str) -> str:
+    """Return a clean location/setting label for overlay (strip ' (Part N)' suffix).
+    Returns empty when the title is generic (e.g. 'Part 1' when scene has no ## sections).
+    """
+    if not chunk_title or not chunk_title.strip():
+        return ""
+    label = re.sub(r"\s*\(Part\s+\d+\)\s*$", "", chunk_title.strip(), flags=re.IGNORECASE).strip()
+    if re.match(r"^Part\s*\d*\s*$", label, re.IGNORECASE):
+        return ""
+    return label
+
+
+def _draw_setting_label(image, quadrant_bounds: tuple, label: str, font_size: int, style: dict = None, setting_rect: Optional[list] = None) -> int:
+    """Draw setting/location in a caption-style box with bold text at the top of the panel.
+    setting_rect: optional [left, top, right, bottom] as fractions 0-1 of quadrant; when present, box is drawn in that rect.
+    Returns the height in pixels used (so caller can offset content below). Returns 0 if no label.
+    """
+    if not label or not label.strip():
+        return 0
+    try:
+        from PIL import ImageDraw, ImageFont
+    except ImportError:
+        return 0
+    x0, y0, x1, y1 = quadrant_bounds
+    w = x1 - x0
+    h_panel = y1 - y0
+    pad = max(3, min(w, h_panel) // 40)
+    size = max(11, min(15, font_size - 2))
+    # Prefer bold font for setting label (consistent "header" look)
+    font = None
+    if os.path.isfile("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"):
+        try:
+            font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", size)
+        except (OSError, IOError):
+            pass
+    if font is None and os.path.isfile("/System/Library/Fonts/Helvetica.ttc"):
+        try:
+            font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", size, index=1)
+        except (TypeError, OSError, IOError):
+            try:
+                font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", size)
+            except (OSError, IOError):
+                pass
+    if font is None:
+        try:
+            font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", size)
+        except (OSError, IOError):
+            try:
+                font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", size)
+            except (OSError, IOError):
+                font = ImageFont.load_default()
+    draw = ImageDraw.Draw(image)
+    box_fill = (style.get("box_fill", (30, 30, 30))) if style else (30, 30, 30)
+    text_color = (style.get("text_color", (245, 245, 240))) if style else (245, 245, 240)
+    outline_color = (style.get("outline_color", (200, 200, 200))) if style else (200, 200, 200)
+    box_pad = max(2, pad // 2)
+    if setting_rect and len(setting_rect) >= 4:
+        rl, rt, rr, rb = setting_rect[:4]
+        rect_left = x0 + int(rl * w)
+        rect_top = y0 + int(rt * h_panel)
+        rect_right = x0 + int(rr * w)
+        rect_bottom = y0 + int(rb * h_panel)
+    else:
+        rect_left = x0 + pad
+        rect_right = x1 - pad
+        rect_top = y0 + max(2, pad - 2)
+        rect_bottom = None  # computed after we know text height
+    max_text_width = max(80, (rect_right - rect_left) - 2 * box_pad)
+    words = label.strip().split()
     lines = []
     current = []
-    current_width = 0
-    for w in words:
-        test = " ".join(current + [w]) if current else w
-        bbox = draw.textbbox((0, 0), test, font=font)
-        wd = bbox[2] - bbox[0]
-        if wd <= max_width:
-            current.append(w)
-            current_width = wd
+    for word in words:
+        candidate = " ".join(current + [word]) if current else word
+        bbox = draw.textbbox((0, 0), candidate, font=font)
+        if bbox[2] - bbox[0] <= max_text_width:
+            current.append(word)
         else:
             if current:
                 lines.append(" ".join(current))
-            current = [w]
-            bbox = draw.textbbox((0, 0), w, font=font)
-            current_width = bbox[2] - bbox[0]
+            current = [word]
+            if len(lines) >= 2:
+                remainder = " ".join(current)
+                if len(remainder) > 12:
+                    remainder = remainder[:10].rsplit(" ", 1)[0] + "…"
+                current = [remainder] if remainder else []
+                break
     if current:
         lines.append(" ".join(current))
+    if not lines:
+        return 0
+    line_height = draw.textbbox((0, 0), "Ay", font=font)[3] - draw.textbbox((0, 0), "A", font=font)[1]
+    th = len(lines) * line_height
+    if rect_bottom is None:
+        rect_bottom = rect_top + th + 2 * box_pad
+    draw.rounded_rectangle(
+        [rect_left, rect_top, rect_right, rect_bottom],
+        radius=max(2, pad // 2),
+        fill=box_fill,
+        outline=outline_color,
+        width=1,
+    )
+    tx = rect_left + box_pad
+    box_h = rect_bottom - rect_top
+    ty = rect_top + (box_h - th) // 2
+    for i, line in enumerate(lines):
+        draw.text((tx, ty + i * line_height), line, font=font, fill=text_color)
+    return int(rect_bottom - y0)
+
+
+def _faces_in_quadrant(image, quadrant_bounds: tuple):
+    """Return list of face bboxes (x0, y0, x1, y1) in image coords within the quadrant.
+    Requires OpenCV; returns [] if cv2 unavailable or no faces detected.
+    """
+    if not _CV2_AVAILABLE:
+        return []
+    try:
+        import numpy as np
+        x0, y0, x1, y1 = quadrant_bounds
+        crop = image.crop((x0, y0, x1, y1))
+        arr = np.array(crop)
+        gray = cv2.cvtColor(arr, cv2.COLOR_RGB2GRAY) if len(arr.shape) == 3 else arr
+        cascade_path = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
+        face_cascade = cv2.CascadeClassifier(cascade_path)
+        if face_cascade.empty():
+            return []
+        faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+        return [(x0 + int(fx), y0 + int(fy), x0 + int(fx) + int(fw), y0 + int(fy) + int(fh)) for (fx, fy, fw, fh) in faces]
+    except Exception:
+        return []
+
+
+def _top_region_overlaps_faces(quadrant_bounds: tuple, face_bboxes: list, top_fraction: float = 0.45) -> bool:
+    """Return True if any face bbox overlaps the top region (y0 to y0 + top_fraction * height)."""
+    if not face_bboxes:
+        return False
+    x0, y0, x1, y1 = quadrant_bounds
+    h = y1 - y0
+    top_y1 = y0 + int(h * top_fraction)
+    for (fx0, fy0, fx1, fy1) in face_bboxes:
+        face_center_y = (fy0 + fy1) / 2
+        if face_center_y < top_y1:
+            return True
+        if fy1 > y0 and fy0 < top_y1:
+            return True
+    return False
+
+
+def _bottom_region_overlaps_faces(quadrant_bounds: tuple, face_bboxes: list, bottom_fraction: float = 0.40) -> bool:
+    """Return True if any face bbox overlaps the bottom region (y1 - bottom_fraction * height to y1)."""
+    if not face_bboxes:
+        return False
+    x0, y0, x1, y1 = quadrant_bounds
+    h = y1 - y0
+    bottom_y0 = y1 - int(h * bottom_fraction)
+    for (fx0, fy0, fx1, fy1) in face_bboxes:
+        face_center_y = (fy0 + fy1) / 2
+        if face_center_y > bottom_y0:
+            return True
+        if fy0 < y1 and fy1 > bottom_y0:
+            return True
+    return False
+
+
+def _hyphenate_word(word: str) -> list[str]:
+    """Return syllable segments for word, e.g. 'manifolds' -> ['mani', 'folds']. Empty list if no hyphenation."""
+    if not _hyphenator or len(word) < 4 or "-" in word:
+        return []
+    try:
+        inserted = _hyphenator.inserted(word, hyphen="-")
+        if "-" in inserted:
+            return inserted.split("-")
+    except Exception:
+        pass
+    return []
+
+
+def _measure(draw, s: str, font) -> int:
+    bbox = draw.textbbox((0, 0), s, font=font)
+    return bbox[2] - bbox[0]
+
+
+def _count_lines_no_hyphen(draw, words: list, font, max_width: int, initial_width: int = 0) -> int:
+    """Simulate word-only wrap; return number of lines. Used to choose hyphen break that minimizes lines."""
+    if not words:
+        return 0
+    space_w = _measure(draw, " ", font)
+    current_width = initial_width
+    count = 1
+    for w in words:
+        wd = _measure(draw, w, font)
+        gap = space_w if current_width > 0 else 0
+        if current_width + gap + wd <= max_width:
+            current_width += gap + wd
+        else:
+            count += 1
+            current_width = wd
+    return count
+
+
+def _best_single_break(segments: list, draw, font, max_width: int, space_width: int, current_width: int, words_queue: list, prefix_on_current: bool) -> tuple:
+    """Return (prefix, suffix) for the single break that minimizes total lines, or (None, None) if len(segments)<2.
+    words_queue is list of (word, is_suffix); we use word part only for line-count simulation.
+    When line counts tie, prefer the break that avoids a very short fragment (maximize min(prefix_len, suffix_len))."""
+    if len(segments) < 2:
+        return (None, None)
+    rest_words = [item[0] for item in words_queue]
+    best_k = None
+    best_lines = float("inf")
+    best_min_part = -1
+    best_suffix_len = -1
+    for k in range(1, len(segments)):
+        prefix = "".join(segments[:k]) + "-"
+        suffix = "".join(segments[k:])
+        rest = [suffix] + rest_words
+        prefix_fits = current_width + (space_width if prefix_on_current else 0) + _measure(draw, prefix, font) <= max_width
+        if prefix_fits and prefix_on_current:
+            total = 1 + _count_lines_no_hyphen(draw, rest, font, max_width, 0)
+        else:
+            total = (2 if prefix_on_current else 1) + _count_lines_no_hyphen(draw, rest, font, max_width, 0)
+        min_part = min(len(prefix) - 1, len(suffix))
+        if total < best_lines:
+            best_lines = total
+            best_k = k
+            best_min_part = min_part
+            best_suffix_len = len(suffix)
+        elif total == best_lines:
+            if min_part > best_min_part:
+                best_k = k
+                best_min_part = min_part
+                best_suffix_len = len(suffix)
+            elif min_part == best_min_part and len(suffix) > best_suffix_len:
+                best_k = k
+                best_suffix_len = len(suffix)
+    if best_k is None:
+        return (None, None)
+    prefix = "".join(segments[:best_k]) + "-"
+    suffix = "".join(segments[best_k:])
+    return (prefix, suffix)
+
+
+def _wrap_text(draw, text: str, font, max_width: int) -> list[str]:
+    """Wrap text to fit within max_width pixels. Newline characters in the source force line breaks. At most one hyphen per word."""
+    all_lines = []
+    for segment in text.split("\n"):
+        segment = segment.strip()
+        if not segment:
+            all_lines.append("")
+            continue
+        all_lines.extend(_wrap_text_segment(draw, segment, font, max_width))
+    return all_lines
+
+
+def _wrap_text_segment(draw, text: str, font, max_width: int) -> list[str]:
+    """Wrap a single segment (no newlines) to fit max_width. At most one hyphen per word; break point chosen to minimize line count."""
+    words_queue = [(w, False) for w in text.split()]
+    lines = []
+    current = []
+    current_width = 0
+    space_width = _measure(draw, " ", font) if words_queue else 0
+
+    def flush():
+        nonlocal current, current_width
+        if current:
+            lines.append(" ".join(current))
+            current = []
+            current_width = 0
+
+    def add_word(w, add_space_before=True):
+        nonlocal current, current_width
+        wd = _measure(draw, w, font)
+        gap = (space_width if add_space_before and current else 0)
+        if current_width + gap + wd <= max_width:
+            current.append(w)
+            current_width += gap + wd
+            return True
+        return False
+
+    while words_queue:
+        w, is_suffix = words_queue.pop(0)
+        if add_word(w):
+            continue
+        segments = _hyphenate_word(w) if not is_suffix else []
+        # At most one hyphen per word; choose break that minimizes number of lines
+        if len(segments) >= 2 and current:
+            prefix, suffix = _best_single_break(segments, draw, font, max_width, space_width, current_width, words_queue, prefix_on_current=True)
+            if prefix is not None:
+                current.append(prefix)
+                flush()
+                if suffix:
+                    words_queue.insert(0, (suffix, True))
+                continue
+        flush()
+        if add_word(w, add_space_before=False):
+            continue
+        if len(segments) >= 2:
+            prefix, suffix = _best_single_break(segments, draw, font, max_width, space_width, 0, words_queue, prefix_on_current=False)
+            if prefix is not None:
+                lines.append(prefix)
+                if suffix:
+                    words_queue.insert(0, (suffix, True))
+                continue
+        # No hyphenation or single segment: one line or character-level break
+        if not segments or len(segments) == 1:
+            # No hyphenation: force onto new line (may overflow) or break at char level
+            if _measure(draw, w, font) <= max_width:
+                current = [w]
+                current_width = _measure(draw, w, font)
+            else:
+                for i in range(len(w) - 1, 0, -1):
+                    chunk = w[:i] + "-"
+                    if _measure(draw, chunk, font) <= max_width:
+                        lines.append(chunk)
+                        current = [w[i:]]
+                        current_width = _measure(draw, current[0], font)
+                        break
+                else:
+                    current = [w]
+                    current_width = _measure(draw, w, font)
+    flush()
     return lines
 
 
-def _draw_panel_text(image, quadrant_bounds: tuple, panel_content: dict, font, font_size: int, verbose: bool, style: dict = None, position: str = "bottom", h_align: str = "full", v_offset: int = 0):
+def _draw_panel_text(image, quadrant_bounds: tuple, panel_content: dict, font, font_size: int, verbose: bool, style: dict = None, position: str = "bottom", h_align: str = "full", v_offset: int = 0, bottom_slot: int = 0, quadrant_rect: Optional[list] = None):
     """Draw text in one panel. panel_content: {text, is_dialogue}.
-    position: "top" places box at the top of the panel, "bottom" (default) at the bottom.
-    h_align: "full" (default) spans the panel width, "left" anchors a narrower box to the left side,
-             "right" anchors it to the right side.
-    v_offset: extra pixels to push the box down (positive) or up (negative) from its default position.
+    quadrant_rect: optional [left, top, right, bottom] as fractions 0-1 of quadrant; when present, box is drawn in that rect.
+    position/h_align/v_offset/bottom_slot: used only when quadrant_rect is not provided.
     Dialogue -> speech bubble (light fill, dark text); narrative -> caption box (dark fill, light text).
     """
     text = (panel_content or {}).get("text", "") or ""
@@ -260,29 +615,76 @@ def _draw_panel_text(image, quadrant_bounds: tuple, panel_content: dict, font, f
     w = x1 - x0
     h = y1 - y0
     pad = max(4, min(w, h) // 30)
-    # Use slightly smaller font for long text so more fits
+    box_inset = max(2, min(w, h) // 50)
     if len(text) > 180:
         font_size = max(9, int(font_size * 0.85))
-    # Text area: small padding from panel edges
-    if h_align == "left":
-        box_x0 = x0 + pad
-        box_x1 = x0 + int(w * 0.90)
-    elif h_align == "right":
-        box_x0 = x1 - int(w * 0.90)
-        box_x1 = x1 - pad
-    else:  # "full"
-        box_x0 = x0 + pad
-        box_x1 = x1 - pad
-    box_w = box_x1 - box_x0
-    if position == "top":
-        box_y0 = y0 + pad + v_offset
-        box_y1 = y0 + int(h * 0.40) + v_offset
+
+    if quadrant_rect and len(quadrant_rect) >= 4:
+        rl, rt, rr, rb = quadrant_rect[:4]
+        box_x0 = x0 + int(rl * w)
+        box_y0 = y0 + int(rt * h)
+        box_x1 = x0 + int(rr * w)
+        box_y1 = y0 + int(rb * h)
     else:
-        box_y0 = y1 - int(h * 0.40) + v_offset
-        box_y1 = y1 - pad + v_offset
+        # Text area: box wider (smaller inset), padding slightly larger inside
+        if h_align == "left":
+            box_x0 = x0 + box_inset
+            box_x1 = x0 + int(w * 0.92)
+        elif h_align == "right":
+            box_x0 = x1 - int(w * 0.92)
+            box_x1 = x1 - box_inset
+        else:  # "full"
+            box_x0 = x0 + box_inset
+            box_x1 = x1 - box_inset
+        box_w = box_x1 - box_x0
+        padding_rect = max(3, pad // 2)
+        text_inset = max(4, padding_rect)
+        right_inset = text_inset + 10
+        max_text_width = max(50, int((box_w - text_inset - right_inset) * 0.92))
+        top_margin = 0 if (position == "top" and v_offset > 0) else pad
+        if position == "top":
+            box_y0 = y0 + top_margin + v_offset
+            box_y1 = y0 + int(h * 0.40) + v_offset
+        elif position == "middle":
+            if bottom_slot == 1:
+                box_y0 = y0 + int(h * 0.35) + v_offset
+                box_y1 = y0 + int(h * 0.50) + v_offset
+            elif bottom_slot == 2:
+                box_y0 = y0 + int(h * 0.50) + v_offset
+                box_y1 = y0 + int(h * 0.65) + v_offset
+            else:
+                box_y0 = y0 + int(h * 0.35) + v_offset
+                box_y1 = y0 + int(h * 0.65) + v_offset
+        else:
+            bottom_edge_margin = max(pad, int(h * 0.07))
+            bottom_limit = y1 - pad - bottom_edge_margin
+            if bottom_slot == 1:
+                box_y0 = y1 - int(h * 0.60) + v_offset
+                box_y1 = min(y1 - int(h * 0.40) + v_offset, bottom_limit)
+            elif bottom_slot == 2:
+                box_y0 = y1 - int(h * 0.40) + v_offset
+                box_y1 = min(y1 - pad + v_offset, bottom_limit)
+            else:
+                box_y0 = y1 - int(h * 0.40) + v_offset
+                box_y1 = min(y1 - pad + v_offset, bottom_limit)
+
+    box_w = box_x1 - box_x0
+    box_h = box_y1 - box_y0
+    padding_rect = max(3, pad // 2)
+    text_inset = max(4, padding_rect)
+    right_inset = text_inset + 10
+    # For lettering rects use actual box width (lower minimum) so narrow dialogue boxes wrap correctly
+    _min_wrap = 20 if (quadrant_rect and len(quadrant_rect) >= 4) else 50
+    max_text_width = max(_min_wrap, int((box_w - text_inset - right_inset) * 0.92))
 
     if not text or not text.strip():
         return
+
+    # When drawing in a specific rect, scale font to box height so text fits (match WYSIWYG editor, +20%)
+    if quadrant_rect and len(quadrant_rect) >= 4:
+        available_h = box_h - 2 * padding_rect
+        # Use a readable minimum (12) and a less aggressive cap (//6) so narrative boxes don't look too small
+        font_size = max(12, min(font_size, int((available_h // 6) * 1.2 * 1.1)))
 
     # Load font at size
     try:
@@ -303,8 +705,10 @@ def _draw_panel_text(image, quadrant_bounds: tuple, panel_content: dict, font, f
             pil_font = ImageFont.load_default()
 
     draw = ImageDraw.Draw(image)
-    lines = _wrap_text(draw, text, pil_font, int(box_w * 0.95))
+    lines = _wrap_text(draw, text, pil_font, int(max_text_width))
     max_lines = 8 if len(text) > 300 else 6
+    if quadrant_rect and len(quadrant_rect) >= 4:
+        max_lines = max(max_lines, 25)
     # If text still overflows, try a smaller font to fit more
     if len(lines) > max_lines:
         smaller_size = max(9, int(font_size * 0.80))
@@ -313,12 +717,12 @@ def _draw_panel_text(image, quadrant_bounds: tuple, panel_content: dict, font, f
         except Exception:
             smaller_font = pil_font
             smaller_size = font_size
-        lines = _wrap_text(draw, text, smaller_font, int(box_w * 0.95))
+        lines = _wrap_text(draw, text, smaller_font, int(max_text_width))
         if len(lines) <= max_lines + 2:
             pil_font = smaller_font
             font_size = smaller_size
         else:
-            lines = _wrap_text(draw, text, pil_font, int(box_w * 0.95))
+            lines = _wrap_text(draw, text, pil_font, int(max_text_width))
     if len(lines) > max_lines:
         lines = lines[:max_lines]
         lines[-1] = lines[-1].rstrip()
@@ -328,18 +732,118 @@ def _draw_panel_text(image, quadrant_bounds: tuple, panel_content: dict, font, f
     # Line height from font (tight)
     line_height = int(font_size * 1.15)
     total_h = len(lines) * line_height
-    if position == "top":
-        start_y = box_y0 + pad
+    if quadrant_rect and len(quadrant_rect) >= 4:
+        # Fixed rect: anchor at top
+        start_y = box_y0 + padding_rect
+        available_h = box_y1 - start_y - padding_rect
+        max_fit_lines = max(1, available_h // line_height)
+        if len(lines) > max_fit_lines:
+            # Try smaller font so all lines fit in the box instead of truncating
+            def _load_font(size):
+                try:
+                    return ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", size)
+                except (OSError, IOError):
+                    try:
+                        return ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", size)
+                    except (OSError, IOError):
+                        return None
+            fit_font = pil_font
+            fit_size = font_size
+            fit_lines = lines
+            for try_size in range(font_size - 1, 7, -1):
+                if try_size < 8:
+                    break
+                try_font = _load_font(try_size)
+                if try_font is None:
+                    continue
+                try_lines = _wrap_text(draw, text, try_font, int(max_text_width))
+                if len(try_lines) > max_lines:
+                    try_lines = try_lines[:max_lines]
+                    if try_lines and len(try_lines[-1]) > 15:
+                        try_lines[-1] = try_lines[-1][: len(try_lines[-1]) - 3].rsplit(" ", 1)[0] + "…"
+                try_lh = int(try_size * 1.15)
+                try_fit = max(1, available_h // try_lh)
+                if len(try_lines) <= try_fit:
+                    fit_font = try_font
+                    fit_size = try_size
+                    fit_lines = try_lines
+                    break
+            pil_font = fit_font
+            font_size = fit_size
+            lines = fit_lines
+            line_height = int(font_size * 1.15)
+            max_fit_lines = max(1, available_h // line_height)
+            if len(lines) > max_fit_lines:
+                lines = lines[:max_fit_lines]
+                if lines and len(lines[-1]) > 15:
+                    lines[-1] = lines[-1][: len(lines[-1]) - 3].rsplit(" ", 1)[0] + "…"
+        total_h = len(lines) * line_height
+        # Reclaim empty space: scale up font to fill the box when there's unused height
+        unused_h = available_h - total_h
+        fill_cap = 40 if not is_dialogue else 32
+        if len(lines) >= 1 and unused_h > 2:
+            n = len(lines)
+            target_line_height = available_h / n
+            fill_font_size = max(font_size, min(fill_cap, int(target_line_height / 1.15) + 1))
+            try_lh = int(fill_font_size * 1.15)
+            if n * try_lh > available_h:
+                fill_font_size = max(font_size, min(fill_cap, int(target_line_height / 1.15)))
+            if fill_font_size > font_size:
+                fill_font = None
+                try:
+                    fill_font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", fill_font_size)
+                except (OSError, IOError):
+                    try:
+                        fill_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", fill_font_size)
+                    except (OSError, IOError):
+                        pass
+                if fill_font is not None:
+                    available_w = max(1, box_w - text_inset - right_inset)
+                    max_line_w = max(_measure(draw, line, fill_font) for line in lines)
+                    if max_line_w > available_w:
+                        fill_font_size = max(font_size, min(fill_font_size, int(fill_font_size * available_w / max_line_w)))
+                    if fill_font_size > font_size:
+                        try:
+                            fill_font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", fill_font_size)
+                        except (OSError, IOError):
+                            try:
+                                fill_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", fill_font_size)
+                            except (OSError, IOError):
+                                fill_font = None
+                        if fill_font is not None:
+                            pil_font = fill_font
+                            font_size = fill_font_size
+                            line_height = int(font_size * 1.15)
+                            total_h = len(lines) * line_height
+        # #region agent log
+        try:
+            import time
+            _unused = available_h - total_h
+            _log = {"location": "overlay_storyboard_text.py:_draw_panel_text", "message": "lettering rect text fill", "data": {"box_h": box_h, "padding_rect": padding_rect, "available_h": available_h, "font_size": font_size, "line_height": line_height, "max_fit_lines": max_fit_lines, "num_lines": len(lines), "total_h": total_h, "unused_h": _unused, "is_dialogue": is_dialogue}, "timestamp": int(time.time() * 1000), "hypothesisId": "H1", "runId": "post-fix"}
+            _f = open("/Users/heffrey/src/dev-jesus/.cursor/debug.log", "a")
+            _f.write(__import__("json").dumps(_log) + "\n")
+            _f.close()
+        except Exception:
+            pass
+        # #endregion
+    elif position == "top" or position == "middle":
+        start_y = box_y0 + max(1, top_margin if position == "top" else padding_rect)
     else:
-        # Anchor text flush to bottom of panel (only small padding_rect gap below)
         start_y = box_y1 - total_h
 
     # Dialogue = speech bubble (light fill, dark text); narrative = caption box (dark fill, light text)
-    padding_rect = max(2, pad // 3)
-    rect_top = max(box_y0, start_y - padding_rect)
-    rect_bottom = min(box_y1, start_y + total_h + padding_rect)
-    rect_left = box_x0
-    rect_right = box_x1
+    if quadrant_rect and len(quadrant_rect) >= 4:
+        # Respect exact rect from WYSIWYG editor (all four corners, including bottom)
+        rect_left = box_x0
+        rect_top = box_y0
+        rect_right = box_x1
+        rect_bottom = box_y1
+    else:
+        rect_top = max(box_y0, start_y - padding_rect)
+        rect_bottom = min(box_y1, start_y + total_h + padding_rect)
+        rect_left = box_x0
+        rect_right = box_x1
+    content_w = max(_measure(draw, line, pil_font) for line in lines) if lines else 0
     if is_dialogue:
         # Speech bubble: Bone White fill, Obsidian text, thin dark outline
         box_fill = style.get("text_color", (245, 245, 240)) if style else (245, 245, 240)  # Bone White
@@ -359,10 +863,8 @@ def _draw_panel_text(image, quadrant_bounds: tuple, panel_content: dict, font, f
     )
     for i, line in enumerate(lines):
         y = start_y + i * line_height
-        # Center horizontally in box
-        bbox = draw.textbbox((0, 0), line, font=pil_font)
-        tw = bbox[2] - bbox[0]
-        tx = box_x0 + (box_w - tw) // 2
+        # Left-justify text in box
+        tx = box_x0 + text_inset
         draw.text((tx, y), line, font=pil_font, fill=text_color)
 
 
@@ -373,11 +875,15 @@ def _overlay_one_image(
     verbose: bool,
     use_ocr: bool = True,
     style: dict = None,
+    setting_label: str = None,
+    avoid_faces: bool = False,
+    lettering_rects: Optional[dict] = None,
 ) -> None:
     """Overlay up to 4 panel contents onto one storyboard image (2x2 grid).
-    Each item is {text, is_dialogue}; dialogue drawn as speech bubble, narrative as caption.
-    If use_ocr and pytesseract available, covers detected text in each quadrant before drawing.
-    style: from _parse_style_from_definitions (box_fill, text_color, outline_color) for lettering/box colors.
+    Each panel in panel_contents is {narrative, dialogue}.
+    setting_label: optional location/setting text drawn at top of first panel.
+    lettering_rects: optional {setting_rect: [l,t,r,b], panels: [{narrative_rect, dialogue_rect}, ...]} (0-1 fractions).
+    When lettering_rects is provided, boxes are drawn at those positions instead of rule-based placement.
     """
     try:
         from PIL import Image
@@ -402,29 +908,71 @@ def _overlay_one_image(
             merged = _merge_overlapping_bboxes(bboxes, margin=12)  # merge nearby so we cover full text blocks
             _cover_text_bboxes(img, merged, pad=8, fill_color=cover_color)  # generous pad to fully hide text
 
-    # Font size: readable but not overwhelming (between previous too-big and too-small)
-    font_size = max(11, min(20, half_h // 22))
+    # Face-aware placement: when avoid_faces and OpenCV available, detect faces and avoid top if overlap
+    avoid_top = [False] * 4
+    face_bboxes_per_panel = [[] for _ in range(4)]
+    if avoid_faces and _CV2_AVAILABLE:
+        for i, bounds in enumerate(quadrants):
+            face_bboxes = _faces_in_quadrant(img, bounds)
+            face_bboxes_per_panel[i] = face_bboxes
+            avoid_top[i] = _top_region_overlaps_faces(bounds, face_bboxes, top_fraction=0.45)
+
+    # Font size: scale down to match WYSIWYG editor scale and avoid truncated text in lettered images (+20%)
+    font_size = max(9, min(14, half_h // 36))
+    font_size = max(9, min(19, int(font_size * 1.2 * 1.1)))
+
+    # Lettering rects from editor (0-1 fractions per quadrant)
+    lrects = lettering_rects or {}
+    setting_rect = lrects.get("setting_rect")
+    panel_rects = (lrects.get("panels") or [{}] * 4)[:4]
+
+    # Draw setting label first in its own caption-style box (bold) at top of first panel; reserve space below it
+    setting_height = 0
+    if setting_label and setting_label.strip():
+        setting_height = _draw_setting_label(
+            img, quadrants[0], setting_label.strip(), font_size, style=style, setting_rect=setting_rect
+        )
+        if verbose:
+            print(f"      Setting: {setting_label.strip()[:50]}{'…' if len(setting_label) > 50 else ''}")
 
     empty = {"narrative": "", "dialogue": ""}
     contents = (panel_contents[:4] + [empty] * 4)[:4]
     for i, (bounds, content) in enumerate(zip(quadrants, contents)):
+        prect = panel_rects[i] if i < len(panel_rects) else {}
         narrative = content.get("narrative", "")
         dialogue = content.get("dialogue", "")
         if verbose and (narrative or dialogue):
             for label, t in [("narrative", narrative), ("dialogue", dialogue)]:
                 if t:
                     print(f"      Panel {i + 1} ({label}): {t[:50]}{'…' if len(t) > 50 else ''}")
-        # When both: dialogue as bubble at top, narrative as caption at bottom
+        dialogue_rect = prect.get("dialogue_rect") if isinstance(prect.get("dialogue_rect"), (list, tuple)) and len(prect.get("dialogue_rect")) >= 4 else None
+        narrative_rect = prect.get("narrative_rect") if isinstance(prect.get("narrative_rect"), (list, tuple)) and len(prect.get("narrative_rect")) >= 4 else None
         pos = "top" if i == 0 else "bottom"
         h_align = "left" if i == 1 else "full"
         v_off = 150 if i == 1 else 0
-        # Panel 1 (top-right): narrative-only box at top so it doesn't overlap art in bottom-right
-        narrative_pos = "bottom" if dialogue else ("top" if (i == 1 and narrative) else pos)
+        panel0_offset = setting_height if i == 0 else 0
+        narrative_pos = "bottom" if dialogue else ("bottom" if (i == 1 and narrative and avoid_faces) else ("top" if (i == 1 and narrative) else pos))
         narrative_v_off = v_off if (not dialogue and narrative_pos == "bottom" and i == 1) else 0
+        if avoid_top[i]:
+            dialogue_pos = "bottom"
+            narrative_pos = "bottom"
+            both_bottom = bool(dialogue and narrative)
+        else:
+            dialogue_pos = "top"
+            both_bottom = False
         if dialogue:
-            _draw_panel_text(img, bounds, {"text": dialogue, "is_dialogue": True}, None, font_size, verbose, style=style, position="top", h_align=h_align, v_offset=0)
+            _draw_panel_text(
+                img, bounds, {"text": dialogue, "is_dialogue": True}, None, font_size, verbose, style=style,
+                position=dialogue_pos, h_align=h_align, v_offset=panel0_offset if dialogue_pos == "top" else 0,
+                bottom_slot=1 if both_bottom else 0, quadrant_rect=dialogue_rect,
+            )
         if narrative:
-            _draw_panel_text(img, bounds, {"text": narrative, "is_dialogue": False}, None, font_size, verbose, style=style, position=narrative_pos, h_align=h_align, v_offset=narrative_v_off)
+            first_panel_top_offset = panel0_offset if (i == 0 and narrative_pos == "top") else 0
+            _draw_panel_text(
+                img, bounds, {"text": narrative, "is_dialogue": False}, None, font_size, verbose, style=style,
+                position=narrative_pos, h_align=h_align, v_offset=narrative_v_off + first_panel_top_offset,
+                bottom_slot=2 if both_bottom else 0, quadrant_rect=narrative_rect,
+            )
 
     os.makedirs(os.path.dirname(output_path) or ".", exist_ok=True)
     img.save(output_path, "JPEG", quality=92)
@@ -438,17 +986,24 @@ def main() -> int:
     )
     parser.add_argument("--scene", required=True, help="Path to scene markdown (e.g. stories/claude/scenes/scene-0001.md)")
     parser.add_argument("--boards-dir", required=True, help="Directory containing storyboard images")
+    parser.add_argument("--lettering-dir", default=None, help="Directory of per-image lettering JSON (e.g. stories/claude/lettering). When a scene-XXXX-Y.json exists for an image, use it instead of scene-derived content and optional rects for box positions.")
     parser.add_argument("--definitions-file", default=None, help="Path to definitions.json (optional; used for style.palette: box/text colors and lettering)")
     parser.add_argument("--output-dir", default=None, help="Where to write lettered images (default: same as --boards-dir)")
     parser.add_argument("--in-place", action="store_true", help="Overwrite original images instead of writing -lettered files")
     parser.add_argument("--no-ocr", action="store_true", help="Do not use OCR to cover existing text (default: use if pytesseract and Tesseract available)")
+    parser.add_argument("--avoid-faces", action="store_true", help="Snap narrative/dialogue boxes to bottom when face detection finds faces in top of panel (requires opencv-python-headless)")
     parser.add_argument("--verbose", "-v", action="store_true", help="Print progress and panel text")
+    parser.add_argument("--print-lettering", action="store_true", help="Print lettering JSON to stdout for one image (use with --for-image); no drawing.")
+    parser.add_argument("--for-image", default=None, metavar="BASENAME", help="With --print-lettering: image basename (e.g. scene-0001-1.jpg) to output lettering for.")
     args = parser.parse_args()
 
     boards_dir = os.path.abspath(args.boards_dir)
     output_dir = os.path.abspath(args.output_dir or boards_dir)
     if args.in_place:
         output_dir = boards_dir
+    lettering_dir = os.path.abspath(args.lettering_dir) if args.lettering_dir else None
+    if lettering_dir and not os.path.isdir(lettering_dir):
+        os.makedirs(lettering_dir, exist_ok=True)
 
     if not os.path.isfile(args.scene):
         print(f"Scene file not found: {args.scene}", file=sys.stderr)
@@ -462,7 +1017,6 @@ def main() -> int:
 
     scene_text = gen.read_text(args.scene)
     scene_id = gen.build_scene_id(args.scene)
-    # Load style from definitions for lettering/box colors (Obsidian, Bone White, etc.)
     style = {}
     if args.definitions_file and os.path.isfile(args.definitions_file):
         definitions = gen.load_definitions(args.definitions_file)
@@ -477,6 +1031,42 @@ def main() -> int:
     if args.verbose:
         print(f"Scene: {scene_id}, chunks: {len(storyboard_chunks)}, images: {len(image_list)}")
 
+    if args.print_lettering and args.for_image:
+        want_base = os.path.basename(args.for_image).replace("-lettered", "")
+        for sb_idx, img_path in image_list:
+            base = os.path.basename(img_path)
+            name = base.replace("-lettered", "") if "-lettered" in base else base
+            name_no_ext, _ = os.path.splitext(name)
+            want_no_ext, _ = os.path.splitext(want_base)
+            if name_no_ext != want_no_ext:
+                continue
+            if sb_idx > len(storyboard_chunks):
+                break
+            chunk_title, chunk_text = storyboard_chunks[sb_idx - 1]
+            all_items = _extract_scene_content_for_panels(chunk_text, max_panels=4)
+            panel_texts = _merge_content_to_panels(all_items, num_panels=4)
+            setting_label = _setting_label_from_chunk_title(chunk_title)
+            default_setting_rect = [0.05, 0.025, 0.95, 0.075]
+            default_dialogue_rect = [0.05, 0.1, 0.95, 0.4]
+            default_narrative_rect = [0.05, 0.65, 0.95, 0.95]
+            lettering_out = {
+                "setting_label": setting_label or "",
+                "setting_rect": default_setting_rect,
+                "panels": [
+                    {
+                        "narrative": p.get("narrative", ""),
+                        "dialogue": p.get("dialogue", ""),
+                        "narrative_rect": default_narrative_rect,
+                        "dialogue_rect": default_dialogue_rect,
+                    }
+                    for p in (panel_texts[:4] + [{"narrative": "", "dialogue": ""}] * 4)[:4]
+                ],
+            }
+            print(json.dumps(lettering_out, indent=2))
+            return 0
+        print("{}")
+        return 0
+
     for sb_idx, img_path in image_list:
         if sb_idx > len(storyboard_chunks):
             if args.verbose:
@@ -485,17 +1075,59 @@ def main() -> int:
         chunk_title, chunk_text = storyboard_chunks[sb_idx - 1]
         all_items = _extract_scene_content_for_panels(chunk_text, max_panels=4)
         panel_texts = _merge_content_to_panels(all_items, num_panels=4)
+        setting_label = _setting_label_from_chunk_title(chunk_title)
+        lettering_rects = None
+
+        default_setting_rect = [0.05, 0.025, 0.95, 0.075]
+        default_dialogue_rect = [0.05, 0.1, 0.95, 0.4]
+        default_narrative_rect = [0.05, 0.65, 0.95, 0.95]
+
+        if lettering_dir:
+            lettering_path = _lettering_json_path_for_image(img_path, lettering_dir)
+            lettering_data = _load_lettering_json(lettering_path)
+            if lettering_data:
+                panel_texts = (lettering_data.get("panels", [])[:4] + [{"narrative": "", "dialogue": ""}] * 4)[:4]
+                setting_label = (lettering_data.get("setting_label") or "").strip() or setting_label
+                lettering_rects = {
+                    "setting_rect": lettering_data.get("setting_rect"),
+                    "panels": [
+                        {"narrative_rect": p.get("narrative_rect"), "dialogue_rect": p.get("dialogue_rect")}
+                        for p in lettering_data.get("panels", [])[:4]
+                    ],
+                }
+            else:
+                # Missing lettering file: write one from scene-derived content so the lettering folder is backfilled
+                lettering_out = {
+                    "setting_label": setting_label or "",
+                    "setting_rect": default_setting_rect,
+                    "panels": [
+                        {
+                            "narrative": p.get("narrative", ""),
+                            "dialogue": p.get("dialogue", ""),
+                            "narrative_rect": default_narrative_rect,
+                            "dialogue_rect": default_dialogue_rect,
+                        }
+                        for p in (panel_texts[:4] + [{"narrative": "", "dialogue": ""}] * 4)[:4]
+                    ],
+                }
+                os.makedirs(os.path.dirname(lettering_path) or ".", exist_ok=True)
+                with open(lettering_path, "w", encoding="utf-8") as f:
+                    json.dump(lettering_out, f, indent=2)
+                if args.verbose:
+                    print(f"      Wrote lettering {os.path.basename(lettering_path)}")
 
         if args.verbose:
             print(f"  {os.path.basename(img_path)} -> chunk {sb_idx}: {chunk_title}")
 
         base = os.path.basename(img_path)
         name, ext = os.path.splitext(base)
+        if name.endswith("-lettered"):
+            name = name[: -len("-lettered")]
         if args.in_place:
             out_path = os.path.join(output_dir, base)
         else:
             out_path = os.path.join(output_dir, f"{name}-lettered.jpg")
-        _overlay_one_image(img_path, panel_texts, out_path, args.verbose, use_ocr=not args.no_ocr, style=style)
+        _overlay_one_image(img_path, panel_texts, out_path, args.verbose, use_ocr=not args.no_ocr, style=style, setting_label=setting_label, avoid_faces=args.avoid_faces, lettering_rects=lettering_rects)
 
     if args.verbose:
         print("Done.")

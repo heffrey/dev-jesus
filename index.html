@@ -139,6 +139,35 @@
             text-align: center;
         }
 
+        .edit-lettering-link {
+            margin-top: 16px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .edit-lettering-link a {
+            color: var(--accent-color, #4B0082);
+            font-weight: 500;
+        }
+
+        .edit-lettering-link a:hover {
+            text-decoration: underline;
+        }
+
+        .edit-lettering-hint {
+            display: block;
+            margin-top: 6px;
+            color: #666;
+            font-size: 12px;
+        }
+
+        .edit-lettering-hint code {
+            background: #eee;
+            padding: 1px 4px;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+
         .github-link {
             margin-top: 20px;
             display: flex;
@@ -367,6 +396,7 @@
                 <option value="99nights">99 Nights</option>
                 <option value="france">France</option>
                 <option value="hunter">Hunter</option>
+                <option value="claude">Claude</option>
             </select>
         </div>
         
@@ -386,6 +416,11 @@
             
             <div class="keyboard-hint">
                 Use arrow keys to navigate
+            </div>
+
+            <div class="edit-lettering-link">
+                <a href="#" id="edit-lettering-btn" title="Open the Lettering Editor app to edit narrative and dialogue boxes">Edit lettering</a>
+                <span class="edit-lettering-hint" id="edit-lettering-hint">Run the Lettering Editor app from <code>lettering-editor/</code> (npm start), then select this story and image.</span>
             </div>
         </div>
 
@@ -444,6 +479,13 @@
                 accent: '#8B0000',      // Dark red from flannel shirts
                 accentHover: '#6b0000',
                 accentShadow: 'rgba(139, 0, 0, 0.4)'
+            },
+            'claude': {
+                // Obsidian, Bone White, Signal Violet, Breach Red (definitions.json)
+                gradient: 'linear-gradient(135deg, #0a0a0c 0%, #8a2be2 100%)',
+                accent: '#8a2be2',      // Signal Violet
+                accentHover: '#6a1bc2',
+                accentShadow: 'rgba(138, 43, 226, 0.4)'
             },
             'pancake': {
                 // Suburban Grey (#A9A9A9), Maple Amber (#FFBF00), Burnt Flour (#8B4513), Dusty Rose (#DCAE96), Blackberry Bruise (#4B0082)
@@ -608,6 +650,18 @@
                 'stories/hunter/boards/scene-0003-1.jpg',
                 'stories/hunter/boards/scene-0003-2.jpg'
             ],
+            'claude': [
+                'stories/claude/boards/lettered/scene-0001-1-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0001-2-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0001-3-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0001-4-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0001-5-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0001-6-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0002-1-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0002-2-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0002-3-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0002-4-lettered.jpg'
+            ],
             'pancake': [
                 'stories/pancake/boards/scene-0001-1.jpg',
                 'stories/pancake/boards/scene-0001-2.jpg',
@@ -688,6 +742,10 @@
                 updateImage();
             }
         }
+
+        document.getElementById('edit-lettering-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+        });
 
         // Keyboard navigation
         document.addEventListener('keydown', (e) => {

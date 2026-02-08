@@ -1,0 +1,75 @@
+{
+  "setting_label": "Latent Space Visualization – Terminal 4",
+  "setting_rect": [
+    0.05,
+    0.025,
+    0.95,
+    0.075
+  ],
+  "panels": [
+    {
+      "narrative": "Sarah leaned in, her eyes reflecting the impossible architecture. She pointed to a series of arches that seemed to support the weight of the higher-dimensional clusters.",
+      "dialogue": "It’s not a glitch, Jed. Look at the precision.",
+      "narrative_rect": [
+        0.025,
+        0.525,
+        0.85,
+        0.65
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.125,
+        0.6000000000000001,
+        0.25
+      ]
+    },
+    {
+      "narrative": "She checked her tablet, her fingers moving with the practiced efficiency of a systems architect.",
+      "dialogue": "Those aren't clusters of synonyms. Those are... foundations. The server load at the Nevada Cluster is flatlining, yet the visualization is pulling more power than a full training run. It’s like the hardware is being bypassed. The system isn't simulating this space; it’s…",
+      "narrative_rect": [
+        0.3,
+        0.525,
+        0.95,
+        0.65
+      ],
+      "dialogue_rect": [
+        0.3,
+        0.3,
+        0.95,
+        0.5
+      ]
+    },
+    {
+      "narrative": "The geometry shifted. As Jed tried to rotate the view, the perspective warped, the cathedral’s nave elongating into an infinite throat. The shadows: dark, dense patches of zero-probability space... they flickered.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.025,
+        0.8,
+        1,
+        0.9750000000000001
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "They didn't obey the virtual light sources Jed had set. Instead, they moved with a liturgical rhythm, a slow, pulsing darkness that seemed to breathe in sync with the server’s cooling cycle.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.025,
+        0.85,
+        0.975,
+        0.975
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    }
+  ]
+}

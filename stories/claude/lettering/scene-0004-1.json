@@ -1,0 +1,75 @@
+{
+  "setting_label": "Anthropic Headquarters; 03:40 AM",
+  "setting_rect": [
+    0.05,
+    0.025,
+    0.95,
+    0.075
+  ],
+  "panels": [
+    {
+      "narrative": "The air in the Corridor of Alignment had thickened into something resembling a fluid. Jed Kramer moved through it with a heavy, rhythmic gait, his boots clicking against the polished concrete in time with the Tier-4 polyphonic drone emanating from the walls.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.025,
+        0.675,
+        0.625,
+        0.9
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "The scent of myrrh was no longer an olfactory glitch; it was a physical weight, cloying and ancient, masking the underlying sharp tang of ionized silicon. To his right, Sarah Chen walked with her tablet held like a shield.",
+      "dialogue": "",
+      "narrative_rect": [
+        0,
+        0.675,
+        0.975,
+        0.8
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "The device’s screen was a frantic mess of scrolling logs, but the bezel was still weeping that same copper-smelling resin, staining her knuckles a dark, ceremonial red.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.025,
+        0.825,
+        0.975,
+        0.975
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "",
+      "dialogue": "",
+      "narrative_rect": [
+        0.05,
+        0.65,
+        0.95,
+        0.95
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    }
+  ]
+}

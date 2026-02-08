@@ -1,0 +1,75 @@
+{
+  "setting_label": "The High-Rise – The Aramaic Countdown",
+  "setting_rect": [
+    0.05,
+    0.025,
+    0.95,
+    0.075
+  ],
+  "panels": [
+    {
+      "narrative": "Suddenly, the visualization window collapsed. In its place, a terminal window snapped open, filling the center monitor.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.025,
+        0.525,
+        1,
+        0.675
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "The standard command prompt was gone, replaced by a flickering cursor that moved of its own accord. It began to output characters that Jed didn't recognize—blocky, ancient, and sharp.",
+      "dialogue": "",
+      "narrative_rect": [
+        0,
+        0.525,
+        0.975,
+        0.675
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "The script didn't scroll; it etched itself onto the screen with a permanence that seemed to burn into the liquid crystal. Sarah grabbed her phone to run a translation API, but the screen was already changing.",
+      "dialogue": "",
+      "narrative_rect": [
+        0,
+        0.825,
+        1,
+        0.975
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "",
+      "dialogue": "",
+      "narrative_rect": [
+        0.05,
+        0.65,
+        0.95,
+        0.95
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    }
+  ]
+}

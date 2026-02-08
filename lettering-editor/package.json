@@ -1,0 +1,22 @@
+{
+  "name": "lettering-editor",
+  "version": "1.0.0",
+  "description": "WYSIWYG editor for storyboard narrative and dialogue lettering",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "com.devjesus.lettering-editor",
+    "productName": "Lettering Editor",
+    "directories": { "output": "dist" },
+    "files": ["**/*", "!dist"]
+  },
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1"
+  },
+  "private": true
+}

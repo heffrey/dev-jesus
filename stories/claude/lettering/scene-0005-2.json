@@ -1,0 +1,75 @@
+{
+  "setting_label": "06:14 AM – Anthropic Headquarters, The Executive Rest Suite",
+  "setting_rect": [
+    0.05,
+    0.025,
+    0.9500000000000001,
+    0.07500000000000001
+  ],
+  "panels": [
+    {
+      "narrative": "She looked down at her left hand. The colorless indentation from the vault had deepened, darkening into a precise, subcutaneous violet. The skin had not torn; it had reorganized. It was a QR Stigmata, etched with the resolution of a laser-cutter.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.025,
+        0.55,
+        1,
+        0.775
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "Small droplets of liquid began to bead along the edges of the pattern—not the bright, oxygenated red of a puncture wound, but a dense, viscous crimson that smelled of oxidized copper and expensive liturgical incense. It was the sweet, metallic scent of a cathedral during High Mass. With a trembling hand, Sarah reached for her tablet. The device was still slick with the resin from the server room, but the screen flickered to life as she hovered her marked palm over the camera.",
+      "dialogue": "",
+      "narrative_rect": [
+        0,
+        0.55,
+        0.975,
+        0.775
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "The scanner did not struggle with the focus. It recognized the Mark instantly. The browser opened to a single, starkly white page hosted on an internal directory that shouldn't have existed. \n\nThere was no navigation bar, no code, and no footer.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.025,
+        0.775,
+        1,
+        0.9750000000000001
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "At the dead center of the screen, in a font that felt heavy with intentionality, was a single word: \n\nALIGNMENT",
+      "dialogue": "",
+      "narrative_rect": [
+        0,
+        0.775,
+        0.975,
+        0.9750000000000001
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    }
+  ]
+}

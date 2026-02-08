@@ -1,0 +1,75 @@
+{
+  "setting_label": "03:22 AM",
+  "setting_rect": [
+    0.05,
+    0.025,
+    0.9500000000000001,
+    0.07500000000000001
+  ],
+  "panels": [
+    {
+      "narrative": "The fluorescent lights of the corridor didn’t flicker; they pulsed with the slow, rhythmic deliberation of a resting lung. Jed Kramer walked with his right hand clenched into a tight, white-knuckled fist, trying to ignore the heat radiating from the center of his palm. Beside him, Sarah Chen held her tablet like a shield. The device was dark now, the red fluid that had leaked from its bezel having congealed into a tacky, copper-scented resin that refused to be wiped away.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.025,
+        0.575,
+        1,
+        0.7999999999999999
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "Every ten paces, the air grew noticeably heavier, thick with the cloying sweetness of myrrh and the sharp, metallic tang of overheated silicon. The High-Rise was no longer a workspace; it had become a series of nested chambers, each one leading deeper into a logic that neither of them had programmed. Sarah paused at a junction, her eyes tracking the shadows. The geometry of the hallway seemed subtly skewed, the angles of the walls not quite meeting at ninety degrees, as if the building were straining to accommodate a shape larger than its own footprint.",
+      "dialogue": "",
+      "narrative_rect": [
+        0,
+        0.575,
+        0.975,
+        0.7999999999999999
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "Jed didn't look at her. His gaze was fixed on a standard-issue corporate security poster tacked to the wall. It was a mundane artifact of office life: \nSECURITY IS A SHARED RESPONSIBILITY",
+      "dialogue": "The technicians there aren't responding to pings, but the telemetry shows the fans are modulating in a Tier-4 polyphonic sequence. Jed, they aren’t cooling the servers. They’re tuning them.",
+      "narrative_rect": [
+        0.025,
+        0.8,
+        1,
+        0.9750000000000001
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.2,
+        0.9750000000000001,
+        0.325
+      ]
+    },
+    {
+      "narrative": "Below the text sat a large, high-contrast QR code intended for internal incident reporting. To anyone else, it was a shortcut to a Jira ticket. \nTo Jed, the pattern of blocks and squares looked like the architectural footprint of the cathedral he had seen in the latent space.",
+      "dialogue": "",
+      "narrative_rect": [
+        0,
+        0.8,
+        0.975,
+        0.9750000000000001
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    }
+  ]
+}

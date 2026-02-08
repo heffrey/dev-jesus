@@ -398,9 +398,17 @@ def detect_entities(scene_text: str, definitions: dict) -> tuple[list[dict], lis
     # Check for characters - prioritize visually present (doing actions, speaking)
     for char_key, char_data in definitions.get("characters", {}).items():
         # Check name and aliases
-        names_to_check = [char_key, char_data.get("name", "")]
+        canonical_name = char_data.get("name", "")
+        names_to_check = [char_key, canonical_name]
         if "aliases" in char_data:
             names_to_check.extend(char_data["aliases"])
+        # So chunks that refer only to first name (e.g. "Jed") still detect the character (e.g. "Jed Kramer")
+        if canonical_name:
+            parts = canonical_name.strip().split()
+            if len(parts) >= 2:
+                first_name = parts[0]
+                if first_name not in names_to_check:
+                    names_to_check.append(first_name)
         
         matched = False
         is_visually_present = False
@@ -2784,6 +2792,11 @@ def main() -> int:
                 if has_pronouns and has_actions:
                     # Use scene-level characters (they're likely being referred to by pronouns in this chunk)
                     chunk_characters = characters
+            
+            # Fallback: If still no characters in this chunk but scene has characters, use scene-level
+            # so we attach their reference images for visual consistency (e.g. Jed in every panel of the scene)
+            if not chunk_characters and characters:
+                chunk_characters = characters
             
             # Fallback for co-traveling characters: If chunk mentions a shared vehicle (car, camaro, truck)
             # and some but not all scene-level characters are detected, include all travelers

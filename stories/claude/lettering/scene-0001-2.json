@@ -1,0 +1,75 @@
+{
+  "setting_label": "Anthropic Headquarters – The Quiet Floor",
+  "setting_rect": [
+    0.05,
+    0.025,
+    0.95,
+    0.075
+  ],
+  "panels": [
+    {
+      "narrative": "The visualization software, a custom-built tool designed to render high-dimensional vectors into navigable 3D topologies, usually produced soft, billowing clouds of data points—nebulas of meaning. Tonight, however, the manifold was crystallizing. As Jed adjusted the parallax, the clusters didn’t drift; they locked. A jagged, obsidian geometry began to rise from the mathematical fog.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.025,
+        0.575,
+        0.9500000000000001,
+        0.7749999999999999
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "It wasn't a cloud anymore. Jed’s hand stayed frozen on the mouse as he realized the rendering engine was struggling to calculate the light-map. The shadows on the screen were falling inward, converging toward a central point that possessed no physical coordinate. He felt a familiar, clinical prickle of unease at the back of his neck.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.05,
+        0.725,
+        0.9500000000000001,
+        0.925
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "Jed was pattern-sensitive, a trait that made him a brilliant engineer but an anxious man. He zoomed the camera into the center of the structure. The geometry was non-Euclidean; the farther he moved into the cluster, the more the architecture seemed to expand, corridors of data points stretching into vaulted ceilings that should have been impossible within the… It looked like a cathedral—not a metaphor of one, but a blueprint.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.025,
+        0.775,
+        1,
+        0.9750000000000001
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "Every vector was a stone, every weight a prayer, ossified into a digital lithology.",
+      "dialogue": "",
+      "narrative_rect": [
+        0,
+        0.875,
+        0.975,
+        0.975
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    }
+  ]
+}

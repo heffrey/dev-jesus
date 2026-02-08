@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lettering Editor</title>
+  <link rel="stylesheet" href="editor.css">
+</head>
+<body>
+  <header class="toolbar">
+    <div class="toolbar-row">
+      <span class="project-root-label">Project: <strong id="project-root-display">—</strong></span>
+      <button type="button" id="btn-project">Change…</button>
+      <span class="sep">|</span>
+      <label>Story:</label>
+      <select id="story-select"><option value="">—</option></select>
+      <label>Image:</label>
+      <button type="button" id="btn-prev-image" title="Previous page">←</button>
+      <select id="image-select"><option value="">—</option></select>
+      <button type="button" id="btn-next-image" title="Next page">→</button>
+      <button type="button" id="btn-save">Save lettering</button>
+      <button type="button" id="btn-overlay">Run overlay</button>
+      <span class="sep">|</span>
+      <label class="toggle-label"><input type="checkbox" id="show-lettered" /> Show lettered</label>
+    </div>
+    <div id="overlay-status" class="status"></div>
+  </header>
+  <main class="editor-main">
+    <div id="editor-scale-container" class="editor-scale-container">
+      <div id="editor-wrap" class="editor-wrap">
+        <div id="editor-container" class="editor-container">
+        <img id="board-image" alt="Storyboard" />
+        <div id="grid-overlay" class="grid-overlay" aria-hidden="true"></div>
+        <div id="quadrants" class="quadrants"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script src="renderer.js"></script>
+</body>
+</html>
