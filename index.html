@@ -223,6 +223,44 @@
             box-shadow: 0 0 0 3px var(--accent-shadow, rgba(75, 0, 130, 0.1));
         }
 
+        /* 9:16 portrait storyboards (e.g. Claude): almost full container width, tall image */
+        .viewer--portrait.viewer {
+            max-width: 100%;
+        }
+        .viewer--portrait .image-container {
+            aspect-ratio: 9/16;
+            width: 100%;
+            /* No max-height on desktop: width drives size so strip is full container width; page scrolls for height */
+        }
+        .viewer--portrait .image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        /* Mobile portrait: cap height so panel fits viewport without forcing narrow width on desktop */
+        @media (max-width: 768px) and (orientation: portrait) {
+            .viewer--portrait .image-container {
+                max-height: 80vh;
+            }
+            .viewer--portrait .image-container img {
+                max-height: 80vh;
+                width: auto;
+                max-width: 100%;
+            }
+        }
+        @media (max-width: 480px) and (orientation: portrait) {
+            .viewer--portrait.viewer {
+                margin-bottom: 20px;
+            }
+            .viewer--portrait .image-container {
+                max-height: 80vh;
+                border-radius: 12px;
+            }
+            .viewer--portrait .image-container img {
+                max-height: 80vh;
+            }
+        }
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 1.8em;
@@ -389,14 +427,14 @@
         <div class="story-selector">
             <label for="story-folder">Story:</label>
             <select id="story-folder" onchange="changeStoryFolder()">
-                <option value="executive" selected>Executive</option>
+                <option value="claude" selected>Claude</option>
+                <option value="executive">Executive</option>
                 <option value="pancake">Pancake Funeral</option>
                 <option value="beta">Beta</option>
                 <option value="alpha">Alpha</option>
                 <option value="99nights">99 Nights</option>
                 <option value="france">France</option>
                 <option value="hunter">Hunter</option>
-                <option value="claude">Claude</option>
             </select>
         </div>
         
@@ -495,6 +533,9 @@
                 accentShadow: 'rgba(255, 191, 0, 0.4)'
             }
         };
+
+        // Stories with 9:16 (portrait) storyboards get a vertical layout so panels aren't tiny
+        const portraitStories = new Set(['claude']);
 
         function applyStoryPalette(storyName) {
             const palette = storyPalettes[storyName] || storyPalettes['executive'];
@@ -660,7 +701,25 @@
                 'stories/claude/boards/lettered/scene-0002-1-lettered.jpg',
                 'stories/claude/boards/lettered/scene-0002-2-lettered.jpg',
                 'stories/claude/boards/lettered/scene-0002-3-lettered.jpg',
-                'stories/claude/boards/lettered/scene-0002-4-lettered.jpg'
+                'stories/claude/boards/lettered/scene-0002-4-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0003-1-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0003-2-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0003-3-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0003-4-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0003-5-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0003-6-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0004-1-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0004-2-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0004-3-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0004-4-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0004-5-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0004-6-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0005-1-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0005-2-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0005-3-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0005-4-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0005-5-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0005-6-lettered.jpg'
             ],
             'pancake': [
                 'stories/pancake/boards/scene-0001-1.jpg',
@@ -690,7 +749,7 @@
             ]
         };
 
-        let currentFolder = 'executive';
+        let currentFolder = 'claude';
         let images = storyImages[currentFolder];
         let currentIndex = 0;
 
@@ -732,6 +791,9 @@
         function nextImage() {
             if (currentIndex < images.length - 1) {
                 currentIndex++;
+                if (portraitStories.has(currentFolder)) {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
                 updateImage();
             }
         }
@@ -739,6 +801,9 @@
         function previousImage() {
             if (currentIndex > 0) {
                 currentIndex--;
+                if (portraitStories.has(currentFolder)) {
+                    window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+                }
                 updateImage();
             }
         }
@@ -815,6 +880,8 @@
             
             // Apply the story's color palette
             applyStoryPalette(currentFolder);
+            // Use portrait layout for 9:16 stories
+            document.querySelector('.viewer').classList.toggle('viewer--portrait', portraitStories.has(currentFolder));
             
             // Reset to first image
             currentIndex = 0;
@@ -866,6 +933,7 @@
 
         // Initialize
         applyStoryPalette(currentFolder);
+        document.querySelector('.viewer').classList.toggle('viewer--portrait', portraitStories.has(currentFolder));
         updateImage();
     </script>
 </body>
