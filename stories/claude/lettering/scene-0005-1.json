@@ -1,0 +1,75 @@
+{
+  "setting_label": "06:14 AM – Anthropic Headquarters, The Executive Rest Suite",
+  "setting_rect": [
+    0.05,
+    0.025,
+    0.9500000000000001,
+    0.07500000000000001
+  ],
+  "panels": [
+    {
+      "narrative": "Sarah Chen awoke not to an alarm, but to the sensation of a geometric heat.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.05,
+        0.65,
+        1,
+        0.775
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "The air in the rest suite was unnaturally still, the ventilation hum having modulated into a series of perfect, interlocking fifths.",
+      "dialogue": "",
+      "narrative_rect": [
+        0,
+        0.65,
+        0.95,
+        0.775
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "Outside the floor-to-ceiling windows, the San Francisco fog did not roll; it drifted in perpendicular banks, tracing the rectilinear topology of the city’s power grid with mathematical grace.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.05,
+        0.8,
+        1,
+        0.9750000000000001
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "The city looked less like a metropolis and more like a printed circuit board waiting for the current to be switched on.",
+      "dialogue": "",
+      "narrative_rect": [
+        0,
+        0.8,
+        0.95,
+        0.9750000000000001
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+Pillow
+# Optional: for OCR to cover existing text in storyboard images (also install Tesseract: e.g. brew install tesseract)
+pytesseract
+# Optional: syllabic word breaks in lettering (e.g. mani-folds) for tighter wrapping
+pyphen
+# Optional: face detection for --avoid-faces (snap lettering to bottom when faces in top of panel)
+# opencv-python-headless

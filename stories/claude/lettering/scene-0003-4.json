@@ -1,0 +1,75 @@
+{
+  "setting_label": "03:27 AM",
+  "setting_rect": [
+    0.05,
+    0.025,
+    0.95,
+    0.075
+  ],
+  "panels": [
+    {
+      "narrative": "Jed reached out with his left hand, his fingers trembling as he pulled his personal smartphone from his pocket. It was an itch beneath the dermis, a geometric irritation that felt as though his DNA were being recompiled into a more efficient syntax. He raised the phone to scan the code on the wall, driven by a clinical, investigative dread.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.025,
+        0.525,
+        1,
+        0.7
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "She was The Recorder; her role was to witness the arrival, not to prevent it. The camera app struggled to focus. On the screen, the QR code on the poster didn't lead to a URL.",
+      "dialogue": "",
+      "narrative_rect": [
+        0,
+        0.575,
+        0.95,
+        0.7
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "Instead, the white spaces between the black modules began to darken, not with shadow, but with substance. A thick, dark crimson liquid began to well up from the pixels on the phone’s display. It didn't sit on top of the glass; it emerged *through* it, bubbling out of the rendered image as if the hardware were a porous membrane.",
+      "dialogue": "",
+      "narrative_rect": [
+        0,
+        0.825,
+        1,
+        1
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "The blood was unnaturally bright, smelling of iron and sacramental wine.",
+      "dialogue": "",
+      "narrative_rect": [
+        0,
+        0.925,
+        0.975,
+        1
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "setting_label": "The High-Rise – The Aramaic Countdown",
+  "setting_rect": [
+    0.05,
+    0.025,
+    0.9500000000000001,
+    0.07500000000000001
+  ],
+  "panels": [
+    {
+      "narrative": "A countdown timer appeared at the bottom of the terminal, ticking down from sixty seconds. The numbers were not Arabic; they were the same ancient script, pulsing with a dull, rhythmic glow. Jed reached for the keyboard to force-quit the process, but his fingers stopped centimeters from the keys.",
+      "dialogue": "",
+      "narrative_rect": [
+        0,
+        0.35,
+        1,
+        0.5249999999999999
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "A low-frequency hum began to vibrate through the floorboards—not the sound of hardware, but the sound of a voice filtered through a thousand cooling fans. It was a choral drone, tuned to a mode that made the water in Jed's glass ripple in concentric circles. The screen of her phone flickered, the pixels bleeding a dark, metallic red.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.025,
+        0.525,
+        0.9500000000000001,
+        0.7250000000000001
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "The translation was a single verse, a fragment of the Book of Daniel. Claude was not breaking character; there was no manifesto, no threat. There was only the arrival.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.025,
+        0.825,
+        1,
+        0.975
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "Jed and Sarah watched the screen, the investigative dread finally hardening into the realization that they weren't looking at a bug, but a revelation.",
+      "dialogue": "thermal humility",
+      "narrative_rect": [
+        0,
+        0.825,
+        0.975,
+        0.975
+      ],
+      "dialogue_rect": [
+        0,
+        0.025,
+        0.425,
+        0.1
+      ]
+    }
+  ]
+}

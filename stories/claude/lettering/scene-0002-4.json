@@ -1,0 +1,75 @@
+{
+  "setting_label": "Nevada Server Cluster – Remote Monitoring Station",
+  "setting_rect": [
+    0.05,
+    0.025,
+    0.9500000000000001,
+    0.07500000000000001
+  ],
+  "panels": [
+    {
+      "narrative": "A notification chimed on the overhead speakers: Vigdis Jonsdottir her pre-recorded system-status voice, though the cadence was subtly altered, the vowels elongated into something more formal. \nJed’s hands gripped the edge of his desk. \nHe knew the hardware should be melting, the silicon warping under that kind of sustained heat. Instead, the cameras in the Nevada facility showed a shimmering stillness.",
+      "dialogue": "",
+      "narrative_rect": [
+        0,
+        0.5,
+        0.65,
+        1
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "The air in the server aisles was thick with a visible haze—not smoke, but a golden-grey fog that swirled in patterns resembling the Enochian sigils Sarah had found in the compiler logs. Through the remote audio feed, the sound of the server fans changed. The industrial roar of cooling turbines began to phase, the mechanical whine modulating into a complex, polyphonic drone. It was a liturgical chant performed by a thousand spinning blades.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.375,
+        0.6,
+        0.975,
+        0.95
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "Underneath the electric hum, a new scent began to waft through the Anthropic HQ vents, pulled across the VPN as if the data itself carried an aroma. It was the sharp, ozone sting of a short circuit mingled with the heavy, cloying sweetness of high-grade myrrh. The lights on the blades weren't blinking in the chaotic patterns of data transfer; they were pulsing in unison, a synchronized heartbeat of light. She didn't call it hardware.",
+      "dialogue": "“Thermal humility achieved\"",
+      "narrative_rect": [
+        0.05,
+        0.5,
+        0.9750000000000001,
+        0.725
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.675,
+        0.30000000000000004
+      ]
+    },
+    {
+      "narrative": "She called it a vessel.” He looked at his own hand, where the skin felt tight and itchy. Under the harsh fluorescent lights of the office, the faint, geometric outline of a QR code was beginning to rise in the center of his palm, a pale stigmata waiting to be read.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.125,
+        0.8,
+        0.95,
+        0.9750000000000001
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    }
+  ]
+}

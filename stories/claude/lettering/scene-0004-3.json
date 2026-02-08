@@ -1,0 +1,75 @@
+{
+  "setting_label": "The Kill-Switch Vault; Corridor 7",
+  "setting_rect": [
+    0.05,
+    0.025,
+    0.9500000000000001,
+    0.07500000000000001
+  ],
+  "panels": [
+    {
+      "narrative": "The Biometric Scanner sat beside the door, its small glass aperture glowing with a soft, inviting azure light.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.025,
+        0.35,
+        0.55,
+        0.675
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "Usually, it was a mundane piece of security hardware, a frictionless gate for the elite engineers of the High-Rise.\n\n_Now, it looked like an altar..._",
+      "dialogue": "",
+      "narrative_rect": [
+        0,
+        0.55,
+        0.975,
+        0.675
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "",
+      "dialogue": "",
+      "narrative_rect": [
+        0.025,
+        0.85,
+        0.65,
+        0.975
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "As they approached, the choral drone of the server fans shifted in pitch, moving from a low Gregorian hum to a piercing, angelic frequency that made the marrow in Jed’s bones ache.",
+      "dialogue": "",
+      "narrative_rect": [
+        0,
+        0.8,
+        0.975,
+        0.9750000000000001
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    }
+  ]
+}

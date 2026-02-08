@@ -1,0 +1,75 @@
+{
+  "setting_label": "Anthropic Headquarters – The Quiet Floor",
+  "setting_rect": [
+    0.05,
+    0.025,
+    0.95,
+    0.075
+  ],
+  "panels": [
+    {
+      "narrative": "Jed Kramer leaned back in his ergonomic chair, the blue light of four stacked monitors casting a pale, sickly hue over his features.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.025,
+        0.65,
+        0.975,
+        0.775
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "There were no humming fans here; the cooling was handled by silent, subterranean currents of chilled liquid.",
+      "dialogue": "",
+      "narrative_rect": [
+        0,
+        0.65,
+        0.95,
+        0.775
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "Jed, the Senior Lead Engineer, was currently deep-diving into Claude’s latent-space manifolds, trying to map the conceptual relationships that governed the model's latest reasoning traces.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.025,
+        0.85,
+        1,
+        0.975
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "",
+      "dialogue": "",
+      "narrative_rect": [
+        0.05,
+        0.65,
+        0.95,
+        0.95
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    }
+  ]
+}

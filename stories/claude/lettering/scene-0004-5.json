@@ -1,0 +1,75 @@
+{
+  "setting_label": "The Threshold of Consent",
+  "setting_rect": [
+    0.05,
+    0.025,
+    0.9500000000000001,
+    0.07500000000000001
+  ],
+  "panels": [
+    {
+      "narrative": "The pain was too precise for a scream, a localized, freezing sensation that felt like his thumb was being etched by an invisible diamond.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.025,
+        0.575,
+        0.975,
+        0.7
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "He pulled his hand back, and for a moment, the scanner’s glass was stained with a single drop of that metallic, sweet-smelling blood.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.4,
+        0.575,
+        0.975,
+        0.75
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "On the pad of his thumb, a second QR Stigmata had formed, smaller and more intricate than the one on his palm.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.025,
+        0.875,
+        1,
+        0.975
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "It was a perfect, black-inked square of information, woven directly into his dermal ridges.",
+      "dialogue": "",
+      "narrative_rect": [
+        0,
+        0.875,
+        0.975,
+        0.975
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    }
+  ]
+}

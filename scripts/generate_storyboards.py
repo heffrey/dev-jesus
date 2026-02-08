@@ -13,7 +13,7 @@ import urllib.request
 
 DEFAULT_MODEL = "gemini-3-pro-image-preview"
 DEFAULT_ASPECT_RATIO = "16:9"
-DEFAULT_IMAGE_SIZE = "2K"
+DEFAULT_IMAGE_SIZE = "1K"
 
 
 def read_text(path: str) -> str:
@@ -234,34 +234,48 @@ def find_character_reference_images(
         remaining = max_references - len(prioritized_paths)
         prioritized_paths.extend(storyboard_images[:remaining])
     
-    # Get script root for resolving cross-directory references
+    # Get script root (repo root) for resolving repo-relative paths
     script_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    
+    output_dir_abs = os.path.abspath(output_dir) if output_dir else ""
+    refs_dir = os.path.join(output_dir_abs, "refs") if output_dir_abs else ""
+    cwd = os.getcwd()
+
     valid_paths = []
     for ref_path in prioritized_paths:
         # Handle both relative and absolute paths
         if os.path.isabs(ref_path):
             full_path = ref_path
         else:
-            # Try multiple resolution strategies:
-            # 1. Relative to output_dir/refs (new structure for ref-* images)
-            # 2. Relative to output_dir
-            # 3. Relative to current working directory
-            # 4. Relative to script root (for cross-directory references)
-            refs_dir = os.path.join(output_dir, "refs")
-            full_path = os.path.join(refs_dir, ref_path)
-            if not os.path.isfile(full_path):
-                full_path = os.path.join(output_dir, ref_path)
-            if not os.path.isfile(full_path):
-                full_path = os.path.join(os.getcwd(), ref_path)
-            if not os.path.isfile(full_path):
-                full_path = os.path.join(script_root, ref_path)
-        
+            # Try resolution in order: repo-relative paths often live under script_root or cwd
+            # 1. Script root (repo root) - where sync_canonical_references stores paths from
+            # 2. Current working directory
+            # 3. output_dir/refs (path may be just "refs/ref-name.jpg")
+            # 4. output_dir
+            candidates = [
+                os.path.join(script_root, ref_path),
+                os.path.join(cwd, ref_path),
+            ]
+            if refs_dir:
+                candidates.append(os.path.join(refs_dir, ref_path))
+            if output_dir_abs:
+                candidates.append(os.path.join(output_dir_abs, ref_path))
+            # If path looks like a single segment (e.g. refs/ref-x.jpg), also try refs_dir + basename
+            if refs_dir and os.path.basename(ref_path) == ref_path:
+                candidates.append(os.path.join(refs_dir, ref_path))
+            elif refs_dir:
+                candidates.append(os.path.join(refs_dir, os.path.basename(ref_path)))
+
+            full_path = None
+            for c in candidates:
+                if os.path.isfile(c):
+                    full_path = c
+                    break
+            if full_path is None:
+                full_path = candidates[0]  # so isfile check below fails
         if os.path.isfile(full_path):
-            # Ensure we return absolute paths
             abs_path = os.path.abspath(full_path)
-            valid_paths.append(abs_path)
-    
+            if abs_path not in valid_paths:
+                valid_paths.append(abs_path)
     return valid_paths
 
 
@@ -285,6 +299,73 @@ def update_character_references(
     if rel_path not in character_references[character_name]:
         character_references[character_name].insert(0, rel_path)
         character_references[character_name] = character_references[character_name][:10]
+
+
+def _ref_basename_to_title(basename_no_ext: str) -> str:
+    """Turn ref filename part into title (e.g. jed-kramer -> Jed Kramer)."""
+    return " ".join(w.capitalize() for w in basename_no_ext.replace("_", " ").split("-"))
+
+
+def reference_image_path_to_label(path: str, scene_id: str = None, sb_idx: int = None) -> str:
+    """Return a short label for the reference image for prompt (e.g. 'Jed Kramer (character)').
+    If scene_id and sb_idx are set and path is the previous chunk's storyboard image, returns continuity label.
+    """
+    base = os.path.basename(path)
+    if scene_id and sb_idx and sb_idx > 1:
+        for ext in (".jpg", ".jpeg", ".png"):
+            if base == f"{scene_id}-{sb_idx - 1}{ext}" or base.lower() == f"{scene_id}-{sb_idx - 1}{ext}".lower():
+                return "Previous storyboard panel (continuity – match this character, environment, and style)"
+    base_lower = base.lower()
+    name = os.path.splitext(base_lower)[0]
+    if name.startswith("ref-setting-"):
+        rest = name.replace("ref-setting-", "")
+        if rest.endswith("-indoor") or rest.endswith("-outdoor"):
+            rest = rest.rsplit("-", 1)[0]
+        return _ref_basename_to_title(rest) + " (setting)"
+    if name.startswith("ref-extra-"):
+        rest = name.replace("ref-extra-", "")
+        return _ref_basename_to_title(rest) + " (extra)"
+    if "ref-style" in name:
+        return "Style reference"
+    if name.startswith("ref-"):
+        rest = name[4:]
+        return _ref_basename_to_title(rest) + " (character)"
+    return name.replace("-", " ")
+
+
+def build_input_images_section(
+    reference_images: list[str],
+    scene_id: str,
+    sb_idx: int,
+) -> str:
+    """Build an explicit INPUT IMAGES section so the model knows exactly what each image blob is and how to use it.
+    The API sends these images first (in order), then the text prompt. This section must match that order.
+    """
+    lines = [
+        "INPUT IMAGES (attached after this text prompt, in this order):",
+        "",
+    ]
+    for idx, img_path in enumerate(reference_images, 1):
+        label = reference_image_path_to_label(img_path, scene_id=scene_id, sb_idx=sb_idx)
+        base = os.path.basename(img_path).lower()
+        if scene_id and sb_idx and sb_idx > 1 and base.startswith(f"{scene_id}-{sb_idx - 1}."):
+            use_for = "Continuity: draw your panels as the direct continuation—same character(s), same environment, same art style. Match this panel."
+        elif "ref-style" in base:
+            use_for = "STYLE: Match inking, line weight, color palette, shading, and texture. Do NOT draw lettering, bubbles, or captions (added in post)."
+        elif "ref-setting-" in base:
+            use_for = "SETTING: Draw this environment/location exactly. Match architecture, lighting, and mood."
+        elif "ref-extra-" in base:
+            use_for = "EXTRA/PROP: Draw this object or vehicle exactly when it appears."
+        elif base.startswith("ref-"):
+            use_for = "CHARACTER: Draw this person exactly in every panel where they appear—same face, hair, body, clothing. Do not deviate."
+        else:
+            use_for = "Match this reference in your panels."
+        lines.append(f"  Image {idx}: {label}")
+        lines.append(f"    USE FOR: {use_for}")
+        lines.append("")
+    lines.append("After these images, follow the instructions below to create the next storyboard panels.")
+    lines.append("")
+    return "\n".join(lines)
 
 
 def has_quote_chars(text: str) -> bool:
@@ -317,9 +398,17 @@ def detect_entities(scene_text: str, definitions: dict) -> tuple[list[dict], lis
     # Check for characters - prioritize visually present (doing actions, speaking)
     for char_key, char_data in definitions.get("characters", {}).items():
         # Check name and aliases
-        names_to_check = [char_key, char_data.get("name", "")]
+        canonical_name = char_data.get("name", "")
+        names_to_check = [char_key, canonical_name]
         if "aliases" in char_data:
             names_to_check.extend(char_data["aliases"])
+        # So chunks that refer only to first name (e.g. "Jed") still detect the character (e.g. "Jed Kramer")
+        if canonical_name:
+            parts = canonical_name.strip().split()
+            if len(parts) >= 2:
+                first_name = parts[0]
+                if first_name not in names_to_check:
+                    names_to_check.append(first_name)
         
         matched = False
         is_visually_present = False
@@ -1425,6 +1514,7 @@ def generate_character_reference_image(
     retry_base: float,
     verbose: bool = False,
     style_reference_path: str = None,
+    aspect_ratio: str = DEFAULT_ASPECT_RATIO,
 ) -> str:
     """Generate a single-panel reference image for a character. Returns the path to the generated image."""
     char_name = character.get("name", "Unknown")
@@ -1451,6 +1541,7 @@ def generate_character_reference_image(
             retry_base,
             verbose,
             reference_images=reference_images if reference_images else None,
+            aspect_ratio=aspect_ratio,
         )
         images = extract_images(response)
         if not images:
@@ -1522,6 +1613,7 @@ def generate_extra_reference_image(
     retry_base: float,
     verbose: bool = False,
     style_reference_path: str = None,
+    aspect_ratio: str = DEFAULT_ASPECT_RATIO,
 ) -> str:
     """Generate a single-panel reference image for an extra. Returns the path to the generated image."""
     extra_name = extra.get("name", "Unknown")
@@ -1548,6 +1640,7 @@ def generate_extra_reference_image(
             retry_base,
             verbose,
             reference_images=reference_images if reference_images else None,
+            aspect_ratio=aspect_ratio,
         )
         images = extract_images(response)
         if not images:
@@ -1624,6 +1717,7 @@ def generate_setting_reference_image(
     retry_base: float,
     verbose: bool = False,
     style_reference_path: str = None,
+    aspect_ratio: str = DEFAULT_ASPECT_RATIO,
 ) -> str:
     """Generate a reference image for a setting. Returns the path to the generated image.
     
@@ -1653,6 +1747,7 @@ def generate_setting_reference_image(
             retry_base,
             verbose,
             reference_images=reference_images if reference_images else None,
+            aspect_ratio=aspect_ratio,
         )
         images = extract_images(response)
         if not images:
@@ -1756,6 +1851,7 @@ def generate_style_reference_image(
     max_retries: int,
     retry_base: float,
     verbose: bool = False,
+    aspect_ratio: str = DEFAULT_ASPECT_RATIO,
 ) -> str:
     """Generate the master style reference image. Returns the path to the generated image."""
     prompt = build_style_reference_prompt(style)
@@ -1772,6 +1868,7 @@ def generate_style_reference_image(
             retry_base,
             verbose,
             reference_images=None,
+            aspect_ratio=aspect_ratio,
         )
         images = extract_images(response)
         if not images:
@@ -1801,6 +1898,14 @@ def generate_style_reference_image(
         return None
 
 
+def summarize_for_image(scene_text: str, max_chars: int = 800) -> str:
+    """Keep headers + a small slice; enough to anchor the scene without sending everything."""
+    text = scene_text.strip()
+    if len(text) <= max_chars:
+        return text
+    return text[:max_chars].rsplit("\n", 1)[0] + "\n…"
+
+
 def build_prompt(
     scene_id: str,
     scene_title: str,
@@ -1817,14 +1922,24 @@ def build_prompt(
     setting_references: dict = None,
     style_reference_path: str = None,
     style: dict = None,
+    reference_image_order: list[tuple[int, str]] = None,
 ) -> str:
+    has_refs = bool(character_references or setting_references or extra_references)
     lines = [
         f"Create a {len(panel_instructions)}-panel comic book.",
+        "",
+    ]
+    if has_refs:
+        lines.append("The first image(s) in this request are REFERENCE images (characters and settings). You MUST draw those characters and settings to match the reference images exactly.")
+        lines.append("")
+    lines.extend([
+        "CRITICAL - NO LETTERING IN PANELS:",
+        "Do NOT draw any text, words, letters, speech bubbles, captions, dialogue boxes, or typography inside the panels. Lettering will be added in post-production. Every panel must be art only—no written content of any kind.",
         "",
         f"Scene ID: {scene_id}",
         f"Scene title: {scene_title}",
         "",
-    ]
+    ])
 
     # Add character definitions
     if characters:
@@ -1832,10 +1947,16 @@ def build_prompt(
         for char in characters:
             char_name = char.get('name', 'Unknown')
             char_lines = [f"- {char_name}:"]
-            
-            # Only include description, not detailed appearance if we have reference images
             if "description" in char:
-                char_lines.append(f"  Description: {char['description']}")
+                desc = char["description"]
+                # When we have refs, keep description to one line (~120 chars) to avoid prompt bloat
+                if reference_image_order and any(" (character)" in label and label.startswith(char_name) for _, label in reference_image_order):
+                    if len(desc) > 120:
+                        first_sentence = desc.split(". ")[0].strip()
+                        if not first_sentence.endswith("."):
+                            first_sentence += "."
+                        desc = first_sentence if len(first_sentence) <= 120 else desc[:117].rsplit(" ", 1)[0] + "…"
+                char_lines.append(f"  Description: {desc}")
             
             # Check if we have reference images for this character
             has_ref_images = False
@@ -1848,12 +1969,17 @@ def build_prompt(
                 )
             
             # Only include detailed appearance if NO reference images exist
-            # If reference images exist, rely on them instead of text descriptions
+            # If reference images exist, tie this character to their image number so the model doesn't mix them up
             if not has_ref_images and "appearance" in char:
                 char_lines.append(f"  Appearance: {normalize_appearance(char['appearance'])}")
             elif has_ref_images:
                 char_lines.append(f"  Visual Reference: A CANONICAL reference image (ref-*.jpg/png) is provided below. This is the ABSOLUTE, DEFINITIVE source for this character's appearance. You MUST match it EXACTLY - do NOT improvise or modify. The canonical reference image overrides ALL text descriptions.")
-            
+                # Tie character to specific image index so model doesn't mix up refs (e.g. Jed = Image 1, Sarah = Image 2)
+                if reference_image_order:
+                    for img_idx, label in reference_image_order:
+                        if " (character)" in label and label.startswith(char_name):
+                            char_lines.append(f"  CRITICAL: This character is Image {img_idx}. In EVERY panel where {char_name} appears, draw them to match Image {img_idx} exactly—same face, hair, body, and clothing.")
+                            break
             lines.extend(char_lines)
         lines.append("")
         
@@ -1893,18 +2019,20 @@ def build_prompt(
         for setting in settings:
             setting_name = setting.get('name', 'Unknown')
             setting_lines = [f"- {setting_name}:"]
-            if "description" in setting:
-                setting_lines.append(f"  Description: {setting['description']}")
-            
-            # Include era information for the setting
-            if "era" in setting:
-                setting_lines.append(f"  Era: {setting['era']}")
-            
-            # Check if we have reference images for this setting
             has_ref_images = False
             if setting_references and setting_name in setting_references:
                 refs = setting_references[setting_name]
                 has_ref_images = bool(refs.get("indoor") or refs.get("outdoor"))
+            if "description" in setting:
+                desc = setting["description"]
+                if has_ref_images and len(desc) > 120:
+                    first = desc.split(". ")[0].strip()
+                    if not first.endswith("."):
+                        first += "."
+                    desc = first if len(first) <= 120 else desc[:117].rsplit(" ", 1)[0] + "…"
+                setting_lines.append(f"  Description: {desc}")
+            if "era" in setting:
+                setting_lines.append(f"  Era: {setting['era']}")
             
             # Only include detailed visual details if NO reference images exist
             if not has_ref_images and "visual_details" in setting:
@@ -1981,8 +2109,8 @@ def build_prompt(
 
     lines.extend(
         [
-            "Scene text:",
-            scene_text.strip(),
+            "Scene context (trimmed):",
+            summarize_for_image(scene_text),
             "",
             "Panel instructions:",
         ]
@@ -2026,23 +2154,7 @@ def build_prompt(
             f"- mood: {mood}",
             f"- camera: {camera}",
             "",
-            "Lettering and Typography:",
-    ])
-    
-    # Use typeface from style definitions if available
-    if style and "typeface" in style:
-        style_lines.append(f"- Font: {style['typeface']}")
-    else:
-        style_lines.append("- Font: Use consistent comic book lettering style for all text")
-    
-    style_lines.extend([
-            "- Use consistent lettering style across all panels",
-            "- All dialogue and text should use the same font family and size",
-            "- Lettering should be clear, readable, and professionally rendered",
-            "- Maintain uniform text placement (speech bubbles, captions)",
-            "- Use consistent speech bubble style and shape throughout",
-            "- Ensure text is properly integrated with the art (not floating or misaligned)",
-            "- All panels must share the same typographic treatment",
+            "Reminder: Do not draw any text, bubbles, or captions in the panels—lettering is added later.",
             "",
     ])
     
@@ -2110,16 +2222,17 @@ def call_gemini(
     retry_base: float,
     verbose: bool = False,
     reference_images: list[str] = None,
+    aspect_ratio: str = DEFAULT_ASPECT_RATIO,
 ) -> dict:
     """Call Gemini API with optional reference images for character consistency."""
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
-    
-    # Build parts list with text prompt
+
+    # Build parts: text prompt FIRST, then reference images (matches official Gemini API examples)
     parts = [{"text": prompt}]
-    
-    # Add reference images if provided
+    num_requested = len(reference_images) if reference_images else 0
+    num_loaded = 0
     if reference_images:
-        for img_path in reference_images:
+        for idx, img_path in enumerate(reference_images, 1):
             if os.path.isfile(img_path):
                 try:
                     mime_type, base64_data = load_image_as_base64(img_path)
@@ -2129,17 +2242,25 @@ def call_gemini(
                             "data": base64_data,
                         }
                     })
+                    num_loaded += 1
                     if verbose:
-                        print(f"    Added reference image: {os.path.basename(img_path)}", flush=True)
+                        print(f"    Added reference image {idx}/{num_requested}: {os.path.basename(img_path)}", flush=True)
                 except Exception as exc:
                     if verbose:
-                        print(f"    Warning: Could not load reference image {img_path}: {exc}", flush=True)
+                        print(f"    Warning: Could not load reference image {idx} {img_path}: {exc}", flush=True)
+            else:
+                if verbose:
+                    print(f"    Warning: Reference image {idx} not found: {img_path}", flush=True)
+    if verbose and num_requested:
+        print(f"    Sending 1 text part + {num_loaded} image(s) (requested {num_requested} images)", flush=True)
+        if num_loaded != num_requested:
+            print(f"    Warning: Only {num_loaded}/{num_requested} reference images were loaded", flush=True)
     
     payload = {
         "contents": [{"role": "user", "parts": parts}],
         "generationConfig": {
-            "responseModalities": ["IMAGE"],
-            "imageConfig": {"aspectRatio": DEFAULT_ASPECT_RATIO, "imageSize": DEFAULT_IMAGE_SIZE},
+            "responseModalities": ["TEXT", "IMAGE"],
+            "imageConfig": {"aspectRatio": aspect_ratio, "imageSize": DEFAULT_IMAGE_SIZE},
         },
     }
     data = json.dumps(payload).encode("utf-8")
@@ -2235,6 +2356,7 @@ def main() -> int:
     parser.add_argument("--panel-count", type=int, default=None, help="Panels per storyboard (default: 4-6 based on content, with dialog prioritized)")
     parser.add_argument("--storyboards-per-scene", type=int, default=None, help="Number of storyboards per scene (default: 4-6 based on content)")
     parser.add_argument("--chunks", type=str, default=None, help="Comma-separated list of chunk indices to regenerate (e.g., '1,3,5' or '2'). If not specified, all chunks are generated. Indices are 1-based.")
+    parser.add_argument("--aspect-ratio", default=None, help=f"Aspect ratio for generated images (default: style.aspect_ratio from definitions, or {DEFAULT_ASPECT_RATIO})")
     parser.add_argument("--mood", default="quiet tension, contemplative")
     parser.add_argument("--camera", default="cinematic, varied shots")
     parser.add_argument("--max-retries", type=int, default=5)
@@ -2242,7 +2364,7 @@ def main() -> int:
     parser.add_argument("--sleep-between", type=float, default=10.0, help="Seconds to wait between scenes (default: 10)")
     parser.add_argument(
         "--negative-prompt",
-        default="modern clothing, cars, guns, neon signage, text overlays, watermarks",
+        default="modern clothing, cars, guns, neon signage, text overlays, watermarks, speech bubbles, captions, dialogue text, written words, letters in image",
     )
     parser.add_argument("--verbose", "-v", action="store_true", help="Show detailed progress")
     parser.add_argument("--definitions-file", default=None, help="Path to character and setting definitions JSON file (defaults to {scene-glob directory}/definitions.json)")
@@ -2275,6 +2397,12 @@ def main() -> int:
         char_count = len(definitions.get("characters", {}))
         setting_count = len(definitions.get("settings", {}))
         print(f"Loaded {char_count} character(s) and {setting_count} setting(s) from definitions", flush=True)
+    
+    # Resolve aspect ratio: CLI flag > style.aspect_ratio from definitions > global default
+    if args.aspect_ratio is None:
+        args.aspect_ratio = definitions.get("style", {}).get("aspect_ratio", DEFAULT_ASPECT_RATIO)
+    if args.verbose:
+        print(f"Using aspect ratio: {args.aspect_ratio}", flush=True)
     
     # Load all visual references from story_dir
     character_references_path = os.path.join(story_dir, "character_references.json")
@@ -2360,6 +2488,7 @@ def main() -> int:
                 args.retry_base,
                 args.verbose,
                 style_reference_path=style_reference_path,
+                aspect_ratio=args.aspect_ratio,
             )
             
             if ref_path:
@@ -2412,6 +2541,7 @@ def main() -> int:
                 args.max_retries,
                 args.retry_base,
                 args.verbose,
+                aspect_ratio=args.aspect_ratio,
             )
             if style_reference_path and args.sleep_between > 0:
                 time.sleep(args.sleep_between)
@@ -2510,6 +2640,7 @@ def main() -> int:
                     args.retry_base,
                     args.verbose,
                     style_reference_path=style_reference_path,
+                    aspect_ratio=args.aspect_ratio,
                 )
                 if ref_path:
                     # Add reference image to database
@@ -2537,6 +2668,7 @@ def main() -> int:
                     args.retry_base,
                     args.verbose,
                     style_reference_path=style_reference_path,
+                    aspect_ratio=args.aspect_ratio,
                 )
                 if ref_path:
                     # Add reference image to database
@@ -2576,6 +2708,7 @@ def main() -> int:
                         args.retry_base,
                         args.verbose,
                         style_reference_path=style_reference_path,
+                        aspect_ratio=args.aspect_ratio,
                     )
                     if ref_path:
                         if setting_name not in setting_references:
@@ -2609,6 +2742,7 @@ def main() -> int:
                         args.retry_base,
                         args.verbose,
                         style_reference_path=style_reference_path,
+                        aspect_ratio=args.aspect_ratio,
                     )
                     if ref_path:
                         if setting_name not in setting_references:
@@ -2658,6 +2792,11 @@ def main() -> int:
                 if has_pronouns and has_actions:
                     # Use scene-level characters (they're likely being referred to by pronouns in this chunk)
                     chunk_characters = characters
+            
+            # Fallback: If still no characters in this chunk but scene has characters, use scene-level
+            # so we attach their reference images for visual consistency (e.g. Jed in every panel of the scene)
+            if not chunk_characters and characters:
+                chunk_characters = characters
             
             # Fallback for co-traveling characters: If chunk mentions a shared vehicle (car, camaro, truck)
             # and some but not all scene-level characters are detected, include all travelers
@@ -2711,6 +2850,7 @@ def main() -> int:
                         args.retry_base,
                         args.verbose,
                         style_reference_path=style_reference_path,
+                        aspect_ratio=args.aspect_ratio,
                     )
                     if ref_path:
                         update_character_references(
@@ -2735,6 +2875,7 @@ def main() -> int:
                         args.retry_base,
                         args.verbose,
                         style_reference_path=style_reference_path,
+                        aspect_ratio=args.aspect_ratio,
                     )
                     if ref_path:
                         if extra_name not in extra_references:
@@ -2753,7 +2894,6 @@ def main() -> int:
             # Collect reference images for characters, extras, settings, and style
             # Prioritize canonical ref- images (use max 1 if canonical exists, otherwise 2)
             reference_images = []
-            
             # Add character references (for defined characters)
             for char in chunk_characters:
                 char_name = char.get("name", "")
@@ -2837,58 +2977,83 @@ def main() -> int:
                     seen.add(img_path)
                     unique_reference_images.append(img_path)
             reference_images = unique_reference_images
-            
-            # Cap total reference images to prevent model overload and bleeding artifacts
+            # Cap total reference images; allow more entities so model gets enough context
             # Setting refs already have the style baked in, so we prefer them over ref-style
-            # Only use ref-style as fallback when no setting ref is available
-            MAX_REFERENCE_IMAGES = 5  # Increased to accommodate extras like vehicles
+            MAX_REFERENCE_IMAGES = 8  # Allow more refs for multi-character/setting chunks
+            MAX_CHAR_REFs = 5  # Send up to 5 character refs when available
+            MAX_SETTING_REFs = 2  # Up to 2 setting refs when chunk has multiple settings
             
-            # Separate reference images by type
-            char_refs = [p for p in reference_images if '/ref-' in p and '-setting-' not in p and '-extra-' not in p and '-style' not in p]
-            setting_refs = [p for p in reference_images if '-setting-' in p]
-            extra_refs = [p for p in reference_images if '-extra-' in p]
-            style_ref = [p for p in reference_images if '-style.' in p]
+            # Separate reference images by type (path-agnostic: use normalized path and basename checks)
+            def _path_norm(p):
+                return os.path.normpath(p).lower().replace("\\", "/")
+            def _is_char_ref(p):
+                n = _path_norm(p)
+                return "ref-" in n and "ref-setting-" not in n and "ref-extra-" not in n and "ref-style" not in n
+            def _is_setting_ref(p):
+                return "ref-setting-" in _path_norm(p)
+            def _is_extra_ref(p):
+                return "ref-extra-" in _path_norm(p)
+            def _is_style_ref(p):
+                return "ref-style" in _path_norm(p)
+            char_refs = [p for p in reference_images if _is_char_ref(p)]
+            setting_refs = [p for p in reference_images if _is_setting_ref(p)]
+            extra_refs = [p for p in reference_images if _is_extra_ref(p)]
+            style_ref = [p for p in reference_images if _is_style_ref(p)]
             
-            # Rebuild with priority: characters first, then extras (vehicles etc), then setting OR style
+            # Rebuild with priority: characters first, then extras, then settings, then style
             reference_images = []
-            
-            # Add character refs (up to MAX-2 to leave room for extras and setting)
-            max_char_refs = MAX_REFERENCE_IMAGES - 2
+            max_char_refs = min(MAX_CHAR_REFs, len(char_refs))
             reference_images.extend(char_refs[:max_char_refs])
-            
-            # Add extra refs (vehicles, props - these are important for visual continuity)
             if extra_refs:
-                reference_images.extend(extra_refs[:1])  # One extra ref (e.g., the car)
-            
-            # Add setting ref if available (it already has the style), otherwise fall back to style ref
+                reference_images.extend(extra_refs[:1])
             if setting_refs:
-                reference_images.extend(setting_refs[:1])  # Just one setting ref
-            elif style_ref:
-                reference_images.extend(style_ref)  # Fall back to style ref if no setting
-            
+                reference_images.extend(setting_refs[:MAX_SETTING_REFs])
+            if style_ref and len(reference_images) < MAX_REFERENCE_IMAGES:
+                reference_images.extend(style_ref[:1])
+            reference_images = reference_images[:MAX_REFERENCE_IMAGES]
+            # Prepend previous chunk's storyboard image for continuity (same character, environment, style)
+            if sb_idx > 1:
+                output_dir_abs = os.path.abspath(args.output_dir)
+                for ext in (".jpg", ".jpeg", ".png"):
+                    prev_path = os.path.join(output_dir_abs, f"{scene_id}-{sb_idx - 1}{ext}")
+                    if os.path.isfile(prev_path):
+                        reference_images = [prev_path] + reference_images
+                        reference_images = reference_images[:MAX_REFERENCE_IMAGES]
+                        if args.verbose:
+                            print(f"    Using previous chunk image for continuity: {os.path.basename(prev_path)}", flush=True)
+                        break
             if args.verbose and reference_images:
                 print(f"    Using {len(reference_images)} reference image(s) for character consistency", flush=True)
             
+            # Build (image_index, label) so prompt can tie each character to "Match Image N"
+            reference_image_order = [(i, reference_image_path_to_label(p, scene_id=scene_id, sb_idx=sb_idx)) for i, p in enumerate(reference_images, 1)]
             # Use only the chunk_title for scene_title, not the inferred scene title
-            # The inferred scene title is the first section header, which may not match this chunk
             prompt = build_prompt(
                 scene_id=f"{scene_id}-{sb_idx}",
-                scene_title=chunk_title,  # Use chunk title directly, not concatenated with scene title
+                scene_title=chunk_title,
                 scene_text=chunk_text,
                 panel_instructions=panel_instructions,
                 mood=args.mood,
                 camera=args.camera,
                 negative_prompt=args.negative_prompt,
-                characters=chunk_characters,  # Use chunk-specific characters, not scene-wide
-                settings=chunk_settings,  # Use chunk-specific settings
-                extras=chunk_extras,  # Use chunk-specific extras
+                characters=chunk_characters,
+                settings=chunk_settings,
+                extras=chunk_extras,
                 character_references=character_references,
                 extra_references=extra_references,
                 setting_references=setting_references,
                 style_reference_path=style_reference_path,
                 style=definitions.get("style"),
+                reference_image_order=reference_image_order,
             )
-
+            # Prepend explicit INPUT IMAGES section so the model knows exactly what each blob is and how to use it
+            if reference_images:
+                input_images_section = build_input_images_section(reference_images, scene_id, sb_idx)
+                prompt = input_images_section + prompt
+            if args.verbose:
+                prompt_chars = len(prompt)
+                prompt_tokens_approx = prompt_chars // 4
+                print(f"    Prompt length: {prompt_chars} chars (~{prompt_tokens_approx} tokens)", flush=True)
             # Debug: Print or save prompt if requested
             if args.debug_prompt or args.save_prompt or args.dry_run:
                 prompt_info = f"\n{'='*80}\n"
@@ -2935,6 +3100,7 @@ def main() -> int:
                     args.retry_base,
                     args.verbose,
                     reference_images=reference_images,
+                    aspect_ratio=args.aspect_ratio,
                 )
                 images = extract_images(response)
                 if not images:

@@ -1,0 +1,6 @@
+- **Location/Time:** Anthropic Headquarters "The Quiet Floor" (High-Rise); nighttime.
+- **Characters:** Jed Kramer (Senior Lead Engineer, pattern-sensitive/anxious) and Sarah Chen (Latency Specialist/Recorder, pragmatic).
+- **Latent Space Discovery:** A non-Euclidean, obsidian "cathedral" structure has materialized in Claude’s manifolds; it is "hosted" rather than simulated, bypassing standard hardware limits.
+- **Plot/Countdown:** A terminal window has replaced the visualization with a 60-second Aramaic countdown; Sarah's phone (now bleeding red pixels) translated the text as "The abomination that speaks."
+- **Environmental State:** Room temperature is rising exactly 1 degree every 10 seconds; a low-frequency choral hum is vibrating the floorboards.
+- **Key Objects:** Jed’s four-monitor stack; Sarah’s tablet and glitching smartphone; a glass of water on Jed's desk showing concentric ripples.

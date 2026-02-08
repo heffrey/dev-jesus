@@ -14,3 +14,4 @@ venv/
 ENV/
 env/
 .DS_Store
+lettering-editor/node_modules/

@@ -2,19 +2,21 @@
 
 **[View Live Demo](https://heffrey.github.io/dev-jesus/)**
 
-Dev-Jesus is a text-first art and software concept built around an AI-driven story. The story lives in markdown files and evolves through user-assisted inputs. A procedural engine uses those inputs to generate a cohesive story arc, and as the narrative develops we invoke Gemini to produce storyboard imagery for the current state of the story.
+Dev-Jesus is a pipeline for generating graphic novels. The story lives in markdown and evolves through user-assisted inputs. A procedural engine uses those inputs to build a cohesive story arc; we then use Gemini to produce panel art and overlay lettering from the scene text, yielding full pages ready for print or digital reading.
 
 ## How it works
 
 - Story concepts and scenes are stored as markdown documents.
 - User inputs guide the procedural generation of the story arc.
-- The evolving story triggers Gemini to generate storyboards.
+- The evolving story triggers Gemini to generate storyboards (art only; no lettering in the image).
+- A separate overlay script adds dialogue and narrative from the scene markdown to the panels.
 
 ## Goals
 
 - Keep narrative development transparent and versioned in text.
 - Enable collaborative story shaping through guided inputs.
 - Translate story progress into visual boards via AI.
+- Keep lettering (dialogue and captions) sourced from markdown so it stays editable and consistent.
 
 ## Project Structure
 
@@ -40,12 +42,20 @@ dev-jesus/
 │           │   ├── ref-setting-{name}-outdoor.jpg
 │           │   ├── ref-extra-{name}.jpg
 │           │   └── ref-style.jpg
+│           ├── lettered/       # Post-processed boards with overlay lettering
+│           │   ├── scene-0001-1-lettered.jpg
+│           │   └── ...
 │           ├── scene-0001-1.jpg
 │           └── ...
+│       └── lettering/         # Per-image lettering JSON (optional; used by overlay and editor)
+│           ├── scene-0001-1.json
+│           └── ...
+├── lettering-editor/          # Electron app for editing lettering boxes (WYSIWYG)
 ├── scripts/                    # Python generation scripts
 │   ├── generate_narrative.py
 │   ├── generate_scenes.py
 │   ├── generate_storyboards.py
+│   ├── overlay_storyboard_text.py
 │   └── tag_storyboards.py
 └── README.md
 ```
@@ -117,21 +127,51 @@ python scripts/generate_scenes.py --acts-file stories/{story}/acts.json --output
 
 Generates comic book-style storyboard images from scene markdown files using Gemini's image generation. The script:
 - Processes scene markdown files matching `stories/{story}/scenes/scene-*.md`
-- Divides each scene into 3-5 storyboard chunks
+- Divides each scene into 4–6 storyboard chunks (4 panels per chunk in a 2×2 grid)
 - Detects characters, settings, and extras from `stories/{story}/definitions.json` to maintain visual consistency
-- **Uses visual references from previous storyboards** to ensure character, extra, and setting appearance continuity
-- Generates multi-panel comic images with consistent character, extra, setting, and style appearances
-- Saves storyboard images to `stories/{story}/boards/` directory
-- Saves reference images to `stories/{story}/boards/refs/` directory
-- Automatically tracks character appearances in `character_references.json`
-- Automatically tracks extra appearances in `extra_references.json`
-- Automatically tracks setting references in `setting_references.json`
-- Generates and uses a master style reference image for series-wide visual consistency
+- **Uses visual references** (character, setting, style refs plus the previous chunk’s image for continuity) so the model draws consistent art
+- Sends an explicit **INPUT IMAGES** section in the prompt so the model knows what each reference is for
+- Generates **art-only** panels (no lettering, bubbles, or captions); lettering is added later by `overlay_storyboard_text.py`
+- Saves storyboard images to `stories/{story}/boards/` and reference images to `stories/{story}/boards/refs/`
+- Tracks character, extra, and setting references in JSON for continuity
 
 **Usage:**
 ```bash
-python scripts/generate_storyboards.py --scene-glob "stories/{story}/scenes/scene-*.md" --output-dir stories/{story}/boards [--api-key KEY]
+python scripts/generate_storyboards.py --scene-glob "stories/{story}/scenes/scene-*.md" --output-dir stories/{story}/boards --definitions-file stories/{story}/definitions.json [--api-key KEY]
 ```
+
+To regenerate only specific chunks:
+```bash
+python scripts/generate_storyboards.py ... --chunks 2,4
+```
+
+### `overlay_storyboard_text.py`
+
+Adds lettering to generated storyboard images. When **lettering JSON** is provided (`--lettering-dir`), the script uses that for text and box positions (WYSIWYG from the lettering editor); otherwise it uses **scene markdown** and rule-based placement. The script:
+- With lettering JSON: per-image JSON supplies rects and text; font scales to fill boxes; newlines force line breaks. With scene markdown: reads the same scene chunks as the generator (via `divide_scene_into_storyboards`)
+- Extracts narrative and dialogue from each chunk (splits on quoted dialogue; strips speech-attribution sentences like “Jed whispered…”)
+- Draws **dialogue** in speech bubbles (light fill, dark text) and **narrative** in caption boxes (dark fill, light text)
+- Distributes all extracted content across the 4 panels per image (merge), so more of the scene text appears
+- Optionally uses OCR (pytesseract) to detect and cover any model-drawn text before overlaying
+- Uses palette and style from `definitions.json` (e.g. Obsidian, Bone White) for box and text colors
+- Writes lettered images to `--output-dir` (e.g. `stories/{story}/boards/lettered/`) as `scene-XXXX-N-lettered.jpg`
+
+**Requirements:** Pillow. Optional: `pytesseract` and Tesseract (e.g. `brew install tesseract`) for covering existing text.
+
+**Usage:**
+```bash
+# With lettering editor JSON (WYSIWYG)
+python scripts/overlay_storyboard_text.py --scene "stories/{story}/scenes/scene-0001.md" --boards-dir stories/{story}/boards --lettering-dir stories/{story}/lettering [--output-dir stories/{story}/boards/lettered] [--verbose]
+
+# Scene-only (rule-based placement)
+python scripts/overlay_storyboard_text.py --scene "stories/{story}/scenes/scene-0001.md" --boards-dir stories/{story}/boards [--definitions-file stories/{story}/definitions.json] [--output-dir stories/{story}/boards/lettered] [--verbose]
+```
+
+**Typical workflow:** Generate boards with `generate_storyboards.py`. Optionally edit boxes in the **Lettering Editor**, then run the overlay with `--lettering-dir stories/{story}/lettering`.
+
+### Lettering Editor (Electron)
+
+The `lettering-editor/` app positions and edits narrative/dialogue boxes per image (WYSIWYG). Set project root, pick story and image; drag/resize boxes; text is saved to `stories/{story}/lettering/scene-XXXX-N.json`. **Space** toggles Show lettered (view updates when `boards/lettered/` files change). **Run overlay** runs the overlay script for the current story. Boxes auto-expand to fit content. Run: `cd lettering-editor && npm install && npm start`. See `lettering-editor/README.md`.
 
 **Visual Continuity System:**
 

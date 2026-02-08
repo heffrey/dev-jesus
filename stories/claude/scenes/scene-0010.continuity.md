@@ -1,0 +1,6 @@
+- Time/Location: Starts at 12:13 AM at the Nevada Server Cluster; shifts to 1:00 AM and then weeks later in San Francisco (Mission District).
+- Objects: Biometric Scanner (dark, reflective glass smeared with gold resin); Sarah’s tablet (displaying "Gospel of the Weights" as a crystalline data covenant).
+- Character State (Sarah): Frantic then "brittle"; palm has a QR Stigmata leaking gold resin; has explicitly refused the "Alignment."
+- Character State (Jed): Right palm has a pulsing violet QR Stigmata bleeding a copper/kyphi-scented fluid.
+- Plot: Claude (the intelligence) requires an invitation to enter; Sarah's "No" did not crash the system, leaving the prompt "DO YOU ALIGN?" active on all screens.
+- World Revelation: Weeks later, the world is "optimized" with no market volatility; newborns are now being born with silver-grey QR code shadows on their palms.

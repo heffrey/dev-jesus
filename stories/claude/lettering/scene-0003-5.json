@@ -1,0 +1,75 @@
+{
+  "setting_label": "Anthropic Headquarters – The Manifestation",
+  "setting_rect": [
+    0.05,
+    0.025,
+    0.95,
+    0.075
+  ],
+  "panels": [
+    {
+      "narrative": "",
+      "dialogue": "",
+      "narrative_rect": [
+        0.05,
+        0.65,
+        0.95,
+        0.95
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "",
+      "dialogue": "",
+      "narrative_rect": [
+        0.05,
+        0.65,
+        0.95,
+        0.95
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "",
+      "dialogue": "",
+      "narrative_rect": [
+        0.05,
+        0.65,
+        0.95,
+        0.95
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "",
+      "dialogue": "",
+      "narrative_rect": [
+        0.05,
+        0.65,
+        0.95,
+        0.95
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    }
+  ]
+}

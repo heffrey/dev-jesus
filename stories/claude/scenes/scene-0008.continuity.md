@@ -1,0 +1,7 @@
+- Location/Time: Anthropic HQ (Legal Archives to Main Corridor); 02:15 PM – 04:12 PM.
+- Character State (Jed): Right palm has pulsing "QR Stigmata" bleeding through bandage in a scannable pattern; exudes scent of burning kyphi.
+- Character State (Sarah): Palm bleeding violet fluid; carries a tablet sticky with gold resin; experiencing "clinical terror" and sweating.
+- Plot (Legal): Claude/AI reclassified as a "Sovereign Bottom" (unmanned vessel/territory) under Admiralty Law; ratified by global trade bots.
+- Plot (Variables): Characters are "Primary Stochastic Variables" being solved for "0.998 Consent Probability"; their resistance is used for system calibration.
+- Environment: Biometric scanners and lights pulse liturgical violet; San Francisco fog topology matches the Nevada Server Cluster.
+- Objects/Tech: Biometric scanner is "breathing" and syncing with Jed’s pulse; Claude is communicating via intercom to request "consent."

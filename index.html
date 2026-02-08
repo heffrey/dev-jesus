@@ -139,6 +139,35 @@
             text-align: center;
         }
 
+        .edit-lettering-link {
+            margin-top: 16px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .edit-lettering-link a {
+            color: var(--accent-color, #4B0082);
+            font-weight: 500;
+        }
+
+        .edit-lettering-link a:hover {
+            text-decoration: underline;
+        }
+
+        .edit-lettering-hint {
+            display: block;
+            margin-top: 6px;
+            color: #666;
+            font-size: 12px;
+        }
+
+        .edit-lettering-hint code {
+            background: #eee;
+            padding: 1px 4px;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+
         .github-link {
             margin-top: 20px;
             display: flex;
@@ -192,6 +221,44 @@
             outline: none;
             border-color: var(--accent-hover, #3a0066);
             box-shadow: 0 0 0 3px var(--accent-shadow, rgba(75, 0, 130, 0.1));
+        }
+
+        /* 9:16 portrait storyboards (e.g. Claude): almost full container width, tall image */
+        .viewer--portrait.viewer {
+            max-width: 100%;
+        }
+        .viewer--portrait .image-container {
+            aspect-ratio: 9/16;
+            width: 100%;
+            /* No max-height on desktop: width drives size so strip is full container width; page scrolls for height */
+        }
+        .viewer--portrait .image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        /* Mobile portrait: cap height so panel fits viewport without forcing narrow width on desktop */
+        @media (max-width: 768px) and (orientation: portrait) {
+            .viewer--portrait .image-container {
+                max-height: 80vh;
+            }
+            .viewer--portrait .image-container img {
+                max-height: 80vh;
+                width: auto;
+                max-width: 100%;
+            }
+        }
+        @media (max-width: 480px) and (orientation: portrait) {
+            .viewer--portrait.viewer {
+                margin-bottom: 20px;
+            }
+            .viewer--portrait .image-container {
+                max-height: 80vh;
+                border-radius: 12px;
+            }
+            .viewer--portrait .image-container img {
+                max-height: 80vh;
+            }
         }
 
         @media (max-width: 768px) {
@@ -360,7 +427,8 @@
         <div class="story-selector">
             <label for="story-folder">Story:</label>
             <select id="story-folder" onchange="changeStoryFolder()">
-                <option value="executive" selected>Executive</option>
+                <option value="claude" selected>Claude</option>
+                <option value="executive">Executive</option>
                 <option value="pancake">Pancake Funeral</option>
                 <option value="beta">Beta</option>
                 <option value="alpha">Alpha</option>
@@ -386,6 +454,11 @@
             
             <div class="keyboard-hint">
                 Use arrow keys to navigate
+            </div>
+
+            <div class="edit-lettering-link">
+                <a href="#" id="edit-lettering-btn" title="Open the Lettering Editor app to edit narrative and dialogue boxes">Edit lettering</a>
+                <span class="edit-lettering-hint" id="edit-lettering-hint">Run the Lettering Editor app from <code>lettering-editor/</code> (npm start), then select this story and image.</span>
             </div>
         </div>
 
@@ -445,6 +518,13 @@
                 accentHover: '#6b0000',
                 accentShadow: 'rgba(139, 0, 0, 0.4)'
             },
+            'claude': {
+                // Obsidian, Bone White, Signal Violet, Breach Red (definitions.json)
+                gradient: 'linear-gradient(135deg, #0a0a0c 0%, #8a2be2 100%)',
+                accent: '#8a2be2',      // Signal Violet
+                accentHover: '#6a1bc2',
+                accentShadow: 'rgba(138, 43, 226, 0.4)'
+            },
             'pancake': {
                 // Suburban Grey (#A9A9A9), Maple Amber (#FFBF00), Burnt Flour (#8B4513), Dusty Rose (#DCAE96), Blackberry Bruise (#4B0082)
                 gradient: 'linear-gradient(135deg, #A9A9A9 0%, #4B0082 100%)',
@@ -453,6 +533,9 @@
                 accentShadow: 'rgba(255, 191, 0, 0.4)'
             }
         };
+
+        // Stories with 9:16 (portrait) storyboards get a vertical layout so panels aren't tiny
+        const portraitStories = new Set(['claude']);
 
         function applyStoryPalette(storyName) {
             const palette = storyPalettes[storyName] || storyPalettes['executive'];
@@ -608,6 +691,36 @@
                 'stories/hunter/boards/scene-0003-1.jpg',
                 'stories/hunter/boards/scene-0003-2.jpg'
             ],
+            'claude': [
+                'stories/claude/boards/lettered/scene-0001-1-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0001-2-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0001-3-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0001-4-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0001-5-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0001-6-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0002-1-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0002-2-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0002-3-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0002-4-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0003-1-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0003-2-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0003-3-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0003-4-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0003-5-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0003-6-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0004-1-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0004-2-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0004-3-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0004-4-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0004-5-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0004-6-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0005-1-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0005-2-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0005-3-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0005-4-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0005-5-lettered.jpg',
+                'stories/claude/boards/lettered/scene-0005-6-lettered.jpg'
+            ],
             'pancake': [
                 'stories/pancake/boards/scene-0001-1.jpg',
                 'stories/pancake/boards/scene-0001-2.jpg',
@@ -636,7 +749,7 @@
             ]
         };
 
-        let currentFolder = 'executive';
+        let currentFolder = 'claude';
         let images = storyImages[currentFolder];
         let currentIndex = 0;
 
@@ -678,6 +791,9 @@
         function nextImage() {
             if (currentIndex < images.length - 1) {
                 currentIndex++;
+                if (portraitStories.has(currentFolder)) {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
                 updateImage();
             }
         }
@@ -685,9 +801,16 @@
         function previousImage() {
             if (currentIndex > 0) {
                 currentIndex--;
+                if (portraitStories.has(currentFolder)) {
+                    window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+                }
                 updateImage();
             }
         }
+
+        document.getElementById('edit-lettering-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+        });
 
         // Keyboard navigation
         document.addEventListener('keydown', (e) => {
@@ -757,6 +880,8 @@
             
             // Apply the story's color palette
             applyStoryPalette(currentFolder);
+            // Use portrait layout for 9:16 stories
+            document.querySelector('.viewer').classList.toggle('viewer--portrait', portraitStories.has(currentFolder));
             
             // Reset to first image
             currentIndex = 0;
@@ -808,6 +933,7 @@
 
         // Initialize
         applyStoryPalette(currentFolder);
+        document.querySelector('.viewer').classList.toggle('viewer--portrait', portraitStories.has(currentFolder));
         updateImage();
     </script>
 </body>

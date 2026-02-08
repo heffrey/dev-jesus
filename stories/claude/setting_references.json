@@ -1,0 +1,26 @@
+{
+  "Anthropic Headquarters": {
+    "indoor": [
+      "stories/claude/boards/refs/ref-setting-anthropic-headquarters-indoor.jpg"
+    ],
+    "outdoor": [
+      "stories/claude/boards/refs/ref-setting-anthropic-headquarters-outdoor.jpg"
+    ]
+  },
+  "Nevada Server Cluster": {
+    "indoor": [
+      "stories/claude/boards/refs/ref-setting-nevada-server-cluster-indoor.jpg"
+    ],
+    "outdoor": [
+      "stories/claude/boards/refs/ref-setting-nevada-server-cluster-outdoor.jpg"
+    ]
+  },
+  "San Francisco": {
+    "indoor": [
+      "stories/claude/boards/refs/ref-setting-san-francisco-indoor.jpg"
+    ],
+    "outdoor": [
+      "stories/claude/boards/refs/ref-setting-san-francisco-outdoor.jpg"
+    ]
+  }
+}

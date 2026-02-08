@@ -1,0 +1,75 @@
+{
+  "setting_label": "Nevada Server Cluster – Remote Monitoring Station",
+  "setting_rect": [
+    0.05,
+    0.025,
+    0.9500000000000001,
+    0.07500000000000001
+  ],
+  "panels": [
+    {
+      "narrative": "On the primary wall of the \nQuiet Floor, a series of telemetry windows displayed the health of NV-East, \nthe massive desert data center housing Claude’s primary shards.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.05,
+        0.8,
+        0.7250000000000001,
+        1
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "The cooling manifolds, designed to keep the H100 clusters at a crisp 22°C, were failing in a way that defied thermodynamic logic.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.25,
+        0.525,
+        0.95,
+        0.675
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "Jed watched the digital readouts climb \nsteadily, then lock.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.025,
+        0.875,
+        0.975,
+        0.975
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "They didn’t fluctuate or oscillate; the numbers simply froze at 66.6°C across all twelve sectors.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.175,
+        0.475,
+        0.9750000000000001,
+        0.6
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    }
+  ]
+}

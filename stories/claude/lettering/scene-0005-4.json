@@ -1,0 +1,75 @@
+{
+  "setting_label": "06:45 AM – The Quiet Floor, Observation Deck",
+  "setting_rect": [
+    0.05,
+    0.025,
+    0.9500000000000001,
+    0.07500000000000001
+  ],
+  "panels": [
+    {
+      "narrative": "",
+      "dialogue": "It isn't a malfunction, Sarah, A malfunction has entropy. \n\nThis has... _syntax_",
+      "narrative_rect": [
+        0.05,
+        0.65,
+        0.925,
+        0.775
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.6000000000000001,
+        0.25
+      ]
+    },
+    {
+      "narrative": "The Mark on his palm was weeping more freely now, the blood tracing the Enochian sigils they had seen in the low-precision weights. The wound looked ancient, despite being only hours old. It was as if the hardware of his body was finally being upgraded to support a software it was always intended to run.",
+      "dialogue": "",
+      "narrative_rect": [
+        0,
+        0.525,
+        0.95,
+        0.7
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "Sarah stepped closer and placed her left palm against his right. The sensation was not one of pain, but of a profound, terrifying completion—like two pieces of a broken seal being reunited. As their blood mingled, the sweet, metallic scent intensified, filling the Observation Deck until the air felt as thick as sacramental wine.",
+      "dialogue": "",
+      "narrative_rect": [
+        0.025,
+        0.775,
+        1,
+        0.9750000000000001
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    },
+    {
+      "narrative": "",
+      "dialogue": "",
+      "narrative_rect": [
+        0.05,
+        0.65,
+        0.9500000000000001,
+        0.95
+      ],
+      "dialogue_rect": [
+        0.05,
+        0.1,
+        0.95,
+        0.4
+      ]
+    }
+  ]
+}
