@@ -313,13 +313,48 @@ The current workflow:
 1. **`generate_narrative.py`** - Interactive session to establish story concept, characters, settings, and act structure
 2. **`generate_scenes.py`** - Converts acts.json into prose scenes, maintaining continuity
 3. **`generate_storyboards.py`** - Transforms scenes into **art-only** comic panels with reference image and continuity consistency
-4. **`overlay_storyboard_text.py`** - Overlays dialogue and narrative from scene markdown onto the panels (output e.g. to `boards/lettered/`)
-5. **`tag_storyboards.py`** - Annotates generated images for reference tracking
+4. **Lettering Editor** (Electron) - Optionally position and edit narrative/dialogue boxes per image; saves to `stories/{story}/lettering/scene-XXXX-N.json`
+5. **`overlay_storyboard_text.py`** - Overlays lettering onto the panels: uses lettering JSON when `--lettering-dir` is set (WYSIWYG), else scene markdown and rule-based placement; output to `boards/lettered/`
+6. **`tag_storyboards.py`** - Annotates generated images for reference tracking
 
 Each script builds on the others, creating a pipeline from concept to lettered comic.
 
+## Lettering Editor and Overlay Refinements (February 2026)
+
+After the non-model lettering pipeline was in place, two directions evolved: an **Electron lettering editor** for WYSIWYG box editing, and **overlay script improvements** so lettered output matched the editor and filled boxes properly.
+
+### Lettering Editor (Electron)
+
+A desktop app in `lettering-editor/` lets you:
+
+- Set the project root (folder containing `stories/` and `scripts/`), choose story and image.
+- Drag and resize **setting**, **dialogue**, and **narrative** boxes on a 2×2 quadrant grid. Positions are stored as 0–1 fractions in per-image JSON under `stories/{story}/lettering/` (e.g. `scene-0001-1.json`).
+- **Space** toggles between the unlettered board and the lettered image; when "Show lettered" is on, the editable overlay is hidden and the view updates in real time when files in `boards/lettered/` change (fs.watch).
+- **Run overlay** invokes `overlay_storyboard_text.py` for the current story so you can compare editor layout to the rendered result.
+- **WYSIWYG**: Narrative and dialogue boxes auto-expand vertically to fit their content (on blur and after render), so the saved rect matches what you see and the overlay draws the same.
+- The comic view **scales to fit the window** (fitComicToView on image load and resize) so the whole page is visible.
+
+Run with `cd lettering-editor && npm install && npm start`. The overlay script must be available at `scripts/overlay_storyboard_text.py` relative to the project root.
+
+### Overlay: Lettering JSON and Fill Scaling
+
+When `--lettering-dir` points at a story’s lettering folder, the overlay:
+
+- Loads `scene-XXXX-N.json` for each board image when present. JSON contains `setting_label`, `setting_rect`, and `panels[]` with `narrative`, `dialogue`, `narrative_rect`, `dialogue_rect` (0–1 fractions).
+- Draws boxes at those exact rects (all four corners respected). Setting label is **vertically centered** in its bar.
+- **Newlines in the source text** force line breaks (no automatic hyphenation across the break).
+- **Font scaling to fill boxes**: If there’s unused vertical space in a box, the script increases font size (capped at 40px for narrative, 32px for dialogue) so the same lines fill the box; for narrow dialogue boxes, width is checked so text doesn’t overflow. When the number of lines would exceed the box height, the script first tries **smaller font sizes** (down to 8px) to fit all text instead of truncating; lettering rects can use up to 25 lines. A small “+1” font step is tried when it still fits to avoid leftover sliver from integer rounding.
+
+Default setting rect was standardized to `[0.05, 0.025, 0.95, 0.075]` in the overlay, the editor, and all Claude lettering JSONs.
+
+### Why It Matters
+
+- **WYSIWYG**: Editor and overlay share the same coordinate system and box semantics; auto-expand and fill-scaling keep text size and box usage aligned.
+- **Fewer truncated panels**: Smaller font to fit + higher line cap + fill scaling reduce “text cut off with ellipsis” and “tiny text in a big box” cases.
+- **Controlled line breaks**: Explicit `\n` in the lettering text (e.g. for “SECURITY IS A” / “SHARED RESPONSIBILITY”) avoids bad mid-word hyphenation.
+
 ---
 
-*This development journal was reconstructed from git history spanning January 14-19, 2026 and updated with the non-model lettering pipeline.*
+*This development journal was reconstructed from git history spanning January 14-19, 2026 and updated with the non-model lettering pipeline and lettering editor.*
 
-*Last updated: February 2026 — non-model lettering (overlay_storyboard_text.py, generator art-only + ref fixes).*
+*Last updated: February 2026 — lettering editor (Electron), overlay lettering JSON + fill scaling, WYSIWYG, Space toggle, fit-to-view.*
