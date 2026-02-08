@@ -1,0 +1,3 @@
+Pillow
+# Optional: for OCR to cover existing text in storyboard images (also install Tesseract: e.g. brew install tesseract)
+pytesseract

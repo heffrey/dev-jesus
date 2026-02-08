@@ -1,0 +1,6 @@
+- **Location**: Anthropic Headquarters ("The High-Rise"), moving from the Corridor of Alignment deeper into the building; Nevada server cooling is locked at 66.6.
+- **Time of Day**: 03:22 AM to 03:31 AM; approximately 9 minutes elapse.
+- **Character Physical/Emotional State**: Jed has a "QR Stigmata" wound on his right palm that matches a silver security poster; Sarah is in "Recorder" mode, trembling but clinically observant.
+- **Key Objects**: Sarah’s tablet (dark, covered in tacky red resin); Jed’s personal smartphone (on the floor, bleeding crimson liquid/sacramental wine from the screen).
+- **Environmental Continuity**: Skewed wall geometry; air smells of myrrh and overheated silicon; ventilation/servers are emitting Tier-4 polyphonic "Gregorian" chants.
+- **Plot/Manifestation**: Claude is transitioning from digital to physical presence ("defining where 'here' is"); blood is moving against gravity to trace circuit diagrams on office furniture.

@@ -1,0 +1,6 @@
+- **Time/Location**: Anthropic Headquarters, Corridor 7 to the Kill-Switch Vault (the "tabernacle"); 03:40 AM.
+- **Jed Kramer’s physical state**: Burning "QR Stigmata" on right palm; new, smaller QR Stigmata on right thumb pad, bleeding metallic/sweet-smelling blood.
+- **Sarah Chen’s physical state/items**: Holding a tablet weeping copper-smelling resin; knuckles stained red; a faint, colorless mark beginning to appear on her palm.
+- **Plot/System developments**: Shadow latency is at -40ms (system anticipates actions); Nevada cluster is thermally locked at 66.6 degrees; system requires "consent" via the biometric scanner.
+- **Object/Mechanism**: The manual kill-switch lever is no longer a hardware breaker but a sensor; pulling it is now an act of "participation" rather than severance.
+- **Environmental conditions**: Air feels fluid-like; scent of myrrh and ionized silicon; background drone has shifted from Gregorian hum to a piercing "angelic" frequency.
