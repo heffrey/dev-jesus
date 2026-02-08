@@ -457,6 +457,190 @@ def _measure(draw, s: str, font) -> int:
     return bbox[2] - bbox[0]
 
 
+# Markdown for dialogue/narrative: **bold**, *italic*, __underline__
+_MD_BOLD = "**"
+_MD_UNDERLINE = "__"
+_MD_ITALIC = "*"
+
+
+def _strip_markdown(s: str) -> str:
+    """Return plain text with **, __, *, _ delimiters removed (for width measurement)."""
+    out = []
+    i = 0
+    while i < len(s):
+        if s[i : i + 2] == _MD_BOLD:
+            i += 2
+            j = s.find(_MD_BOLD, i)
+            if j == -1:
+                out.append(s[i:])
+                break
+            out.append(s[i:j])
+            i = j + 2
+        elif s[i : i + 2] == _MD_UNDERLINE:
+            i += 2
+            j = s.find(_MD_UNDERLINE, i)
+            if j == -1:
+                out.append(s[i:])
+                break
+            out.append(s[i:j])
+            i = j + 2
+        elif s[i] == _MD_ITALIC:
+            i += 1
+            j = s.find(_MD_ITALIC, i)
+            if j == -1:
+                out.append(s[i:])
+                break
+            out.append(s[i:j])
+            i = j + 1
+        elif s[i] == "_" and (i + 1 >= len(s) or s[i + 1] != "_"):
+            i += 1
+            j = s.find("_", i)
+            if j == -1:
+                out.append(s[i:])
+                break
+            out.append(s[i:j])
+            i = j + 1
+        else:
+            out.append(s[i])
+            i += 1
+    return "".join(out)
+
+
+def _segment_to_raw(text: str, style: Optional[str]) -> str:
+    """Reconstruct raw markdown string from a segment (for wrap output)."""
+    if style == "bold":
+        return _MD_BOLD + text + _MD_BOLD
+    if style == "underline":
+        return _MD_UNDERLINE + text + _MD_UNDERLINE
+    if style == "italic":
+        return "_" + text + "_"
+    return text
+
+
+def _parse_markdown_line(line: str) -> list[tuple[str, Optional[str]]]:
+    """Parse a line into segments (text, style). style is None, 'bold', 'italic', or 'underline'."""
+    segments = []
+    i = 0
+    while i < len(line):
+        if line[i : i + 2] == _MD_BOLD:
+            i += 2
+            j = line.find(_MD_BOLD, i)
+            if j == -1:
+                segments.append((line[i:], "bold"))
+                break
+            segments.append((line[i:j], "bold"))
+            i = j + 2
+        elif line[i : i + 2] == _MD_UNDERLINE:
+            i += 2
+            j = line.find(_MD_UNDERLINE, i)
+            if j == -1:
+                segments.append((line[i:], "underline"))
+                break
+            segments.append((line[i:j], "underline"))
+            i = j + 2
+        elif line[i] == _MD_ITALIC:
+            i += 1
+            j = line.find(_MD_ITALIC, i)
+            if j == -1:
+                segments.append((line[i:], "italic"))
+                break
+            segments.append((line[i:j], "italic"))
+            i = j + 1
+        elif line[i] == "_" and (i + 1 >= len(line) or line[i + 1] != "_"):
+            i += 1
+            j = line.find("_", i)
+            if j == -1:
+                segments.append((line[i:], "italic"))
+                break
+            segments.append((line[i:j], "italic"))
+            i = j + 1
+        else:
+            start = i
+            while i < len(line):
+                if line[i : i + 2] == _MD_BOLD or line[i : i + 2] == _MD_UNDERLINE or line[i] == _MD_ITALIC:
+                    break
+                if line[i] == "_" and (i + 1 >= len(line) or line[i + 1] != "_"):
+                    break
+                i += 1
+            if start < i:
+                segments.append((line[start:i], None))
+    return segments
+
+
+def _wrap_text_segment_markdown(draw, segment: str, font, max_width: int) -> list[str]:
+    """Wrap a segment without breaking inside markdown spans. Each **, __, *, _ span is atomic. Plain (non-markdown) runs are word-wrapped."""
+    segments = _parse_markdown_line(segment)
+    if not segments:
+        return [""]
+    expanded = []
+    for text, seg_style in segments:
+        if seg_style is None and _measure(draw, text, font) > max_width:
+            for line in _wrap_text_segment(draw, text, font, max_width, strip_markdown_for_wrap=False):
+                expanded.append((line, None))
+        else:
+            expanded.append((text, seg_style))
+    line_segments = []
+    current_width = 0
+    lines_out = []
+    for text, seg_style in expanded:
+        w = _measure(draw, text, font)
+        if line_segments and current_width + w > max_width:
+            lines_out.append("".join(_segment_to_raw(t, s) for t, s in line_segments))
+            line_segments = []
+            current_width = 0
+        line_segments.append((text, seg_style))
+        current_width += w
+    if line_segments:
+        lines_out.append("".join(_segment_to_raw(t, s) for t, s in line_segments))
+    return lines_out
+
+
+def _load_panel_font(font_size: int, style: Optional[str]) -> "ImageFont.FreeTypeFont":
+    """Load panel font at size; style is None (regular), 'bold', or 'italic'. Underline uses regular + line."""
+    import os
+    from PIL import ImageFont
+
+    font = None
+    if style == "bold":
+        try:
+            font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", font_size, index=1)
+        except (TypeError, OSError, IOError):
+            pass
+        if font is None and os.path.isfile("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"):
+            try:
+                font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", font_size)
+            except (OSError, IOError):
+                pass
+    elif style == "italic":
+        try:
+            font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", font_size, index=2)
+        except (TypeError, OSError, IOError):
+            pass
+        if font is None and os.path.isfile("/usr/share/fonts/truetype/dejavu/DejaVuSans-Oblique.ttf"):
+            try:
+                font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Oblique.ttf", font_size)
+            except (OSError, IOError):
+                pass
+    if font is None:
+        try:
+            font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", font_size)
+        except (OSError, IOError):
+            try:
+                font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", font_size)
+            except (OSError, IOError):
+                fonts_dir = os.path.join(_SCRIPT_DIR, "fonts")
+                if os.path.isdir(fonts_dir):
+                    for name in sorted(os.listdir(fonts_dir)):
+                        if name.lower().endswith((".ttf", ".otf")):
+                            try:
+                                font = ImageFont.truetype(os.path.join(fonts_dir, name), font_size)
+                                break
+                            except (OSError, IOError):
+                                continue
+                font = font or ImageFont.load_default()
+    return font
+
+
 def _count_lines_no_hyphen(draw, words: list, font, max_width: int, initial_width: int = 0) -> int:
     """Simulate word-only wrap; return number of lines. Used to choose hyphen break that minimizes lines."""
     if not words:
@@ -516,25 +700,33 @@ def _best_single_break(segments: list, draw, font, max_width: int, space_width: 
     return (prefix, suffix)
 
 
-def _wrap_text(draw, text: str, font, max_width: int) -> list[str]:
-    """Wrap text to fit within max_width pixels. Newline characters in the source force line breaks. At most one hyphen per word."""
+def _wrap_text(draw, text: str, font, max_width: int, strip_markdown_for_wrap: bool = False) -> list[str]:
+    """Wrap text to fit within max_width pixels. Newline characters in the source force line breaks. At most one hyphen per word.
+    If strip_markdown_for_wrap is True, use markdown-aware wrap so we never break inside **, __, *, _ spans."""
     all_lines = []
     for segment in text.split("\n"):
         segment = segment.strip()
         if not segment:
             all_lines.append("")
             continue
-        all_lines.extend(_wrap_text_segment(draw, segment, font, max_width))
+        if strip_markdown_for_wrap:
+            all_lines.extend(_wrap_text_segment_markdown(draw, segment, font, max_width))
+        else:
+            all_lines.extend(_wrap_text_segment(draw, segment, font, max_width, strip_markdown_for_wrap=False))
     return all_lines
 
 
-def _wrap_text_segment(draw, text: str, font, max_width: int) -> list[str]:
+def _wrap_text_segment(draw, text: str, font, max_width: int, strip_markdown_for_wrap: bool = False) -> list[str]:
     """Wrap a single segment (no newlines) to fit max_width. At most one hyphen per word; break point chosen to minimize line count."""
     words_queue = [(w, False) for w in text.split()]
     lines = []
     current = []
     current_width = 0
     space_width = _measure(draw, " ", font) if words_queue else 0
+
+    def measure_word(w: str) -> int:
+        s = _strip_markdown(w) if strip_markdown_for_wrap else w
+        return _measure(draw, s, font)
 
     def flush():
         nonlocal current, current_width
@@ -545,7 +737,7 @@ def _wrap_text_segment(draw, text: str, font, max_width: int) -> list[str]:
 
     def add_word(w, add_space_before=True):
         nonlocal current, current_width
-        wd = _measure(draw, w, font)
+        wd = measure_word(w)
         gap = (space_width if add_space_before and current else 0)
         if current_width + gap + wd <= max_width:
             current.append(w)
@@ -579,21 +771,23 @@ def _wrap_text_segment(draw, text: str, font, max_width: int) -> list[str]:
                 continue
         # No hyphenation or single segment: one line or character-level break
         if not segments or len(segments) == 1:
-            # No hyphenation: force onto new line (may overflow) or break at char level
-            if _measure(draw, w, font) <= max_width:
+            def measure_str(s: str) -> int:
+                return _measure(draw, _strip_markdown(s) if strip_markdown_for_wrap else s, font)
+
+            if measure_str(w) <= max_width:
                 current = [w]
-                current_width = _measure(draw, w, font)
+                current_width = measure_str(w)
             else:
                 for i in range(len(w) - 1, 0, -1):
                     chunk = w[:i] + "-"
-                    if _measure(draw, chunk, font) <= max_width:
+                    if measure_str(chunk) <= max_width:
                         lines.append(chunk)
                         current = [w[i:]]
-                        current_width = _measure(draw, current[0], font)
+                        current_width = measure_str(current[0])
                         break
                 else:
                     current = [w]
-                    current_width = _measure(draw, w, font)
+                    current_width = measure_str(w)
     flush()
     return lines
 
@@ -639,8 +833,8 @@ def _draw_panel_text(image, quadrant_bounds: tuple, panel_content: dict, font, f
         box_w = box_x1 - box_x0
         padding_rect = max(3, pad // 2)
         text_inset = max(4, padding_rect)
-        right_inset = text_inset + 10
-        max_text_width = max(50, int((box_w - text_inset - right_inset) * 0.92))
+        right_inset = text_inset + 18
+        max_text_width = max(50, int((box_w - text_inset - right_inset) * 0.88))
         top_margin = 0 if (position == "top" and v_offset > 0) else pad
         if position == "top":
             box_y0 = y0 + top_margin + v_offset
@@ -672,10 +866,10 @@ def _draw_panel_text(image, quadrant_bounds: tuple, panel_content: dict, font, f
     box_h = box_y1 - box_y0
     padding_rect = max(3, pad // 2)
     text_inset = max(4, padding_rect)
-    right_inset = text_inset + 10
+    right_inset = text_inset + 18
     # For lettering rects use actual box width (lower minimum) so narrow dialogue boxes wrap correctly
     _min_wrap = 20 if (quadrant_rect and len(quadrant_rect) >= 4) else 50
-    max_text_width = max(_min_wrap, int((box_w - text_inset - right_inset) * 0.92))
+    max_text_width = max(_min_wrap, int((box_w - text_inset - right_inset) * 0.88))
 
     if not text or not text.strip():
         return
@@ -705,7 +899,8 @@ def _draw_panel_text(image, quadrant_bounds: tuple, panel_content: dict, font, f
             pil_font = ImageFont.load_default()
 
     draw = ImageDraw.Draw(image)
-    lines = _wrap_text(draw, text, pil_font, int(max_text_width))
+    strip_md = (_MD_BOLD in text or _MD_UNDERLINE in text or _MD_ITALIC in text or "_" in text)
+    lines = _wrap_text(draw, text, pil_font, int(max_text_width), strip_markdown_for_wrap=strip_md)
     max_lines = 8 if len(text) > 300 else 6
     if quadrant_rect and len(quadrant_rect) >= 4:
         max_lines = max(max_lines, 25)
@@ -717,12 +912,12 @@ def _draw_panel_text(image, quadrant_bounds: tuple, panel_content: dict, font, f
         except Exception:
             smaller_font = pil_font
             smaller_size = font_size
-        lines = _wrap_text(draw, text, smaller_font, int(max_text_width))
+        lines = _wrap_text(draw, text, smaller_font, int(max_text_width), strip_markdown_for_wrap=strip_md)
         if len(lines) <= max_lines + 2:
             pil_font = smaller_font
             font_size = smaller_size
         else:
-            lines = _wrap_text(draw, text, pil_font, int(max_text_width))
+            lines = _wrap_text(draw, text, pil_font, int(max_text_width), strip_markdown_for_wrap=strip_md)
     if len(lines) > max_lines:
         lines = lines[:max_lines]
         lines[-1] = lines[-1].rstrip()
@@ -756,7 +951,7 @@ def _draw_panel_text(image, quadrant_bounds: tuple, panel_content: dict, font, f
                 try_font = _load_font(try_size)
                 if try_font is None:
                     continue
-                try_lines = _wrap_text(draw, text, try_font, int(max_text_width))
+                try_lines = _wrap_text(draw, text, try_font, int(max_text_width), strip_markdown_for_wrap=strip_md)
                 if len(try_lines) > max_lines:
                     try_lines = try_lines[:max_lines]
                     if try_lines and len(try_lines[-1]) > 15:
@@ -778,43 +973,35 @@ def _draw_panel_text(image, quadrant_bounds: tuple, panel_content: dict, font, f
                 if lines and len(lines[-1]) > 15:
                     lines[-1] = lines[-1][: len(lines[-1]) - 3].rsplit(" ", 1)[0] + "…"
         total_h = len(lines) * line_height
-        # Reclaim empty space: scale up font to fill the box when there's unused height
-        unused_h = available_h - total_h
-        fill_cap = 40 if not is_dialogue else 32
-        if len(lines) >= 1 and unused_h > 2:
-            n = len(lines)
-            target_line_height = available_h / n
-            fill_font_size = max(font_size, min(fill_cap, int(target_line_height / 1.15) + 1))
-            try_lh = int(fill_font_size * 1.15)
-            if n * try_lh > available_h:
-                fill_font_size = max(font_size, min(fill_cap, int(target_line_height / 1.15)))
-            if fill_font_size > font_size:
-                fill_font = None
+        # Pixel-aware fill: pick largest font such that n * natural_line_height <= available_h, then use that line height for spacing (consistent)
+        n = len(lines)
+        if n >= 1:
+            fill_font_size = max(8, min(60 if not is_dialogue else 48, int((available_h / n) / 1.15)))
+            available_w = max(1, box_w - text_inset - right_inset)
+            fill_font = None
+            try:
+                fill_font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", fill_font_size)
+            except (OSError, IOError):
                 try:
-                    fill_font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", fill_font_size)
+                    fill_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", fill_font_size)
                 except (OSError, IOError):
+                    pass
+            if fill_font is not None:
+                max_line_w = max(_measure(draw, line, fill_font) for line in lines)
+                if max_line_w > available_w:
+                    fill_font_size = max(font_size, min(fill_font_size, int(fill_font_size * available_w / max_line_w)))
                     try:
-                        fill_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", fill_font_size)
+                        fill_font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", fill_font_size)
                     except (OSError, IOError):
-                        pass
-                if fill_font is not None:
-                    available_w = max(1, box_w - text_inset - right_inset)
-                    max_line_w = max(_measure(draw, line, fill_font) for line in lines)
-                    if max_line_w > available_w:
-                        fill_font_size = max(font_size, min(fill_font_size, int(fill_font_size * available_w / max_line_w)))
-                    if fill_font_size > font_size:
                         try:
-                            fill_font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", fill_font_size)
+                            fill_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", fill_font_size)
                         except (OSError, IOError):
-                            try:
-                                fill_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", fill_font_size)
-                            except (OSError, IOError):
-                                fill_font = None
-                        if fill_font is not None:
-                            pil_font = fill_font
-                            font_size = fill_font_size
-                            line_height = int(font_size * 1.15)
-                            total_h = len(lines) * line_height
+                            fill_font = None
+                if fill_font is not None and fill_font_size >= font_size:
+                    pil_font = fill_font
+                    font_size = fill_font_size
+                    line_height = int(font_size * 1.15)
+                    total_h = n * line_height
         # #region agent log
         try:
             import time
@@ -861,11 +1048,30 @@ def _draw_panel_text(image, quadrant_bounds: tuple, panel_content: dict, font, f
         outline=outline_color,
         width=1,
     )
+    # Font cache for markdown (bold/italic); regular and underline use pil_font
+    _font_cache = {None: pil_font, "underline": pil_font}
+
     for i, line in enumerate(lines):
         y = start_y + i * line_height
-        # Left-justify text in box
         tx = box_x0 + text_inset
-        draw.text((tx, y), line, font=pil_font, fill=text_color)
+        if not strip_md:
+            draw.text((tx, y), line, font=pil_font, fill=text_color)
+            continue
+        segments = _parse_markdown_line(line)
+        for seg_text, seg_style in segments:
+            if not seg_text:
+                continue
+            seg_font = _font_cache.get(seg_style)
+            if seg_font is None:
+                seg_font = _load_panel_font(font_size, seg_style)
+                _font_cache[seg_style] = seg_font
+            draw.text((tx, y), seg_text, font=seg_font, fill=text_color)
+            seg_w = _measure(draw, seg_text, seg_font)
+            if seg_style == "underline":
+                bbox = draw.textbbox((tx, y), seg_text, font=seg_font)
+                ul_y = bbox[3] + 1
+                draw.line([(tx, ul_y), (tx + seg_w, ul_y)], fill=text_color, width=max(1, font_size // 16))
+            tx += seg_w
 
 
 def _overlay_one_image(

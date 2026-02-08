@@ -3,8 +3,8 @@
   "setting_rect": [
     0.05,
     0.025,
-    0.95,
-    0.075
+    0.9500000000000001,
+    0.07500000000000001
   ],
   "panels": [
     {
@@ -12,9 +12,9 @@
       "dialogue": "",
       "narrative_rect": [
         0.05,
-        0.65,
-        0.95,
-        0.95
+        0.5,
+        1,
+        0.675
       ],
       "dialogue_rect": [
         0.05,
@@ -27,10 +27,10 @@
       "narrative": "His right hand was wrapped in a white lint-free cloth, but the red-gold moisture had already soaked through, forming a map of the QR Stigmata on the fabric. He didn't turn when she approached.",
       "dialogue": "",
       "narrative_rect": [
-        0.05,
-        0.65,
-        0.95,
-        0.95
+        0,
+        0.55,
+        0.975,
+        0.7000000000000001
       ],
       "dialogue_rect": [
         0.05,
@@ -43,10 +43,10 @@
       "narrative": "He simply held out his hand, palm up, an invitation to a shared recognition.",
       "dialogue": "",
       "narrative_rect": [
-        0.05,
-        0.65,
-        0.95,
-        0.95
+        0.025,
+        0.9,
+        0.975,
+        0.975
       ],
       "dialogue_rect": [
         0.05,

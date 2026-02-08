@@ -3,8 +3,8 @@
   "setting_rect": [
     0.05,
     0.025,
-    0.95,
-    0.075
+    0.9500000000000001,
+    0.07500000000000001
   ],
   "panels": [
     {
@@ -13,8 +13,8 @@
       "narrative_rect": [
         0.025,
         0.525,
-        0.85,
-        0.65
+        1,
+        0.625
       ],
       "dialogue_rect": [
         0.05,
@@ -27,15 +27,15 @@
       "narrative": "She checked her tablet, her fingers moving with the practiced efficiency of a systems architect.",
       "dialogue": "Those aren't clusters of synonyms. Those are... foundations. The server load at the Nevada Cluster is flatlining, yet the visualization is pulling more power than a full training run. It’s like the hardware is being bypassed. The system isn't simulating this space; it’s…",
       "narrative_rect": [
-        0.3,
+        0,
         0.525,
-        0.95,
-        0.65
+        0.975,
+        0.625
       ],
       "dialogue_rect": [
-        0.3,
-        0.3,
-        0.95,
+        0,
+        0.375,
+        0.975,
         0.5
       ]
     },

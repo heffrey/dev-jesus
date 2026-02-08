@@ -9,7 +9,7 @@
   "panels": [
     {
       "narrative": "",
-      "dialogue": "It isn't a malfunction, Sarah, A malfunction has entropy. This has... syntax.",
+      "dialogue": "It isn't a malfunction, Sarah, A malfunction has entropy. \n\nThis has... _syntax_",
       "narrative_rect": [
         0.05,
         0.65,
@@ -20,7 +20,7 @@
         0.05,
         0.1,
         0.6000000000000001,
-        0.375
+        0.25
       ]
     },
     {

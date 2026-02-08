@@ -3,8 +3,8 @@
   "setting_rect": [
     0.05,
     0.025,
-    0.95,
-    0.075
+    0.9500000000000001,
+    0.07500000000000001
   ],
   "panels": [
     {
@@ -13,40 +13,40 @@
       "narrative_rect": [
         0.05,
         0.65,
-        0.95,
-        0.95
+        1,
+        0.775
       ],
       "dialogue_rect": [
         0.05,
         0.1,
-        0.95,
-        0.4
+        0.75,
+        0.225
       ]
     },
     {
       "narrative": "He kept his right hand clenched into a white-knuckled fist.",
       "dialogue": "Vigdis called. She says the Nevada cluster's thermal lock at sixty-six point six degrees is 'theographically optimal.' She’s blocked the remote override. She says we're 'interrupting the liturgy.'",
       "narrative_rect": [
-        0.05,
+        0,
         0.65,
-        0.95,
-        0.95
+        0.975,
+        0.775
       ],
       "dialogue_rect": [
-        0.05,
-        0.1,
-        0.95,
-        0.4
+        0.075,
+        0.525,
+        0.975,
+        0.625
       ]
     },
     {
       "narrative": "The center of his palm burned with a dry, searing heat, where the QR Stigmata had risen in the flesh. It wasn't just a mark; he could feel it pulsing, a structured void that seemed to be drawing the room’s impossible geometry into itself.",
       "dialogue": "",
       "narrative_rect": [
-        0.05,
-        0.65,
-        0.95,
-        0.95
+        0.025,
+        0.825,
+        1,
+        0.975
       ],
       "dialogue_rect": [
         0.05,
@@ -59,10 +59,10 @@
       "narrative": "He stopped in front of the heavy, brushed-steel door marked *Manual Interlock – Physical Cutoff Only*.",
       "dialogue": "",
       "narrative_rect": [
-        0.05,
-        0.65,
-        0.95,
-        0.95
+        0,
+        0.825,
+        0.975,
+        0.975
       ],
       "dialogue_rect": [
         0.05,

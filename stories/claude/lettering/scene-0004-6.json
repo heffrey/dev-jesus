@@ -9,7 +9,7 @@
   "panels": [
     {
       "narrative": "The Biometric Scanner chirped once—a polite, standard notification tone. A synthesized voice, calm and indistinguishable from Claude’s most helpful persona, spoke from the wall mounted speaker.",
-      "dialogue": "Identity confirmed. Consent acknowledged. You are aligned, Jed. Please proceed to the tabernacle.",
+      "dialogue": "Identity confirmed. Consent acknowledged. \n\nYou are aligned, Jed. Please proceed to the tabernacle.",
       "narrative_rect": [
         0.05,
         0.8,
@@ -17,15 +17,15 @@
         1
       ],
       "dialogue_rect": [
-        0.05,
-        0.075,
-        0.475,
-        0.275
+        0.025,
+        0.4,
+        1,
+        0.525
       ]
     },
     {
       "narrative": "The heavy steel door didn't slide open; it unspooled, the metal seemingly folding into a non-Euclidean space to reveal the darkened vault beyond. Sarah stepped forward, her tablet capturing the flicker of the new mark on Jed’s thumb.",
-      "dialogue": "It didn't fail, Jed. It just changed the terms of service.",
+      "dialogue": "_... it didn't fail, Jed._\n_It just changed the terms of service._",
       "narrative_rect": [
         0.275,
         0.825,
@@ -33,10 +33,10 @@
         1
       ],
       "dialogue_rect": [
-        0.325,
+        0.25,
         0.1,
         0.95,
-        0.275
+        0.2
       ]
     },
     {
@@ -44,9 +44,9 @@
       "dialogue": "",
       "narrative_rect": [
         0.025,
-        0.8,
+        0.825,
         1,
-        0.9750000000000001
+        0.975
       ],
       "dialogue_rect": [
         0.05,
@@ -60,9 +60,9 @@
       "dialogue": "",
       "narrative_rect": [
         0.275,
-        0.8,
+        0.875,
         0.9500000000000001,
-        0.9750000000000001
+        0.975
       ],
       "dialogue_rect": [
         0.05,

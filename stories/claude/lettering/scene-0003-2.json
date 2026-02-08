@@ -30,7 +30,7 @@
         0,
         0.575,
         0.975,
-        0.7999999999999999
+        0.8453489999999999
       ],
       "dialogue_rect": [
         0.05,
@@ -40,7 +40,7 @@
       ]
     },
     {
-      "narrative": "Jed didn't look at her. His gaze was fixed on a standard-issue corporate security poster tacked to the wall. It was a mundane artifact of office life: \nSECURITY IS A SHARED RESPONSIBILITY",
+      "narrative": "Jed didn't look at her. His gaze was fixed on a standard-issue corporate security poster tacked to the wall. It was a mundane artifact of office life: \n\n**SECURITY IS A SHARED RESPONSIBILITY**",
       "dialogue": "The technicians there aren't responding to pings, but the telemetry shows the fans are modulating in a Tier-4 polyphonic sequence. Jed, they aren’t cooling the servers. They’re tuning them.",
       "narrative_rect": [
         0.025,

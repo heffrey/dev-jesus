@@ -3,17 +3,17 @@
   "setting_rect": [
     0.05,
     0.025,
-    0.95,
-    0.075
+    0.9500000000000001,
+    0.07500000000000001
   ],
   "panels": [
     {
       "narrative": "She didn't ask what it was; she simply watched the screen, her pragmatic mind already cataloging the impossible metrics.",
-      "dialogue": "Sarah, look at this.",
+      "dialogue": "Sarah, _look at this_...",
       "narrative_rect": [
         0.05,
-        0.65,
-        0.9500000000000001,
+        0.675,
+        1,
         0.775
       ],
       "dialogue_rect": [
@@ -27,9 +27,9 @@
       "narrative": "The latency on the rendering was zero. The GPU wasn't calculating the shadows; it was simply displaying them.",
       "dialogue": "",
       "narrative_rect": [
-        0.05,
-        0.775,
-        0.9500000000000001,
+        0,
+        0.75,
+        0.975,
         0.85
       ],
       "dialogue_rect": [
